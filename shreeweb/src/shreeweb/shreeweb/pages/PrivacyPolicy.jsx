@@ -1,0 +1,653 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+export default function PrivacyPolicy() {
+  const [privacyData, setPrivacyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchPrivacyData();
+  }, []);
+
+  const fetchPrivacyData = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await fetch('/backend/shreeweb-privacy-policy', {
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Failed to fetch privacy policy data');
+      }
+
+      if (data.success) {
+        setPrivacyData(data.data);
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err) {
+      console.error('Error fetching privacy policy data:', err);
+      setError(err.message || 'Failed to load privacy policy data');
+      // Set fallback data if API fails
+      setPrivacyData({
+        hero: {
+          tag: 'Privacy Policy',
+          title: 'Your data,',
+          subtitle: 'handled with care',
+          description: 'We are committed to protecting your privacy and handling your personal information with the utmost care and transparency.'
+        },
+        lastUpdatedDate: 'March 2026',
+        informationCollection: {
+          title: 'Information We Collect',
+          personalInfo: {
+            title: 'Personal Information',
+            items: [
+              'Name and contact information (email, phone number)',
+              'Demographic information (age, location if relevant to services)',
+              'Session preferences and wellness goals',
+              'Payment information (processed securely through third-party providers)'
+            ]
+          },
+          sessionInfo: {
+            title: 'Session Information',
+            items: [
+              'Intake form responses and wellness assessments',
+              'Session notes and progress tracking (with your consent)',
+              'Booking history and scheduling preferences',
+              'Communication records related to your sessions'
+            ]
+          },
+          technicalInfo: {
+            title: 'Technical Information',
+            items: [
+              'Website usage data and analytics',
+              'Device information and browser type',
+              'IP address and general location data',
+              'Cookies and similar tracking technologies'
+            ]
+          }
+        },
+        howWeUse: {
+          title: 'How We Use Your Information',
+          serviceDelivery: {
+            title: 'Service Delivery',
+            items: [
+              'Schedule and conduct energetic alignment sessions',
+              'Provide personalized wellness recommendations',
+              'Track progress and session outcomes',
+              'Send appointment reminders and follow-ups'
+            ]
+          },
+          communication: {
+            title: 'Communication',
+            items: [
+              'Respond to inquiries and support requests',
+              'Send service updates and wellness tips',
+              'Share relevant educational content',
+              'Notify about new offerings or schedule changes'
+            ]
+          },
+          businessOps: {
+            title: 'Business Operations',
+            items: [
+              'Process payments and manage billing',
+              'Maintain accurate client records',
+              'Improve service quality and offerings',
+              'Comply with legal and regulatory requirements'
+            ]
+          },
+          websiteEnhancement: {
+            title: 'Website Enhancement',
+            items: [
+              'Analyze website usage and performance',
+              'Optimize user experience and navigation',
+              'Troubleshoot technical issues',
+              'Develop new features and functionality'
+            ]
+          }
+        },
+        dataSharing: {
+          title: 'Information Sharing & Disclosure',
+          commitment: {
+            title: 'Our Commitment',
+            description: 'We never sell, rent, or trade your personal information to third parties for marketing purposes. Your privacy and trust are fundamental to our practice.'
+          },
+          serviceProviders: {
+            title: 'Service Providers',
+            description: 'We may share information with trusted service providers (payment processors, scheduling platforms) who assist in delivering our services under strict confidentiality agreements.'
+          },
+          legalRequirements: {
+            title: 'Legal Requirements',
+            description: 'We may disclose information when required by law, court order, or to protect the rights, property, or safety of our practice, clients, or others.'
+          },
+          businessTransfers: {
+            title: 'Business Transfers',
+            description: 'In the unlikely event of a business sale or merger, client information may be transferred to the new entity under the same privacy protections.'
+          }
+        },
+        dataSecurity: {
+          title: 'Data Security & Retention',
+          securityMeasures: {
+            title: 'Security Measures',
+            items: [
+              'SSL encryption for data transmission',
+              'Secure cloud storage with access controls',
+              'Regular security audits and updates',
+              'Limited access on a need-to-know basis'
+            ]
+          },
+          retentionPeriods: {
+            title: 'Retention Periods',
+            items: [
+              'Active client records: Duration of relationship + 7 years',
+              'Payment information: As required by law',
+              'Website analytics: 26 months maximum',
+              'Marketing communications: Until unsubscribed'
+            ]
+          }
+        },
+        privacyRights: {
+          title: 'Your Privacy Rights',
+          accessPortability: {
+            title: 'Access & Portability',
+            description: 'Request a copy of your personal information in a commonly used format.',
+            responseTime: 'Within 30 days'
+          },
+          correction: {
+            title: 'Correction & Updates',
+            description: 'Request corrections to inaccurate or incomplete personal information.',
+            responseTime: 'Within 30 days'
+          },
+          deletion: {
+            title: 'Deletion',
+            description: 'Request deletion of your personal information (subject to legal retention requirements).',
+            responseTime: 'Within 30 days'
+          },
+          optOut: {
+            title: 'Opt-Out',
+            description: 'Unsubscribe from marketing communications or withdraw consent for certain data processing.',
+            responseTime: 'Immediately'
+          },
+          exerciseRights: {
+            title: 'How to Exercise Your Rights',
+            description: 'Contact us through our contact page or email us directly. We may need to verify your identity before processing certain requests to protect your privacy and security.'
+          }
+        },
+        internationalCompliance: {
+          title: 'International Users & Compliance',
+          gdpr: {
+            title: 'GDPR Compliance',
+            description: 'For users in the European Union, we comply with the General Data Protection Regulation (GDPR) and provide additional rights including data portability and the right to be forgotten.'
+          },
+          ccpa: {
+            title: 'CCPA Compliance',
+            description: 'For California residents, we comply with the California Consumer Privacy Act (CCPA) and provide additional rights regarding personal information disclosure and sale.'
+          }
+        },
+        contactSection: {
+          title: 'Contact Our Privacy Team',
+          generalQuestions: {
+            title: 'General Privacy Questions',
+            description: 'For questions about this privacy policy or our data practices, please reach out through our contact page.'
+          },
+          dataProtectionOfficer: {
+            title: 'Data Protection Officer',
+            description: 'For formal privacy complaints or data protection concerns, you may contact our designated privacy officer.',
+            responseTime: 'Within 72 hours for urgent matters'
+          },
+          footerText: 'Questions about our privacy practices? We\'re here to help.'
+        }
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-center py-24">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-stone-600">Loading privacy policy...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!privacyData) {
+    return (
+      <div className="w-full">
+        <div className="text-center py-24">
+          <p className="text-stone-600">Privacy policy content not available</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      {/* Hero Section */}
+      <section 
+        className="py-24 px-4 text-center bg-gradient-to-br from-[#F4EFE6] via-amber-50 to-orange-50 relative overflow-hidden"
+        data-aos="fade-in"
+        data-aos-duration="300"
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-16 left-16 w-40 h-40 border border-amber-300 rounded-full"></div>
+          <div className="absolute bottom-16 right-16 w-28 h-28 border border-stone-300 rounded-full"></div>
+          <div className="absolute top-1/3 right-1/3 w-20 h-20 border border-orange-300 rounded-full"></div>
+        </div>
+        
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div 
+            className="text-sm font-medium text-stone-600 mb-6 tracking-[0.2em] uppercase"
+            data-aos="fade-up"
+            data-aos-duration="200"
+            data-aos-delay="200"
+          >
+            {privacyData.hero?.tag || 'Privacy Policy'}
+          </div>
+          <h1 
+            className="text-6xl md:text-7xl font-serif text-stone-800 mb-8 leading-tight"
+            data-aos="fade-up"
+            data-aos-duration="300"
+            data-aos-delay="300"
+          >
+            {privacyData.hero?.title || 'Your data,'} 
+            <span className="block text-stone-600 italic font-light mt-2">{privacyData.hero?.subtitle || 'handled with care'}</span>
+          </h1>
+          <div 
+            className="w-32 h-0.5 bg-amber-400 mx-auto mb-8"
+            data-aos="fade-up"
+            data-aos-duration="200"
+            data-aos-delay="500"
+          ></div>
+          <p 
+            className="text-xl md:text-2xl text-stone-700 leading-relaxed max-w-4xl mx-auto font-light"
+            data-aos="fade-up"
+            data-aos-duration="300"
+            data-aos-delay="600"
+          >
+            {privacyData.hero?.description || 'We are committed to protecting your privacy and handling your personal information with the utmost care and transparency.'}
+          </p>
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section 
+        className="py-20 px-4 bg-[#F4EFE6]"
+        data-aos="fade-up"
+        data-aos-duration="300"
+      >
+        <div className="max-w-5xl mx-auto">
+          <div 
+            className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-lg border border-stone-200/50"
+            data-aos="fade-up"
+            data-aos-duration="200"
+            data-aos-delay="200"
+          >
+            
+            {/* Last Updated */}
+            <div className="mb-12 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full text-sm text-amber-800 font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Last Updated: {privacyData.lastUpdatedDate || 'March 2026'}
+              </div>
+            </div>
+
+            <div className="space-y-12">
+              {/* Information Collection - Dynamic */}
+              <div className="border-l-4 border-amber-400 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.informationCollection?.title || 'Information We Collect'}</h2>
+                
+                <div className="space-y-6">
+                  <div className="bg-amber-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      {privacyData.informationCollection?.personalInfo?.title || 'Personal Information'}
+                    </h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.informationCollection?.personalInfo?.items || [
+                        'Name and contact information (email, phone number)',
+                        'Demographic information (age, location if relevant to services)',
+                        'Session preferences and wellness goals',
+                        'Payment information (processed securely through third-party providers)'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-stone-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {privacyData.informationCollection?.sessionInfo?.title || 'Session Information'}
+                    </h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.informationCollection?.sessionInfo?.items || [
+                        'Intake form responses and wellness assessments',
+                        'Session notes and progress tracking (with your consent)',
+                        'Booking history and scheduling preferences',
+                        'Communication records related to your sessions'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {privacyData.informationCollection?.technicalInfo?.title || 'Technical Information'}
+                    </h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.informationCollection?.technicalInfo?.items || [
+                        'Website usage data and analytics',
+                        'Device information and browser type',
+                        'IP address and general location data',
+                        'Cookies and similar tracking technologies'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* How We Use Information - Dynamic */}
+              <div className="border-l-4 border-stone-400 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.howWeUse?.title || 'How We Use Your Information'}</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-stone-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.howWeUse?.serviceDelivery?.title || 'Service Delivery'}</h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.howWeUse?.serviceDelivery?.items || [
+                        'Schedule and conduct energetic alignment sessions',
+                        'Provide personalized wellness recommendations',
+                        'Track progress and session outcomes',
+                        'Send appointment reminders and follow-ups'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-amber-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.howWeUse?.communication?.title || 'Communication'}</h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.howWeUse?.communication?.items || [
+                        'Respond to inquiries and support requests',
+                        'Send service updates and wellness tips',
+                        'Share relevant educational content',
+                        'Notify about new offerings or schedule changes'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.howWeUse?.businessOps?.title || 'Business Operations'}</h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.howWeUse?.businessOps?.items || [
+                        'Process payments and manage billing',
+                        'Maintain accurate client records',
+                        'Improve service quality and offerings',
+                        'Comply with legal and regulatory requirements'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-stone-100 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.howWeUse?.websiteEnhancement?.title || 'Website Enhancement'}</h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.howWeUse?.websiteEnhancement?.items || [
+                        'Analyze website usage and performance',
+                        'Optimize user experience and navigation',
+                        'Troubleshoot technical issues',
+                        'Develop new features and functionality'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Sharing - Dynamic */}
+              <div className="border-l-4 border-orange-400 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.dataSharing?.title || 'Information Sharing & Disclosure'}</h2>
+                
+                <div className="bg-orange-50 rounded-2xl p-8 mb-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-orange-200 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-serif text-stone-800 mb-2">{privacyData.dataSharing?.commitment?.title || 'Our Commitment'}</h3>
+                      <p className="text-base text-stone-700 leading-relaxed">
+                        {privacyData.dataSharing?.commitment?.description || 'We never sell, rent, or trade your personal information to third parties for marketing purposes. Your privacy and trust are fundamental to our practice.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
+                    <h3 className="text-lg font-serif text-stone-800 mb-2">{privacyData.dataSharing?.serviceProviders?.title || 'Service Providers'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed">
+                      {privacyData.dataSharing?.serviceProviders?.description || 'We may share information with trusted service providers (payment processors, scheduling platforms) who assist in delivering our services under strict confidentiality agreements.'}
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
+                    <h3 className="text-lg font-serif text-stone-800 mb-2">{privacyData.dataSharing?.legalRequirements?.title || 'Legal Requirements'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed">
+                      {privacyData.dataSharing?.legalRequirements?.description || 'We may disclose information when required by law, court order, or to protect the rights, property, or safety of our practice, clients, or others.'}
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
+                    <h3 className="text-lg font-serif text-stone-800 mb-2">{privacyData.dataSharing?.businessTransfers?.title || 'Business Transfers'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed">
+                      {privacyData.dataSharing?.businessTransfers?.description || 'In the unlikely event of a business sale or merger, client information may be transferred to the new entity under the same privacy protections.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Security - Dynamic */}
+              <div className="border-l-4 border-amber-600 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.dataSecurity?.title || 'Data Security & Retention'}</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                  <div className="bg-amber-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      {privacyData.dataSecurity?.securityMeasures?.title || 'Security Measures'}
+                    </h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.dataSecurity?.securityMeasures?.items || [
+                        'SSL encryption for data transmission',
+                        'Secure cloud storage with access controls',
+                        'Regular security audits and updates',
+                        'Limited access on a need-to-know basis'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-stone-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {privacyData.dataSecurity?.retentionPeriods?.title || 'Retention Periods'}
+                    </h3>
+                    <ul className="text-base text-stone-700 leading-relaxed space-y-2">
+                      {(privacyData.dataSecurity?.retentionPeriods?.items || [
+                        'Active client records: Duration of relationship + 7 years',
+                        'Payment information: As required by law',
+                        'Website analytics: 26 months maximum',
+                        'Marketing communications: Until unsubscribed'
+                      ]).map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Your Rights - Dynamic */}
+              <div className="border-l-4 border-stone-600 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.privacyRights?.title || 'Your Privacy Rights'}</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-stone-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.privacyRights?.accessPortability?.title || 'Access & Portability'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed mb-3">
+                      {privacyData.privacyRights?.accessPortability?.description || 'Request a copy of your personal information in a commonly used format.'}
+                    </p>
+                    <div className="text-sm text-stone-600">
+                      Response time: {privacyData.privacyRights?.accessPortability?.responseTime || 'Within 30 days'}
+                    </div>
+                  </div>
+
+                  <div className="bg-amber-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.privacyRights?.correction?.title || 'Correction & Updates'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed mb-3">
+                      {privacyData.privacyRights?.correction?.description || 'Request corrections to inaccurate or incomplete personal information.'}
+                    </p>
+                    <div className="text-sm text-stone-600">
+                      Response time: {privacyData.privacyRights?.correction?.responseTime || 'Within 30 days'}
+                    </div>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.privacyRights?.deletion?.title || 'Deletion'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed mb-3">
+                      {privacyData.privacyRights?.deletion?.description || 'Request deletion of your personal information (subject to legal retention requirements).'}
+                    </p>
+                    <div className="text-sm text-stone-600">
+                      Response time: {privacyData.privacyRights?.deletion?.responseTime || 'Within 30 days'}
+                    </div>
+                  </div>
+
+                  <div className="bg-stone-100 rounded-2xl p-6">
+                    <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.privacyRights?.optOut?.title || 'Opt-Out'}</h3>
+                    <p className="text-base text-stone-700 leading-relaxed mb-3">
+                      {privacyData.privacyRights?.optOut?.description || 'Unsubscribe from marketing communications or withdraw consent for certain data processing.'}
+                    </p>
+                    <div className="text-sm text-stone-600">
+                      Effective: {privacyData.privacyRights?.optOut?.responseTime || 'Immediately'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 bg-white rounded-2xl p-6 border border-stone-200">
+                  <h3 className="text-lg font-serif text-stone-800 mb-2">{privacyData.privacyRights?.exerciseRights?.title || 'How to Exercise Your Rights'}</h3>
+                  <p className="text-base text-stone-700 leading-relaxed">
+                    {privacyData.privacyRights?.exerciseRights?.description || 'Contact us through our contact page or email us directly. We may need to verify your identity before processing certain requests to protect your privacy and security.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* International Users - Dynamic */}
+              <div className="border-l-4 border-amber-400 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.internationalCompliance?.title || 'International Users & Compliance'}</h2>
+                
+                <div className="bg-amber-50 rounded-2xl p-8">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.internationalCompliance?.gdpr?.title || 'GDPR Compliance'}</h3>
+                      <p className="text-base text-stone-700 leading-relaxed">
+                        {privacyData.internationalCompliance?.gdpr?.description || 'For users in the European Union, we comply with the General Data Protection Regulation (GDPR) and provide additional rights including data portability and the right to be forgotten.'}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-serif text-stone-800 mb-3">{privacyData.internationalCompliance?.ccpa?.title || 'CCPA Compliance'}</h3>
+                      <p className="text-base text-stone-700 leading-relaxed">
+                        {privacyData.internationalCompliance?.ccpa?.description || 'For California residents, we comply with the California Consumer Privacy Act (CCPA) and provide additional rights regarding personal information disclosure and sale.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Section - Dynamic */}
+              <div className="border-l-4 border-stone-400 pl-8">
+                <h2 className="text-3xl font-serif text-stone-800 mb-6">{privacyData.contactSection?.title || 'Contact Our Privacy Team'}</h2>
+                
+                <div className="bg-stone-50 rounded-2xl p-8">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <h3 className="text-xl font-serif text-stone-800 mb-4">{privacyData.contactSection?.generalQuestions?.title || 'General Privacy Questions'}</h3>
+                      <p className="text-base text-stone-700 leading-relaxed mb-4">
+                        {privacyData.contactSection?.generalQuestions?.description || 'For questions about this privacy policy or our data practices, please reach out through our contact page.'}
+                      </p>
+                      <Link
+                        to="/shreeweb/contact"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        Contact Us
+                      </Link>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-serif text-stone-800 mb-4">{privacyData.contactSection?.dataProtectionOfficer?.title || 'Data Protection Officer'}</h3>
+                      <p className="text-base text-stone-700 leading-relaxed mb-4">
+                        {privacyData.contactSection?.dataProtectionOfficer?.description || 'For formal privacy complaints or data protection concerns, you may contact our designated privacy officer.'}
+                      </p>
+                      <div className="text-sm text-stone-600">
+                        Response time: {privacyData.contactSection?.dataProtectionOfficer?.responseTime || 'Within 72 hours for urgent matters'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Section */}
+            <div className="mt-12 pt-8 border-t border-stone-300/50 text-center">
+              <p className="text-stone-600 mb-6 italic">
+                {privacyData.contactSection?.footerText || 'Questions about our privacy practices? We\'re here to help.'}
+              </p>
+              <Link
+                to="/shreeweb/contact"
+                className="inline-block px-8 py-4 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
