@@ -1,0 +1,17 @@
+{
+  "name": "shreeweb-healing",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
+    "dev-backend": "cd backend && npm run dev",
+    "dev-frontend": "cd shreeweb && npm run dev",
+    "build": "cd shreeweb && npm run build",
+    "start": "cd backend && npm start",
+    "install-all": "npm install && cd backend && npm install && cd ../shreeweb && npm install",
+    "clean": "rm -rf backend/public && rm -rf backend/node_modules && rm -rf shreeweb/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "glob": "^13.0.6"
+  }
+}

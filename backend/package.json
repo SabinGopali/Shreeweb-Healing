@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
+    "build-frontend": "cd ../shreeweb && npm install && npm run build",
+    "postinstall": "npm run build-frontend",
     "test-connection": "node test-connection.js",
     "setup-shreeweb-admin": "node scripts/setupShreeWebAdmin.js",
     "seed-shreeweb-admin": "node scripts/seedShreeWebAdmin.js",

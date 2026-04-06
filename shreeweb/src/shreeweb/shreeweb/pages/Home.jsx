@@ -110,7 +110,7 @@ export default function Home() {
     if (/^https?:\/\//i.test(url)) return url;
     // Uploaded CMS assets are under `/uploads/...` and should be fetched from backend.
     if (url.startsWith('/uploads/')) {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
       return `${backendUrl}${url}`;
     }
     // Frontend static assets (ex: `/healing2.png`) stay as-is.
@@ -160,7 +160,7 @@ export default function Home() {
     if (!url || typeof url !== 'string') return '/healing.webp';
     if (/^https?:\/\//i.test(url)) return url;
     if (url.startsWith('/uploads/')) {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
       return `${backendUrl}${url}`;
     }
     return url;

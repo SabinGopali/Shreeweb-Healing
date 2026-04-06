@@ -18,7 +18,7 @@ const resolveImage = (image) => {
   }
   
   // Relative paths - prepend backend URL
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   return image.startsWith('/') ? `${backendUrl}${image}` : `${backendUrl}/${image}`;
 };
 

@@ -58,7 +58,7 @@ export default function CmsGrowthSection() {
     if (!url || typeof url !== 'string') return '';
     if (url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (/^https?:\/\//i.test(url)) return url;
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
     if (url.startsWith('/uploads/')) return `${backendUrl}${url}`;
     return url;
   };

@@ -23,7 +23,7 @@ const resolveUrl = (url) => {
   }
   
   // Relative paths - prepend backend URL
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   return url.startsWith('/') ? `${backendUrl}${url}` : `${backendUrl}/${url}`;
 };
 

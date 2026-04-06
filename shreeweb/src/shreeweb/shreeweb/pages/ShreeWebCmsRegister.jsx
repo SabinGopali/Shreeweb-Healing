@@ -44,7 +44,7 @@ export default function ShreeWebCmsRegister() {
     setLoading(true);
 
     try {
-      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/backend';
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || '/backend';
       const response = await fetch(`${backendUrl}/shreeweb-auth/register`, {
         method: 'POST',
         headers: {

@@ -17,6 +17,7 @@ console.log('Environment check:');
 console.log('- PORT:', process.env.PORT || 'NOT SET');
 console.log('- MONGO:', process.env.MONGO ? 'SET' : 'NOT SET');
 console.log('- JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'NOT SET');
+console.log('- NODE_ENV:', process.env.NODE_ENV || 'development');
 console.log('');
 
 import connectDB from './config/db.js';
@@ -58,7 +59,6 @@ const startServer = async () => {
   
   while (retries) {
     try {
-      // Connect to MongoDB
       await connectDB();
       console.log('✓ Database connection established');
       break;
@@ -68,40 +68,28 @@ const startServer = async () => {
       
       if (retries === 0) {
         console.error('✗ Failed to connect to database after multiple attempts');
-        console.error('\nPlease check:');
-        console.error('  1. Your internet connection');
-        console.error('  2. MongoDB Atlas IP whitelist (Network Access)');
-        console.error('  3. MongoDB connection string in .env file');
-        console.error('  4. If using VPN/proxy, try disabling it');
         process.exit(1);
       }
       
-      // Wait 5 seconds before retrying
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
   
   // Middleware
   app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173', // Vite default port
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true
   }));
-  app.use(cookieParser()); // Parse cookies
+  app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   
   // Serve static files with proper headers for video streaming
   app.use('/uploads', (req, res, next) => {
-    // Enable CORS for uploaded files
     res.header('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:5173');
     res.header('Access-Control-Allow-Credentials', 'true');
-    
-    // Enable range requests for video streaming
     res.header('Accept-Ranges', 'bytes');
-    
-    // Set proper cache headers
     res.header('Cache-Control', 'public, max-age=31536000');
-    
     next();
   }, express.static(path.join(__dirname, 'uploads')));
   
@@ -148,26 +136,45 @@ const startServer = async () => {
   app.use('/backend/shreeweb-overview', shreeWebOverviewRoute);
   app.use('/backend/shreeweb-settings', shreeWebSettingsRoute);
   app.use('/backend/shreeweb-notifications', shreeWebNotificationRoute);
-  
-  // Public user authentication routes
   app.use('/backend/auth', shreeWebUserAuthRoute);
-  app.use('/backend/user', shreeWebUserAuthRoute); // Alias for backward compatibility
-  
-  // Email capture routes
+  app.use('/backend/user', shreeWebUserAuthRoute);
   app.use('/backend/email-captures', emailCaptureRoute);
-  
-  // Email campaign routes
   app.use('/backend/email-campaigns', emailCampaignRoute);
-  
-  // Contact routes
   app.use('/backend/contact', contactRoute);
   
-  // 404 handler for undefined routes
-  app.use((req, res) => {
-    res.status(404).json({ 
-      error: 'Route not found',
-      path: req.originalUrl 
+  // ========== SERVE FRONTEND IN PRODUCTION ==========
+  if (process.env.NODE_ENV === 'production') {
+    // Serve static files from the 'public' directory
+    app.use(express.static(path.join(__dirname, 'public')));
+    
+    // For any route that doesn't start with /backend or /api, serve index.html
+    app.get('*', (req, res) => {
+      if (req.path.startsWith('/backend') || req.path.startsWith('/api')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+      }
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
+  } else {
+    // Development mode - helpful message
+    app.get('*', (req, res) => {
+      if (!req.path.startsWith('/backend') && !req.path.startsWith('/api')) {
+        res.status(200).json({ 
+          message: 'Frontend not served in development mode',
+          instruction: 'Run: cd shreeweb && npm run dev',
+          frontendUrl: 'http://localhost:5173'
+        });
+      }
+    });
+  }
+  
+  // 404 handler for undefined API routes
+  app.use((req, res) => {
+    if (req.path.startsWith('/backend') || req.path.startsWith('/api')) {
+      res.status(404).json({ 
+        error: 'Route not found',
+        path: req.originalUrl 
+      });
+    }
   });
   
   // Global error handler
@@ -183,25 +190,22 @@ const startServer = async () => {
   app.listen(PORT, () => {
     console.log(`\n✓ Server running on http://localhost:${PORT}`);
     console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`✓ Health check: http://localhost:${PORT}/api/health\n`);
+    console.log(`✓ Health check: http://localhost:${PORT}/api/health`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`✓ Frontend available at http://localhost:${PORT}/shreeweb/home`);
+    }
   });
 };
 
-// Import mongoose for health check
 import mongoose from 'mongoose';
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Promise Rejection:', err);
-  // Don't crash the server, just log the error
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
-  // Log and exit gracefully
   process.exit(1);
 });
 
-// Start the application
 startServer();

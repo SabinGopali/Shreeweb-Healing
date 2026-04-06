@@ -7,7 +7,7 @@ const resolveBackendImageUrl = (imageUrl) => {
   if (!imageUrl || typeof imageUrl !== 'string') return '';
   if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:')) return imageUrl;
   if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '';
   return imageUrl.startsWith('/') ? `${backendUrl}${imageUrl}` : `${backendUrl}/${imageUrl}`;
 };
 
