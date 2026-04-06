@@ -159,6 +159,20 @@ const startServer = async () => {
     res.json({ message: 'Hello from Node.js backend!' });
   });
   
+  // Add this near your other routes (before the 404 handler)
+app.get('/api/debug-env', (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    EMAIL_HOST: process.env.EMAIL_HOST ? 'SET' : 'NOT SET',
+    EMAIL_PORT: process.env.EMAIL_PORT ? 'SET' : 'NOT SET',
+    EMAIL_USER: process.env.EMAIL_USER ? 'SET' : 'NOT SET',
+    EMAIL_PASS: process.env.EMAIL_PASS ? 'SET' : 'NOT SET',
+    EMAIL_FROM: process.env.EMAIL_FROM ? 'SET' : 'NOT SET',
+    FRONTEND_URL: process.env.FRONTEND_URL ? 'SET' : 'NOT SET',
+    allKeys: Object.keys(process.env).filter(k => k.includes('EMAIL'))
+  });
+});
+
   // ========== API ROUTES ==========
   app.use('/backend/shreeweb-auth', shreeWebAuthRoute);
   app.use('/backend/shreeweb-cms', shreeWebCMSRoute);
@@ -232,6 +246,7 @@ const startServer = async () => {
       }
     });
   }
+  
   
   // Global error handler
   app.use((err, req, res, next) => {
