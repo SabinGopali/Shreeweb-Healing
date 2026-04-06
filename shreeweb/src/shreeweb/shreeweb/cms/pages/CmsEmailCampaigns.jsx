@@ -11,6 +11,25 @@ export default function CmsEmailCampaigns() {
   const [pagination, setPagination] = useState({ total: 0, pages: 1 });
   const [totalRecipients, setTotalRecipients] = useState(0);
   const [sendingCampaigns, setSendingCampaigns] = useState(new Set());
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
+
+  const openModal = ({ title, message, type = 'info' }) => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type
+    });
+  };
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, isOpen: false }));
+  };
 
   useEffect(() => {
     fetchCampaigns();
@@ -144,6 +163,9 @@ export default function CmsEmailCampaigns() {
   const handleSendCampaign = async (id) => {
     if (!confirm('Are you sure you want to send this campaign? This action cannot be undone.')) return;
 
+    let sendStatus = null;
+    let sendErrorMessage = '';
+
     try {
       const url = `/backend/email-campaigns/${id}/send`;
       console.log('[SEND DEBUG] Full URL:', `${location.origin}${url}`);
@@ -161,6 +183,7 @@ export default function CmsEmailCampaigns() {
           'Content-Type': 'application/json'
         }
       });
+      sendStatus = response.status;
 
       console.log('Send response status:', response.status);
       console.log('Send response headers:', Object.fromEntries([...response.headers.entries()]));
@@ -180,6 +203,7 @@ export default function CmsEmailCampaigns() {
         
         console.error('Send error data:', errorData);
         console.error('Send error status:', response.status);
+        sendErrorMessage = errorData.message || '';
         
         setSendingCampaigns(prev => {
           const newSet = new Set(prev);
@@ -193,7 +217,11 @@ export default function CmsEmailCampaigns() {
       console.log('Send response:', data);
       
       if (data.success) {
-        alert(`✅ Campaign is being sent to ${data.data.recipientCount} recipients!\n\nThe status will update automatically.`);
+        openModal({
+          type: 'success',
+          title: 'Campaign Sending Started',
+          message: `Campaign is being sent to ${data.data.recipientCount} recipients. The status will update automatically.`
+        });
         fetchCampaigns();
       } else {
         setSendingCampaigns(prev => {
@@ -205,7 +233,12 @@ export default function CmsEmailCampaigns() {
       }
     } catch (error) {
       console.error('Error sending campaign:', error);
-      alert(`❌ Send failed (${response?.status || 'unknown'}): ${error.message}\n\nCheck browser console for details (F12 → Console/Network)`);
+      const friendlyMessage = sendErrorMessage || error.message || 'Unknown error';
+      openModal({
+        type: 'error',
+        title: `Send Failed (${sendStatus || 'unknown'})`,
+        message: `${friendlyMessage}\n\nCheck browser console for details (F12 -> Console/Network).`
+      });
     }
   };
 
@@ -223,12 +256,20 @@ export default function CmsEmailCampaigns() {
 
       const data = await response.json();
       if (data.success) {
-        alert(`✅ Recipients updated: ${data.data.oldCount} → ${data.data.newCount}`);
+        openModal({
+          type: 'success',
+          title: 'Recipients Updated',
+          message: `Recipients updated: ${data.data.oldCount} -> ${data.data.newCount}`
+        });
         fetchCampaigns();
       }
     } catch (error) {
       console.error('Error fixing recipients:', error);
-      alert('Failed to fix recipients');
+      openModal({
+        type: 'error',
+        title: 'Fix Failed',
+        message: 'Failed to fix recipients'
+      });
     }
   };
 
@@ -458,6 +499,28 @@ export default function CmsEmailCampaigns() {
             >
               Next
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal */}
+      {modal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white shadow-xl">
+            <div className="border-b border-stone-100 px-5 py-4">
+              <h3 className="text-base font-semibold text-stone-900">
+                {modal.type === 'success' ? '✅ ' : modal.type === 'error' ? '❌ ' : 'ℹ️ '}
+                {modal.title}
+              </h3>
+            </div>
+            <div className="px-5 py-4">
+              <p className="whitespace-pre-line text-sm text-stone-700">{modal.message}</p>
+            </div>
+            <div className="flex justify-end border-t border-stone-100 px-5 py-3">
+              <button onClick={closeModal} className={cmsTheme.btnPrimary}>
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}
