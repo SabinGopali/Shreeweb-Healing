@@ -28,24 +28,28 @@ async function testCampaignAPI() {
       console.log('   This is normal if you haven\'t created any campaigns yet');
     }
 
-    // Test the API endpoint
-    console.log('\n🧪 Testing API endpoint...');
+    // Test the API endpoint using environment variable or localhost for local testing
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://omshreeguidance.com' 
+      : 'http://localhost:3000';
+    
+    console.log(`\n🧪 Testing API endpoint at ${baseUrl}...`);
     const fetch = (await import('node-fetch')).default;
     
     try {
-      const response = await fetch('http://localhost:3000/backend/email-campaigns?page=1&limit=20');
+      const response = await fetch(`${baseUrl}/backend/email-campaigns?page=1&limit=20`);
       console.log('   Status:', response.status, response.statusText);
       
       if (response.status === 401 || response.status === 403) {
         console.log('   ⚠️  Authentication required (this is expected)');
         console.log('   The frontend will send auth token automatically');
-      } else {
+      } else if (response.ok) {
         const data = await response.json();
-        console.log('   Response:', JSON.stringify(data, null, 2));
+        console.log('   Response:', JSON.stringify(data, null, 2).substring(0, 500));
       }
     } catch (fetchError) {
       console.log('   ❌ API Error:', fetchError.message);
-      console.log('   Make sure backend server is running on port 3000');
+      console.log('   Make sure backend server is running');
     }
 
     process.exit(0);

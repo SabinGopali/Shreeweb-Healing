@@ -18,6 +18,7 @@ console.log('- PORT:', process.env.PORT || 'NOT SET');
 console.log('- MONGO:', process.env.MONGO ? 'SET' : 'NOT SET');
 console.log('- JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'NOT SET');
 console.log('- NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('- CLIENT_URL:', process.env.CLIENT_URL || 'NOT SET');
 console.log('');
 
 import connectDB from './config/db.js';
@@ -77,10 +78,30 @@ const startServer = async () => {
     }
   }
   
-  // CORS middleware
+  // ========== CORS CONFIGURATION - UPDATED FOR CUSTOM DOMAIN ==========
+  const allowedOrigins = [
+    'http://localhost:5173',                    // Local development (Vite)
+    'http://localhost:3000',                    // Local backend
+    'https://omshreeguidance.com',              // Your custom domain
+    'https://www.omshreeguidance.com',          // WWW version of custom domain
+    'https://shreeweb-healing-18t4.onrender.com' // Your Render fallback URL
+  ];
+  
   app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        console.warn(`CORS blocked request from: ${origin}`);
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,  // Important for cookies, auth headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   }));
   
   app.use(cookieParser());
@@ -94,12 +115,25 @@ const startServer = async () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   
-  // Serve static files with proper headers for video streaming
+  // ========== SERVE STATIC FILES WITH PROPER CORS ==========
   app.use('/uploads', (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:5173');
+    // Allow all origins for static files or specify your domain
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+    } else {
+      res.header('Access-Control-Allow-Origin', 'https://omshreeguidance.com');
+    }
     res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.header('Accept-Ranges', 'bytes');
     res.header('Cache-Control', 'public, max-age=31536000');
+    
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
     next();
   }, express.static(path.join(__dirname, 'uploads')));
   
@@ -114,7 +148,9 @@ const startServer = async () => {
     res.json({ 
       status: 'OK', 
       timestamp: new Date().toISOString(),
-      database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+      database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+      environment: process.env.NODE_ENV,
+      allowedOrigins: allowedOrigins
     });
   });
   
@@ -123,7 +159,7 @@ const startServer = async () => {
     res.json({ message: 'Hello from Node.js backend!' });
   });
   
-  // API Routes
+  // ========== API ROUTES ==========
   app.use('/backend/shreeweb-auth', shreeWebAuthRoute);
   app.use('/backend/shreeweb-cms', shreeWebCMSRoute);
   app.use('/backend/shreeweb-hero', shreeWebHeroRoute);
@@ -158,24 +194,33 @@ const startServer = async () => {
     // Serve static files from the 'public' directory (where frontend builds to)
     app.use(express.static(path.join(__dirname, 'public')));
     
-    // For any route that doesn't start with /backend or /api, serve index.html
+    // For any route that doesn't start with /backend, /api, or /webhook, serve index.html
+    // This allows React Router to handle client-side routing
     app.get('*', (req, res) => {
       // Skip API and backend routes
-      if (req.path.startsWith('/backend') || req.path.startsWith('/api') || req.path.startsWith('/webhook')) {
+      if (req.path.startsWith('/backend') || 
+          req.path.startsWith('/api') || 
+          req.path.startsWith('/webhook') ||
+          req.path.startsWith('/uploads')) {
         return res.status(404).json({ error: 'API endpoint not found' });
       }
-      // Serve the React app
+      // Serve the React app for all other routes (including /shreeweb/*)
       res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
   } else {
-    // Development mode - helpful message
+    // Development mode - helpful message for frontend routes
     app.get('*', (req, res) => {
-      if (!req.path.startsWith('/backend') && !req.path.startsWith('/api') && !req.path.startsWith('/webhook')) {
+      if (!req.path.startsWith('/backend') && 
+          !req.path.startsWith('/api') && 
+          !req.path.startsWith('/webhook') &&
+          !req.path.startsWith('/uploads')) {
         res.status(200).json({ 
           message: 'Frontend not served in development mode',
           instruction: 'Run: cd shreeweb && npm run dev',
           frontendUrl: 'http://localhost:5173'
         });
+      } else {
+        res.status(404).json({ error: 'Route not found' });
       }
     });
   }
@@ -194,21 +239,27 @@ const startServer = async () => {
     console.log(`\n✓ Server running on http://localhost:${PORT}`);
     console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`✓ Health check: http://localhost:${PORT}/api/health`);
+    console.log(`✓ CORS enabled for: ${allowedOrigins.join(', ')}`);
     if (process.env.NODE_ENV === 'production') {
-      console.log(`✓ Frontend available at http://localhost:${PORT}/shreeweb/home`);
+      console.log(`✓ Frontend available at:`);
+      console.log(`   - http://localhost:${PORT}/shreeweb/home`);
+      console.log(`   - https://omshreeguidance.com/shreeweb/home`);
     }
   });
 };
 
 import mongoose from 'mongoose';
 
+// Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Promise Rejection:', err);
 });
 
+// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   process.exit(1);
 });
 
+// Start the application
 startServer();
