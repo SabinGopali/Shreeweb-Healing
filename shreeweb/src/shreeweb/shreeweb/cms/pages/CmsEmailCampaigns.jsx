@@ -145,12 +145,16 @@ export default function CmsEmailCampaigns() {
     if (!confirm('Are you sure you want to send this campaign? This action cannot be undone.')) return;
 
     try {
+      const url = `/backend/email-campaigns/${id}/send`;
+      console.log('[SEND DEBUG] Full URL:', `${location.origin}${url}`);
+      console.log('[SEND DEBUG] Is production:', location.hostname !== 'localhost' && !location.hostname.includes('127.'));
+      console.log('[SEND DEBUG] User agent:', navigator.userAgent);
       console.log('Sending campaign:', id);
       
       // Add to sending campaigns immediately for UI feedback
       setSendingCampaigns(prev => new Set([...prev, id]));
       
-      const response = await fetch(`/backend/email-campaigns/${id}/send`, {
+      const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -159,16 +163,30 @@ export default function CmsEmailCampaigns() {
       });
 
       console.log('Send response status:', response.status);
+      console.log('Send response headers:', Object.fromEntries([...response.headers.entries()]));
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Send error:', errorData);
+        // Log full response body as text first (clone for multiple reads)
+        const errorClone = response.clone();
+        const errorText = await errorClone.text();
+        console.error('[SEND ERROR FULL TEXT]:', errorText);
+        
+        let errorData = {};
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          console.error('JSON parse failed:', e);
+        }
+        
+        console.error('Send error data:', errorData);
+        console.error('Send error status:', response.status);
+        
         setSendingCampaigns(prev => {
           const newSet = new Set(prev);
           newSet.delete(id);
           return newSet;
         });
-        throw new Error(errorData.message || 'Failed to send campaign');
+        throw new Error(errorData.message || `HTTP ${response.status}: Failed to send campaign`);
       }
 
       const data = await response.json();
@@ -187,7 +205,7 @@ export default function CmsEmailCampaigns() {
       }
     } catch (error) {
       console.error('Error sending campaign:', error);
-      alert(`❌ Failed to send campaign: ${error.message}`);
+      alert(`❌ Send failed (${response?.status || 'unknown'}): ${error.message}\n\nCheck browser console for details (F12 → Console/Network)`);
     }
   };
 
@@ -446,3 +464,4 @@ export default function CmsEmailCampaigns() {
     </div>
   );
 }
+

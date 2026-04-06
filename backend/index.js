@@ -185,7 +185,15 @@ const startServer = async () => {
   app.use('/backend/auth', shreeWebUserAuthRoute);
   app.use('/backend/user', shreeWebUserAuthRoute);
   app.use('/backend/email-captures', emailCaptureRoute);
-  app.use('/backend/email-campaigns', emailCampaignRoute);
+  app.use('/backend/email-campaigns', (req, res, next) => {
+    console.log(`=== EMAIL CAMPAIGN ${req.method} ${req.path} from ${req.headers.origin} ===`);
+    console.log('Cookies:', req.headers.cookie ? 'present' : 'none');
+    console.log('User:', req.user ? req.user.id : 'none');
+    console.log('Body:', req.body ? JSON.stringify(req.body).substring(0, 200) : 'empty');
+    console.log('Query:', req.query);
+    console.log('=== END LOG ===');
+    next();
+  }, emailCampaignRoute);
   app.use('/backend/contact', contactRoute);
   app.use('/backend/bookings', bookingRoute);
   
