@@ -18,6 +18,13 @@ export default function CmsOfferings() {
     cardBackground: '#EDE7DC'
   });
   
+  // Additional programs state
+  const [additionalPrograms, setAdditionalPrograms] = useState({
+    enabled: false,
+    title: 'Looking for deeper transformation?',
+    programs: []
+  });
+  
   const [settingsLoading, setSettingsLoading] = useState(false);
 
   const showToast = (message, type = 'success') => {

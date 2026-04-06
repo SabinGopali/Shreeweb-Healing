@@ -28,10 +28,10 @@ const HeroSection = () => {
 
   if (loading) {
     return (
-      <section className="relative min-h-screen w-full flex items-center justify-center bg-stone-200 animate-pulse">
-        <div className="text-center px-4">
+      <section className="relative min-h-screen w-full flex items-center justify-center bg-stone-200 animate-pulse px-4">
+        <div className="text-center">
           <div className="w-8 h-8 border-4 border-stone-400 border-t-stone-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-stone-600">Loading...</p>
+          <p className="text-stone-600 text-sm sm:text-base">Loading...</p>
         </div>
       </section>
     );
@@ -41,7 +41,7 @@ const HeroSection = () => {
     // Fallback to default hero section
     return (
       <section 
-        className="relative min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat py-12 sm:py-16 md:py-0"
+        className="relative min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat py-16 px-4 sm:py-20 sm:px-6 md:py-0"
         style={{ 
           backgroundImage: 'url(/healing.webp)',
           backgroundSize: 'cover',
@@ -52,9 +52,9 @@ const HeroSection = () => {
         data-aos-duration="400"
       >
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div className="relative z-10 text-center w-full max-w-7xl mx-auto">
           <h1 
-            className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-serif tracking-wide sm:tracking-wider text-white drop-shadow-2xl mb-6 sm:mb-8 leading-tight break-words"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-serif tracking-wide sm:tracking-wider text-white drop-shadow-2xl mb-8 sm:mb-10 leading-tight px-4"
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="300"
@@ -63,18 +63,18 @@ const HeroSection = () => {
           </h1>
           
           <div 
-            className="mt-6 sm:mt-8 md:mt-12"
+            className="mt-8 sm:mt-10 md:mt-12 px-4"
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="600"
           >
             <Link
               to="/booking?plan=discovery"
-              className="group relative overflow-hidden inline-flex items-center px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 lg:px-12 border-2 border-white/40 text-white rounded-full hover:border-white/60 transition-all duration-500 font-semibold text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
+              className="group relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 sm:px-10 sm:py-4 md:px-12 md:py-4 lg:px-14 border-2 border-white/40 text-white rounded-full hover:border-white/60 transition-all duration-500 font-semibold text-base sm:text-lg md:text-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 w-auto"
             >
               <span className="relative z-10 flex items-center gap-2 sm:gap-3">
                 Begin Your Journey
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
@@ -82,7 +82,7 @@ const HeroSection = () => {
             </Link>
             
             <p 
-              className="mt-4 sm:mt-6 text-white/80 text-xs sm:text-sm md:text-base lg:text-lg font-light tracking-wide px-2 sm:px-4 max-w-3xl mx-auto leading-relaxed"
+              className="mt-6 sm:mt-8 text-white/80 text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide max-w-3xl mx-auto leading-relaxed px-2"
               data-aos="fade-up"
               data-aos-duration="300"
               data-aos-delay="800"
@@ -140,7 +140,7 @@ const HeroSection = () => {
 
   return (
     <section 
-      className={`relative min-h-screen w-full flex items-center justify-center py-12 sm:py-16 md:py-0 ${
+      className={`relative min-h-screen w-full flex items-center justify-center py-16 px-4 sm:py-20 sm:px-6 md:py-0 ${
         heroData.backgroundType === 'image' ? 'bg-cover bg-center bg-no-repeat' : ''
       }`}
       style={{ 
@@ -158,9 +158,9 @@ const HeroSection = () => {
         style={{ backgroundColor: `rgba(0,0,0,${heroData.overlayOpacity / 100})` }}
       ></div>
       
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      <div className="relative z-10 text-center w-full max-w-7xl mx-auto">
         <h1 
-          className={`font-serif tracking-wide sm:tracking-wider ${heroData.titleColor} drop-shadow-2xl mb-6 sm:mb-8 text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:${heroData.titleSize} leading-tight break-words`}
+          className={`font-serif tracking-wide sm:tracking-wider ${heroData.titleColor} drop-shadow-2xl mb-6 sm:mb-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:${heroData.titleSize} leading-tight px-4`}
           data-aos="fade-up"
           data-aos-duration="300"
           data-aos-delay="300"
@@ -168,18 +168,18 @@ const HeroSection = () => {
         />
         
         <div 
-          className="mt-6 sm:mt-8 md:mt-12"
+          className="mt-8 sm:mt-10 md:mt-12 px-4"
           data-aos="fade-up"
           data-aos-duration="300"
           data-aos-delay="600"
         >
           <Link
             to="/booking?plan=discovery"
-            className={`group relative overflow-hidden inline-flex items-center px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 lg:px-12 rounded-full transition-all duration-500 font-semibold text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 ${getCtaButtonStyles()}`}
+            className={`group relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 sm:px-10 sm:py-4 md:px-12 md:py-4 lg:px-14 rounded-full transition-all duration-500 font-semibold text-base sm:text-lg md:text-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 w-auto ${getCtaButtonStyles()}`}
           >
             <span className="relative z-10 flex items-center gap-2 sm:gap-3">
               <span dangerouslySetInnerHTML={{ __html: heroData.ctaText }} />
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </span>
@@ -193,7 +193,7 @@ const HeroSection = () => {
           </Link>
           
           <p 
-            className={`mt-4 sm:mt-6 ${heroData.subtitleColor} text-xs sm:text-sm md:text-base lg:text-lg font-light tracking-wide px-2 sm:px-4 max-w-3xl mx-auto leading-relaxed`}
+            className={`mt-6 sm:mt-8 ${heroData.subtitleColor} text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide max-w-3xl mx-auto leading-relaxed px-2`}
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="800"

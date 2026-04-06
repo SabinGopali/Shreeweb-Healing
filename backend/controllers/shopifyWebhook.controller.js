@@ -41,6 +41,7 @@ function formatCurrency(amount, currency = 'USD') {
 // Generate order confirmation email HTML
 function generateOrderConfirmationEmail(order) {
   const {
+    id,
     order_number,
     email,
     customer,
@@ -58,6 +59,9 @@ function generateOrderConfirmationEmail(order) {
 
   const customerName = customer?.first_name || 'Valued Customer';
   const shippingPrice = total_shipping_price_set?.shop_money?.amount || '0.00';
+
+  // Generate booking URL
+  const bookingUrl = `https://omshreeguidance.com/shreeweb/booking-confirmation?order_id=${id}&order_number=${order_number}&email=${encodeURIComponent(email)}`;
 
   // Generate line items HTML
   const lineItemsHtml = line_items
@@ -130,6 +134,41 @@ function generateOrderConfirmationEmail(order) {
         </p>
       </div>
 
+      <!-- BOOKING CALL-TO-ACTION - PROMINENT & GMAIL-COMPATIBLE -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+        <tr>
+          <td style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-left: 4px solid #F59E0B; padding: 24px; border-radius: 8px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center">
+                  <h2 style="margin: 0 0 12px 0; font-size: 22px; color: #92400E;">🎉 Next Step: Schedule Your Session</h2>
+                  <p style="margin: 0 0 20px 0; color: #78716c; font-size: 16px; line-height: 1.6;">
+                    Your payment is confirmed! Now let's find the perfect time for your session.
+                  </p>
+                  <!-- Button as table for maximum compatibility -->
+                  <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                    <tr>
+                      <td align="center" style="background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                        <a href="${bookingUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 18px; font-family: Arial, sans-serif;">
+                          Schedule Now →
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin: 16px 0 0 0; color: #57534e; font-size: 14px;">
+                    Click the button above to choose your preferred date and time
+                  </p>
+                  <!-- Fallback link in case button doesn't render -->
+                  <p style="margin: 12px 0 0 0; color: #78716c; font-size: 12px;">
+                    Button not working? <a href="${bookingUrl}" target="_blank" style="color: #D97706; text-decoration: underline;">Click here to schedule</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
       <!-- Order Details -->
       <div style="background: #fef3c7; border-left: 4px solid #F59E0B; padding: 16px; margin-bottom: 24px; border-radius: 4px;">
         <div style="color: #92400E; font-size: 14px; margin-bottom: 4px;">Order Date</div>
@@ -193,11 +232,21 @@ function generateOrderConfirmationEmail(order) {
       ${
         order_status_url
           ? `
-      <div style="text-align: center; margin: 32px 0;">
-        <a href="${order_status_url}" style="display: inline-block; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">
-          View Order Status
-        </a>
-      </div>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 32px 0;">
+        <tr>
+          <td align="center">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" style="background: #f5f5f4; border-radius: 8px; border: 1px solid #e7e5e4;">
+                  <a href="${order_status_url}" target="_blank" style="display: inline-block; padding: 12px 24px; color: #44403c; text-decoration: none; font-weight: 500; font-size: 14px; font-family: Arial, sans-serif;">
+                    View Order Status
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
       `
           : ''
       }
@@ -206,7 +255,7 @@ function generateOrderConfirmationEmail(order) {
       <div style="background: #f5f5f4; padding: 20px; border-radius: 8px; margin-top: 24px;">
         <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #1c1917;">Need Help?</h3>
         <p style="margin: 0; color: #44403c; font-size: 14px; line-height: 1.6;">
-          If you have any questions about your order, please contact us at 
+          If you have any questions about your order or booking, please contact us at 
           <a href="mailto:${process.env.EMAIL_FROM}" style="color: #D97706; text-decoration: none;">${process.env.EMAIL_FROM}</a>
         </p>
       </div>
