@@ -206,6 +206,10 @@ export default function CmsSidebar() {
         <ContentIcon />
         Cookie Policy
       </NavLink>
+      <NavLink to="/shreeweb/cms/terms-of-service" className={itemClass} onClick={() => setOpen(false)}>
+        <ContentIcon />
+        Terms of Service
+      </NavLink>
       <NavLink to="/shreeweb/cms/offerings" className={itemClass} onClick={() => setOpen(false)}>
         <OfferingsIcon />
         Service Offerings
@@ -220,6 +224,12 @@ export default function CmsSidebar() {
         <LeadsIcon />
         Email Subscribers
       </NavLink>
+      <NavLink to="/shreeweb/cms/email-campaigns" className={itemClass} onClick={() => setOpen(false)}>
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        Email Campaigns
+      </NavLink>
       <NavLink to="/shreeweb/cms/contacts" className={itemClass} onClick={() => setOpen(false)}>
         <ContactIcon />
         Contact Messages
@@ -232,6 +242,10 @@ export default function CmsSidebar() {
       </NavLink>
 
       <p className={groupLabel}>System Configuration</p>
+      <NavLink to="/shreeweb/cms/embeds" className={itemClass} onClick={() => setOpen(false)}>
+        <IntegrationsIcon />
+        Third-party Integrations
+      </NavLink>
       <NavLink to="/shreeweb/cms/settings" className={itemClass} onClick={() => setOpen(false)}>
         <SettingsIcon />
         System Settings
@@ -245,17 +259,6 @@ export default function CmsSidebar() {
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
           <NavBlock />
         </nav>
-        <div className="border-t border-stone-200/80 p-4">
-          <Link
-            to="/shreeweb/home"
-            className="flex items-center justify-center gap-2 rounded-xl bg-stone-800/90 px-3 py-2.5 text-center text-sm font-medium text-white transition hover:bg-stone-800"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            View Live Site
-          </Link>
-        </div>
       </aside>
 
       {/* Mobile drawer */}
@@ -275,16 +278,6 @@ export default function CmsSidebar() {
           <button type="button" className="absolute inset-0 bg-stone-900/40" onClick={() => setOpen(false)} aria-label="Close menu" />
           <nav className="absolute right-0 top-0 flex h-full w-[min(100%,20rem)] flex-col overflow-y-auto border-l border-stone-200 bg-[#EDE8DF] p-4 shadow-xl">
             <NavBlock />
-            <Link
-              to="/shreeweb/home"
-              className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-stone-800 px-3 py-2.5 text-center text-sm font-medium text-white"
-              onClick={() => setOpen(false)}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              View Live Site
-            </Link>
           </nav>
         </div>
       ) : null}

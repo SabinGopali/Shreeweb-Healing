@@ -11,180 +11,75 @@ const shreeWebPrivacyPolicySchema = new mongoose.Schema(
     },
 
     // Last Updated
-    lastUpdatedDate: { type: String, default: 'March 2026' },
+    lastUpdatedDate: { type: String, default: '6 April 2026' },
+
+    // Introduction
+    introduction: {
+      title: { type: String, default: 'Your privacy is respected and handled with care.' },
+      description: { type: String, default: 'This policy outlines how your information is collected, used, and protected when you engage with Om Shree Guidance, its website, and services.' }
+    },
 
     // Information Collection Section
     informationCollection: {
-      title: { type: String, default: 'Information We Collect' },
-      personalInfo: {
-        title: { type: String, default: 'Personal Information' },
-        items: [
-          { type: String, default: 'Name and contact information (email, phone number)' },
-          { type: String, default: 'Demographic information (age, location if relevant to services)' },
-          { type: String, default: 'Session preferences and wellness goals' },
-          { type: String, default: 'Payment information (processed securely through third-party providers)' }
-        ]
-      },
-      sessionInfo: {
-        title: { type: String, default: 'Session Information' },
-        items: [
-          { type: String, default: 'Intake form responses and wellness assessments' },
-          { type: String, default: 'Session notes and progress tracking (with your consent)' },
-          { type: String, default: 'Booking history and scheduling preferences' },
-          { type: String, default: 'Communication records related to your sessions' }
-        ]
-      },
-      technicalInfo: {
-        title: { type: String, default: 'Technical Information' },
-        items: [
-          { type: String, default: 'Website usage data and analytics' },
-          { type: String, default: 'Device information and browser type' },
-          { type: String, default: 'IP address and general location data' },
-          { type: String, default: 'Cookies and similar tracking technologies' }
-        ]
-      }
+      title: { type: String, default: '1. Information We Collect' },
+      description: { type: String, default: 'When you interact with this space, you may choose to provide:' },
+      items: [
+        { type: String, default: 'Name' },
+        { type: String, default: 'Email address' },
+        { type: String, default: 'Contact details' },
+        { type: String, default: 'Information shared through forms, bookings, or sessions' }
+      ],
+      technicalData: { type: String, default: 'In addition, limited technical data (such as browser type, device, and general usage patterns) may be collected to ensure a smooth and refined experience.' }
     },
 
     // How We Use Information Section
     howWeUse: {
-      title: { type: String, default: 'How We Use Your Information' },
-      serviceDelivery: {
-        title: { type: String, default: 'Service Delivery' },
-        items: [
-          { type: String, default: 'Schedule and conduct energetic alignment sessions' },
-          { type: String, default: 'Provide personalized wellness recommendations' },
-          { type: String, default: 'Track progress and session outcomes' },
-          { type: String, default: 'Send appointment reminders and follow-ups' }
-        ]
-      },
-      communication: {
-        title: { type: String, default: 'Communication' },
-        items: [
-          { type: String, default: 'Respond to inquiries and support requests' },
-          { type: String, default: 'Send service updates and wellness tips' },
-          { type: String, default: 'Share relevant educational content' },
-          { type: String, default: 'Notify about new offerings or schedule changes' }
-        ]
-      },
-      businessOps: {
-        title: { type: String, default: 'Business Operations' },
-        items: [
-          { type: String, default: 'Process payments and manage billing' },
-          { type: String, default: 'Maintain accurate client records' },
-          { type: String, default: 'Improve service quality and offerings' },
-          { type: String, default: 'Comply with legal and regulatory requirements' }
-        ]
-      },
-      websiteEnhancement: {
-        title: { type: String, default: 'Website Enhancement' },
-        items: [
-          { type: String, default: 'Analyze website usage and performance' },
-          { type: String, default: 'Optimize user experience and navigation' },
-          { type: String, default: 'Troubleshoot technical issues' },
-          { type: String, default: 'Develop new features and functionality' }
-        ]
-      }
+      title: { type: String, default: '2. How Your Information Is Used' },
+      description: { type: String, default: 'Your information is used with intention, only where necessary, to:' },
+      items: [
+        { type: String, default: 'Facilitate bookings and deliver services' },
+        { type: String, default: 'Communicate regarding sessions, inquiries, or updates' },
+        { type: String, default: 'Improve the overall experience and offerings' }
+      ],
+      optInNote: { type: String, default: 'You will only receive communication beyond service-related updates if you have explicitly opted in.' },
+      noSelling: { type: String, default: 'Your information is never sold, rented, or shared for external marketing purposes.' }
     },
 
-    // Data Sharing Section
-    dataSharing: {
-      title: { type: String, default: 'Information Sharing & Disclosure' },
-      commitment: {
-        title: { type: String, default: 'Our Commitment' },
-        description: { type: String, default: 'We never sell, rent, or trade your personal information to third parties for marketing purposes. Your privacy and trust are fundamental to our practice.' }
-      },
-      serviceProviders: {
-        title: { type: String, default: 'Service Providers' },
-        description: { type: String, default: 'We may share information with trusted service providers (payment processors, scheduling platforms) who assist in delivering our services under strict confidentiality agreements.' }
-      },
-      legalRequirements: {
-        title: { type: String, default: 'Legal Requirements' },
-        description: { type: String, default: 'We may disclose information when required by law, court order, or to protect the rights, property, or safety of our practice, clients, or others.' }
-      },
-      businessTransfers: {
-        title: { type: String, default: 'Business Transfers' },
-        description: { type: String, default: 'In the unlikely event of a business sale or merger, client information may be transferred to the new entity under the same privacy protections.' }
-      }
+    // Confidentiality Section
+    confidentiality: {
+      title: { type: String, default: '3. Confidentiality' },
+      description: { type: String, default: 'All personal information, as well as anything shared during sessions, is treated with strict confidentiality and professional discretion.' }
     },
 
-    // Data Security Section
-    dataSecurity: {
-      title: { type: String, default: 'Data Security & Retention' },
-      securityMeasures: {
-        title: { type: String, default: 'Security Measures' },
-        items: [
-          { type: String, default: 'SSL encryption for data transmission' },
-          { type: String, default: 'Secure cloud storage with access controls' },
-          { type: String, default: 'Regular security audits and updates' },
-          { type: String, default: 'Limited access on a need-to-know basis' }
-        ]
-      },
-      retentionPeriods: {
-        title: { type: String, default: 'Retention Periods' },
-        items: [
-          { type: String, default: 'Active client records: Duration of relationship + 7 years' },
-          { type: String, default: 'Payment information: As required by law' },
-          { type: String, default: 'Website analytics: 26 months maximum' },
-          { type: String, default: 'Marketing communications: Until unsubscribed' }
-        ]
-      }
+    // Data Protection Section
+    dataProtection: {
+      title: { type: String, default: '4. Data Protection' },
+      description: { type: String, default: 'Appropriate measures are in place to protect your data. However, as with all digital platforms, absolute security cannot be guaranteed.' }
     },
 
-    // Privacy Rights Section
-    privacyRights: {
-      title: { type: String, default: 'Your Privacy Rights' },
-      accessPortability: {
-        title: { type: String, default: 'Access & Portability' },
-        description: { type: String, default: 'Request a copy of your personal information in a commonly used format.' },
-        responseTime: { type: String, default: 'Within 30 days' }
-      },
-      correction: {
-        title: { type: String, default: 'Correction & Updates' },
-        description: { type: String, default: 'Request corrections to inaccurate or incomplete personal information.' },
-        responseTime: { type: String, default: 'Within 30 days' }
-      },
-      deletion: {
-        title: { type: String, default: 'Deletion' },
-        description: { type: String, default: 'Request deletion of your personal information (subject to legal retention requirements).' },
-        responseTime: { type: String, default: 'Within 30 days' }
-      },
-      optOut: {
-        title: { type: String, default: 'Opt-Out' },
-        description: { type: String, default: 'Unsubscribe from marketing communications or withdraw consent for certain data processing.' },
-        responseTime: { type: String, default: 'Immediately' }
-      },
-      exerciseRights: {
-        title: { type: String, default: 'How to Exercise Your Rights' },
-        description: { type: String, default: 'Contact us through our contact page or email us directly. We may need to verify your identity before processing certain requests to protect your privacy and security.' }
-      }
+    // Third Party Services Section
+    thirdPartyServices: {
+      title: { type: String, default: '5. Third-Party Services' },
+      description: { type: String, default: 'Trusted third-party platforms (such as payment processors or booking systems) may be used to support operations. These services operate under their own privacy policies.' }
     },
 
-    // International Compliance Section
-    internationalCompliance: {
-      title: { type: String, default: 'International Users & Compliance' },
-      gdpr: {
-        title: { type: String, default: 'GDPR Compliance' },
-        description: { type: String, default: 'For users in the European Union, we comply with the General Data Protection Regulation (GDPR) and provide additional rights including data portability and the right to be forgotten.' }
-      },
-      ccpa: {
-        title: { type: String, default: 'CCPA Compliance' },
-        description: { type: String, default: 'For California residents, we comply with the California Consumer Privacy Act (CCPA) and provide additional rights regarding personal information disclosure and sale.' }
-      }
+    // Your Rights Section
+    yourRights: {
+      title: { type: String, default: '6. Your Rights' },
+      description: { type: String, default: 'You may request to:' },
+      items: [
+        { type: String, default: 'Access your personal data' },
+        { type: String, default: 'Update or correct your information' },
+        { type: String, default: 'Request deletion of your data' }
+      ],
+      contactEmail: { type: String, default: 'omshreeguidance@gmail.com' },
+      contactNote: { type: String, default: 'For any such requests, contact:' }
     },
 
-    // Contact Section
-    contactSection: {
-      title: { type: String, default: 'Contact Our Privacy Team' },
-      generalQuestions: {
-        title: { type: String, default: 'General Privacy Questions' },
-        description: { type: String, default: 'For questions about this privacy policy or our data practices, please reach out through our contact page.' }
-      },
-      dataProtectionOfficer: {
-        title: { type: String, default: 'Data Protection Officer' },
-        description: { type: String, default: 'For formal privacy complaints or data protection concerns, you may contact our designated privacy officer.' },
-        responseTime: { type: String, default: 'Within 72 hours for urgent matters' }
-      },
-      footerText: { type: String, default: 'Questions about our privacy practices? We\'re here to help.' }
+    // Policy Updates Section
+    policyUpdates: {
+      title: { type: String, default: '7. Policy Updates' },
+      description: { type: String, default: 'This policy may be refined over time. Continued use of this website and services indicates acceptance of any updates.' }
     },
 
     // Meta

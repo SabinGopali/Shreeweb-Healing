@@ -18,16 +18,6 @@ export default function CmsOfferings() {
     cardBackground: '#EDE7DC'
   });
   
-  // Additional programs state
-  const [additionalPrograms, setAdditionalPrograms] = useState({
-    enabled: true,
-    title: 'Looking for deeper transformation?',
-    programs: [
-      { name: 'Realignment Program', sessions: '8 Sessions' },
-      { name: 'Transformation Program', sessions: '12 Sessions' }
-    ]
-  });
-  
   const [settingsLoading, setSettingsLoading] = useState(false);
 
   const showToast = (message, type = 'success') => {
@@ -79,8 +69,7 @@ export default function CmsOfferings() {
         },
         credentials: 'include',
         body: JSON.stringify({
-          section: sectionSettings,
-          additionalPrograms: additionalPrograms
+          section: sectionSettings
         })
       });
 
@@ -291,137 +280,6 @@ export default function CmsOfferings() {
           </div>
         </div>
 
-        {/* Additional Programs Section */}
-        <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} mb-6`}>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className={`${cmsTheme.title} text-lg`}>Additional Programs Section</h2>
-              <p className="text-sm text-stone-600 mt-1">Manage the additional programs that appear below the main offerings</p>
-            </div>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={additionalPrograms.enabled}
-                onChange={(e) => setAdditionalPrograms(prev => ({ ...prev, enabled: e.target.checked }))}
-                className="rounded"
-              />
-              <span className="text-sm text-stone-600">Enable Section</span>
-              <span className={`px-2 py-1 text-xs rounded-full ${additionalPrograms.enabled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
-                {additionalPrograms.enabled ? 'Enabled' : 'Disabled'}
-              </span>
-            </label>
-          </div>
-          
-          {additionalPrograms.enabled && (
-            <div className="space-y-4">
-              <div>
-                <label className={cmsTheme.label}>Section Title</label>
-                <p className="text-xs text-stone-500 mb-2">The heading that appears above the program buttons</p>
-                <input
-                  type="text"
-                  value={additionalPrograms.title}
-                  onChange={(e) => setAdditionalPrograms(prev => ({ ...prev, title: e.target.value }))}
-                  className={cmsTheme.input}
-                  placeholder="Looking for deeper transformation?"
-                />
-              </div>
-              
-              <div>
-                <label className={cmsTheme.label}>Programs</label>
-                <p className="text-xs text-stone-500 mb-3">Add programs that will be displayed as buttons in the additional programs section</p>
-                <div className="space-y-3">
-                  {additionalPrograms.programs.length === 0 ? (
-                    <div className="text-center py-8 bg-stone-50 rounded-lg border-2 border-dashed border-stone-200">
-                      <p className="text-stone-500 mb-4">No programs added yet</p>
-                      <button
-                        onClick={() => {
-                          setAdditionalPrograms(prev => ({ 
-                            ...prev, 
-                            programs: [
-                              { name: 'Realignment Program', sessions: '8 Sessions' },
-                              { name: 'Transformation Program', sessions: '12 Sessions' }
-                            ]
-                          }));
-                        }}
-                        className="px-4 py-2 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors mr-2"
-                      >
-                        Add Default Programs
-                      </button>
-                      <button
-                        onClick={() => {
-                          setAdditionalPrograms(prev => ({ 
-                            ...prev, 
-                            programs: [{ name: '', sessions: '' }]
-                          }));
-                        }}
-                        className="px-4 py-2 text-sm text-green-600 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
-                      >
-                        Add Empty Program
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      {additionalPrograms.programs.map((program, index) => (
-                        <div key={index} className="flex gap-3 items-start">
-                          <div className="flex-1">
-                            <label className="block text-xs font-medium text-stone-600 mb-1">Program Name</label>
-                            <input
-                              type="text"
-                              value={program.name || ''}
-                              onChange={(e) => {
-                                const newPrograms = [...additionalPrograms.programs];
-                                newPrograms[index].name = e.target.value;
-                                setAdditionalPrograms(prev => ({ ...prev, programs: newPrograms }));
-                              }}
-                              className={cmsTheme.input}
-                              placeholder="e.g., Realignment Program"
-                            />
-                          </div>
-                          <div className="w-40">
-                            <label className="block text-xs font-medium text-stone-600 mb-1">Sessions</label>
-                            <input
-                              type="text"
-                              value={program.sessions || ''}
-                              onChange={(e) => {
-                                const newPrograms = [...additionalPrograms.programs];
-                                newPrograms[index].sessions = e.target.value;
-                                setAdditionalPrograms(prev => ({ ...prev, programs: newPrograms }));
-                              }}
-                              className={cmsTheme.input}
-                              placeholder="e.g., 8 Sessions"
-                            />
-                          </div>
-                          <div className="pt-6">
-                            <button
-                              onClick={() => {
-                                const newPrograms = additionalPrograms.programs.filter((_, i) => i !== index);
-                                setAdditionalPrograms(prev => ({ ...prev, programs: newPrograms }));
-                              }}
-                              className="px-3 py-2 text-xs text-red-600 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
-                              title="Remove this program"
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        onClick={() => {
-                          const newPrograms = [...additionalPrograms.programs, { name: '', sessions: '' }];
-                          setAdditionalPrograms(prev => ({ ...prev, programs: newPrograms }));
-                        }}
-                        className="px-4 py-2 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
-                      >
-                        + Add Program
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Save Settings Button */}
         <div className="mb-6 flex gap-3 flex-wrap">
           <button
@@ -465,6 +323,11 @@ export default function CmsOfferings() {
                           Featured
                         </span>
                       )}
+                      {offering.shopifyProductId && String(offering.shopifyProductId).trim() && (
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-violet-100 text-violet-800">
+                          Shopify linked
+                        </span>
+                      )}
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                         offering.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                       }`}>
@@ -478,7 +341,7 @@ export default function CmsOfferings() {
                     
                     <div className="flex items-center gap-4 text-sm text-stone-600 mb-2">
                       {offering.duration && <span>Duration: {offering.duration}</span>}
-                      {offering.price && <span>Price: {offering.price}</span>}
+                      {offering.price && <span>Price (USD): {offering.price}</span>}
                     </div>
                     
                     {offering.description && (

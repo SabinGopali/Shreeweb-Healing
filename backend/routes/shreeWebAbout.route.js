@@ -8,10 +8,11 @@ import {
 
 const router = express.Router();
 
-// Public routes
-router.get('/', getAboutContent);
+// Public routes for frontend
+router.get('/public', getAboutContent);
 
 // Admin routes - require authentication
+router.get('/', verifyToken, requireAdmin, getAboutContent);
 router.put('/', verifyToken, requireAdmin, updateAboutContent);
 router.put('/section/:section', verifyToken, requireAdmin, updateAboutSection);
 

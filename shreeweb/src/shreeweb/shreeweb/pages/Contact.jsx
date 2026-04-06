@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
+const resolveImage = (image) => {
+  if (!image) return '';
+  if (image.startsWith('blob:') || image.startsWith('data:')) return image;
+  if (/^https?:\/\//i.test(image)) return image;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  return image.startsWith('/') ? `${backendUrl}${image}` : `${backendUrl}/${image}`;
+};
+
 export default function Contact() {
   const [content, setContent] = useState({
     isActive: true,
@@ -7,6 +15,7 @@ export default function Contact() {
       text: 'JAPANDI',
       subtext: 'Energetic Alignment',
       letter: 'J',
+      imageUrl: '',
     },
     hero: {
       tag: 'CONTACT',
@@ -123,29 +132,41 @@ export default function Contact() {
     <div className="w-full">
       {/* Hero Section */}
       <section 
-        className="py-20 px-4 text-center"
+        className="py-16 px-4 text-center sm:py-20"
         data-aos="fade-in"
         data-aos-duration="300"
       >
         <div className="max-w-4xl mx-auto">
           {/* Logo */}
           <div 
-            className="flex items-center justify-center gap-3 mb-8"
+            className="flex items-center justify-center gap-2 mb-6 sm:gap-3 sm:mb-8"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="100"
           >
-            <div className="grid h-16 w-16 flex-shrink-0 place-items-center rounded-2xl bg-stone-800 text-white">
-              <span className="text-xl font-bold tracking-widest">{content.logo?.letter || 'J'}</span>
-            </div>
+            {content.logo?.imageUrl ? (
+              <img 
+                src={resolveImage(content.logo.imageUrl)} 
+                alt={content.logo.text}
+                className="h-16 w-16 flex-shrink-0 object-contain sm:h-20 sm:w-20"
+                onError={(e) => {
+                  console.error('Contact logo failed to load:', content.logo.imageUrl);
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="grid h-16 w-16 flex-shrink-0 place-items-center rounded-2xl bg-stone-800 text-white sm:h-20 sm:w-20">
+                <span className="text-xl font-bold tracking-widest sm:text-2xl">{content.logo?.letter || 'J'}</span>
+              </div>
+            )}
             <div className="min-w-0 leading-tight">
-              <div className="truncate text-2xl font-serif tracking-wide text-stone-800">{content.logo?.text || 'JAPANDI'}</div>
-              <div className="truncate text-sm text-stone-600">{content.logo?.subtext || 'Energetic Alignment'}</div>
+              <div className="truncate text-xl font-serif tracking-wide text-stone-800 sm:text-2xl">{content.logo?.text || 'JAPANDI'}</div>
+              <div className="truncate text-xs text-stone-600 sm:text-sm">{content.logo?.subtext || 'Energetic Alignment'}</div>
             </div>
           </div>
           
           <div 
-            className="text-sm font-medium text-stone-600 mb-4 tracking-wider"
+            className="text-xs font-medium text-stone-600 mb-3 tracking-wider sm:text-sm sm:mb-4"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="200"
@@ -153,7 +174,7 @@ export default function Contact() {
             {content.hero.tag}
           </div>
           <h1 
-            className="text-5xl font-serif text-stone-800 mb-6"
+            className="text-3xl font-serif text-stone-800 mb-4 sm:text-4xl md:text-5xl sm:mb-6"
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="300"
@@ -161,7 +182,7 @@ export default function Contact() {
             {content.hero.title}
           </h1>
           <p 
-            className="text-xl text-stone-600 leading-relaxed"
+            className="text-lg text-stone-600 leading-relaxed sm:text-xl"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="400"
@@ -173,89 +194,89 @@ export default function Contact() {
 
       {/* Contact Form Section */}
       <section 
-        className="py-16 px-4"
+        className="py-12 px-4 sm:py-16"
         data-aos="fade-up"
         data-aos-duration="300"
       >
         <div className="max-w-6xl mx-auto">
-          <div className="grid gap-12 lg:grid-cols-2">
+          <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
             {/* Contact Form */}
             <div 
-              className="bg-white rounded-3xl p-8 shadow-sm"
+              className="bg-white rounded-2xl p-6 shadow-sm sm:rounded-3xl sm:p-8"
               data-aos="fade-right"
               data-aos-duration="200"
               data-aos-delay="200"
             >
-              <h2 className="text-2xl font-serif text-stone-800 mb-8">{content.form.heading}</h2>
+              <h2 className="text-xl font-serif text-stone-800 mb-6 sm:text-2xl sm:mb-8">{content.form.heading}</h2>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
                   <label className="block">
-                    <span className="text-stone-700 font-medium mb-2 block">Name</span>
+                    <span className="text-sm text-stone-700 font-medium mb-2 block">Name</span>
                     <input
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400"
+                      className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400 text-sm sm:rounded-2xl sm:py-3 sm:text-base"
                       placeholder="Your full name"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-stone-700 font-medium mb-2 block">Phone</span>
+                    <span className="text-sm text-stone-700 font-medium mb-2 block">Phone</span>
                     <input
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400"
+                      className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400 text-sm sm:rounded-2xl sm:py-3 sm:text-base"
                       placeholder="Your phone number"
                     />
                   </label>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2">
+                <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
                   <label className="block">
-                    <span className="text-stone-700 font-medium mb-2 block">Email</span>
+                    <span className="text-sm text-stone-700 font-medium mb-2 block">Email</span>
                     <input
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400"
+                      className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400 text-sm sm:rounded-2xl sm:py-3 sm:text-base"
                       placeholder="your@email.com"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-stone-700 font-medium mb-2 block">Subject</span>
+                    <span className="text-sm text-stone-700 font-medium mb-2 block">Subject</span>
                     <input
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400"
+                      className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400 text-sm sm:rounded-2xl sm:py-3 sm:text-base"
                       placeholder="What's this about?"
                     />
                   </label>
                 </div>
 
                 <label className="block">
-                  <span className="text-stone-700 font-medium mb-2 block">Message</span>
+                  <span className="text-sm text-stone-700 font-medium mb-2 block">Message</span>
                   <textarea
                     name="message"
                     rows={6}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400"
+                    className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-2.5 text-stone-800 outline-none focus:ring-2 focus:ring-stone-400/30 focus:border-stone-400 text-sm sm:rounded-2xl sm:py-3 sm:text-base"
                     placeholder="Tell us more about what you're looking for..."
                   />
                 </label>
 
                 {errorMessage && (
-                  <div className="rounded-2xl bg-red-50 border border-red-200 p-4 text-red-700">
+                  <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-red-700 text-sm sm:rounded-2xl sm:p-4">
                     {errorMessage}
                   </div>
                 )}
                 
                 {successMessage && (
-                  <div className="rounded-2xl bg-green-50 border border-green-200 p-4 text-green-700">
+                  <div className="rounded-xl bg-green-50 border border-green-200 p-3 text-green-700 text-sm sm:rounded-2xl sm:p-4">
                     {successMessage}
                   </div>
                 )}
@@ -263,7 +284,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-2xl bg-orange-100 px-6 py-4 text-orange-800 font-medium hover:bg-orange-200 disabled:opacity-60 transition-colors"
+                  className="w-full rounded-xl bg-orange-100 px-6 py-3 text-orange-800 font-medium hover:bg-orange-200 disabled:opacity-60 transition-colors text-sm sm:rounded-2xl sm:py-4 sm:text-base"
                 >
                   {loading ? 'Sending…' : 'Send Message'}
                 </button>
@@ -272,16 +293,16 @@ export default function Contact() {
 
             {/* Contact Information */}
             <div 
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
               data-aos="fade-left"
               data-aos-duration="200"
               data-aos-delay="300"
             >
-              <div className="bg-white rounded-3xl p-8 shadow-sm">
-                <h2 className="text-2xl font-serif text-stone-800 mb-6">{content.connect.heading}</h2>
-                <p className="text-stone-600 mb-8 leading-relaxed">{content.connect.description}</p>
+              <div className="bg-white rounded-2xl p-6 shadow-sm sm:rounded-3xl sm:p-8">
+                <h2 className="text-xl font-serif text-stone-800 mb-4 sm:text-2xl sm:mb-6">{content.connect.heading}</h2>
+                <p className="text-sm text-stone-600 mb-6 leading-relaxed sm:text-base sm:mb-8">{content.connect.description}</p>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div 
                     className="flex items-start space-x-4"
                     data-aos="fade-up"
@@ -339,14 +360,14 @@ export default function Contact() {
 
               {/* Social Media */}
               <div 
-                className="bg-stone-100 rounded-3xl p-8"
+                className="bg-stone-100 rounded-2xl p-6 sm:rounded-3xl sm:p-8"
                 data-aos="fade-up"
                 data-aos-duration="200"
                 data-aos-delay="700"
               >
-                <h3 className="text-xl font-serif text-stone-800 mb-4">Follow us</h3>
-                <p className="text-stone-600 mb-6">{content.follow.description}</p>
-                <div className="flex space-x-4">
+                <h3 className="text-lg font-serif text-stone-800 mb-3 sm:text-xl sm:mb-4">Follow us</h3>
+                <p className="text-sm text-stone-600 mb-4 sm:text-base sm:mb-6">{content.follow.description}</p>
+                <div className="flex space-x-3 sm:space-x-4">
                   <a
                     href={content.follow.socials.facebookUrl}
                     target="_blank"
@@ -398,13 +419,13 @@ export default function Contact() {
 
       {/* Call to Action */}
       <section 
-        className="py-20 px-4 bg-gradient-to-br from-amber-200 to-orange-200 text-stone-800"
+        className="py-16 px-4 bg-gradient-to-br from-amber-200 to-orange-200 text-stone-800 sm:py-20"
         data-aos="fade-up"
         data-aos-duration="300"
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2 
-            className="text-3xl font-serif mb-6"
+            className="text-2xl font-serif mb-4 sm:text-3xl sm:mb-6"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="100"
@@ -412,7 +433,7 @@ export default function Contact() {
             {content.callToAction.heading}
           </h2>
           <p 
-            className="text-lg mb-8 opacity-90"
+            className="text-base mb-6 opacity-90 sm:text-lg sm:mb-8"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="200"
@@ -421,7 +442,7 @@ export default function Contact() {
           </p>
           <a
             href={content.callToAction.buttonLink}
-            className="inline-block px-8 py-4 bg-white text-stone-800 rounded-full hover:bg-stone-50 transition-colors font-medium shadow-sm"
+            className="inline-block px-6 py-3 bg-white text-stone-800 rounded-full hover:bg-stone-50 transition-colors font-medium shadow-sm text-sm sm:px-8 sm:py-4 sm:text-base"
             data-aos="zoom-in"
             data-aos-duration="200"
             data-aos-delay="300"

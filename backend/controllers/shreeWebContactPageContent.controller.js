@@ -82,3 +82,28 @@ export const updateContactPageContent = async (req, res, next) => {
   }
 };
 
+export const uploadContactLogo = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No logo file uploaded' });
+    }
+
+    const imageUrl = `/backend/uploads/${req.file.filename}`;
+    let content = await ShreeWebContactPageContent.findOne().sort({ createdAt: 1 });
+    if (!content) {
+      content = new ShreeWebContactPageContent({});
+    }
+
+    content.logo.imageUrl = imageUrl;
+    await content.save();
+
+    return res.status(200).json({
+      success: true,
+      imageUrl,
+      contactPageContent: pickSafeToObject(content),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

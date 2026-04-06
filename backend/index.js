@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -39,8 +40,14 @@ import shreeWebContactPageContentRoute from './routes/shreeWebContactPageContent
 import shreeWebAboutRoute from './routes/shreeWebAbout.route.js';
 import shreeWebPrivacyPolicyRoute from './routes/shreeWebPrivacyPolicy.route.js';
 import shreeWebCookiePolicyRoute from './routes/shreeWebCookiePolicy.route.js';
+import shreeWebTermsOfServiceRoute from './routes/shreeWebTermsOfService.route.js';
 import shreeWebOverviewRoute from './routes/shreeWebOverview.route.js';
 import shreeWebSettingsRoute from './routes/shreeWebSettings.route.js';
+import shreeWebNotificationRoute from './routes/shreeWebNotification.route.js';
+import shreeWebUserAuthRoute from './routes/shreeWebUserAuth.route.js';
+import emailCaptureRoute from './routes/emailCapture.route.js';
+import emailCampaignRoute from './routes/emailCampaign.routes.js';
+import contactRoute from './routes/contact.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -79,11 +86,24 @@ const startServer = async () => {
     origin: process.env.CLIENT_URL || 'http://localhost:5173', // Vite default port
     credentials: true
   }));
+  app.use(cookieParser()); // Parse cookies
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   
-  // Serve static files
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  // Serve static files with proper headers for video streaming
+  app.use('/uploads', (req, res, next) => {
+    // Enable CORS for uploaded files
+    res.header('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:5173');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Enable range requests for video streaming
+    res.header('Accept-Ranges', 'bytes');
+    
+    // Set proper cache headers
+    res.header('Cache-Control', 'public, max-age=31536000');
+    
+    next();
+  }, express.static(path.join(__dirname, 'uploads')));
   
   // Request logging middleware
   app.use((req, res, next) => {
@@ -124,8 +144,23 @@ const startServer = async () => {
   app.use('/backend/shreeweb-about', shreeWebAboutRoute);
   app.use('/backend/shreeweb-privacy-policy', shreeWebPrivacyPolicyRoute);
   app.use('/backend/shreeweb-cookie-policy', shreeWebCookiePolicyRoute);
+  app.use('/backend/shreeweb-terms-of-service', shreeWebTermsOfServiceRoute);
   app.use('/backend/shreeweb-overview', shreeWebOverviewRoute);
   app.use('/backend/shreeweb-settings', shreeWebSettingsRoute);
+  app.use('/backend/shreeweb-notifications', shreeWebNotificationRoute);
+  
+  // Public user authentication routes
+  app.use('/backend/auth', shreeWebUserAuthRoute);
+  app.use('/backend/user', shreeWebUserAuthRoute); // Alias for backward compatibility
+  
+  // Email capture routes
+  app.use('/backend/email-captures', emailCaptureRoute);
+  
+  // Email campaign routes
+  app.use('/backend/email-campaigns', emailCampaignRoute);
+  
+  // Contact routes
+  app.use('/backend/contact', contactRoute);
   
   // 404 handler for undefined routes
   app.use((req, res) => {

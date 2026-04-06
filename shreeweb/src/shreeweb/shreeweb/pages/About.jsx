@@ -15,7 +15,7 @@ export default function About() {
       setLoading(true);
       setError('');
 
-      const response = await fetch('/backend/shreeweb-about', {
+      const response = await fetch('/backend/shreeweb-about/public', {
         credentials: 'include',
       });
 
@@ -120,7 +120,7 @@ export default function About() {
     <div className="w-full">
       {/* Hero Section */}
       <section 
-        className={`py-24 px-4 text-center bg-gradient-to-br ${aboutData.hero?.backgroundColor || 'from-[#F4EFE6] via-amber-50 to-orange-50'} relative overflow-hidden`}
+        className={`py-16 px-4 text-center bg-gradient-to-br ${aboutData.hero?.backgroundColor || 'from-[#F4EFE6] via-amber-50 to-orange-50'} relative overflow-hidden sm:py-20 md:py-24`}
         data-aos="fade-in"
         data-aos-duration="300"
       >
@@ -133,7 +133,7 @@ export default function About() {
         
         <div className="max-w-5xl mx-auto relative z-10">
           <div 
-            className="text-sm font-medium text-stone-600 mb-6 tracking-[0.2em] uppercase"
+            className="text-xs font-medium text-stone-600 mb-4 tracking-[0.2em] uppercase sm:text-sm sm:mb-6"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="200"
@@ -141,7 +141,7 @@ export default function About() {
             {aboutData.hero?.tag || 'About'}
           </div>
           <h1 
-            className="text-6xl md:text-7xl font-serif text-stone-800 mb-8 leading-tight"
+            className="text-4xl font-serif text-stone-800 mb-6 leading-tight sm:text-5xl md:text-6xl md:text-7xl sm:mb-8"
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="300"
@@ -150,13 +150,13 @@ export default function About() {
             <span className="block text-stone-600 italic font-light mt-2">{aboutData.hero?.subtitle || 'Energy Sessions'}</span>
           </h1>
           <div 
-            className="w-32 h-0.5 bg-amber-400 mx-auto mb-8"
+            className="w-24 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-32 sm:mb-8"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="500"
           ></div>
           <p 
-            className="text-2xl md:text-3xl text-stone-700 leading-relaxed max-w-4xl mx-auto font-light"
+            className="text-lg text-stone-700 leading-relaxed max-w-4xl mx-auto font-light sm:text-xl md:text-2xl md:text-3xl"
             data-aos="fade-up"
             data-aos-duration="300"
             data-aos-delay="600"
@@ -166,23 +166,70 @@ export default function About() {
         </div>
       </section>
 
+      {/* About Me Section */}
+      {aboutData.aboutMe && (
+        <section 
+          className={`py-16 px-4 bg-gradient-to-br ${aboutData.aboutMe?.backgroundColor || 'from-stone-50 to-amber-50'} relative overflow-hidden sm:py-20 md:py-24`}
+          data-aos="fade-up"
+          data-aos-duration="300"
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 right-20 w-32 h-32 border border-amber-300 rounded-full animate-pulse" style={{animationDuration: '4s'}}></div>
+            <div className="absolute bottom-32 left-16 w-24 h-24 border border-stone-300 rounded-full animate-pulse" style={{animationDuration: '6s', animationDelay: '2s'}}></div>
+            <div className="absolute top-1/2 left-1/4 w-20 h-20 border border-orange-300 rounded-full animate-pulse" style={{animationDuration: '5s', animationDelay: '1s'}}></div>
+          </div>
+          
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="text-center mb-8 sm:mb-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
+              <h2 className="text-3xl font-serif text-stone-800 mb-3 sm:text-4xl md:text-5xl md:text-6xl sm:mb-4">{aboutData.aboutMe.title}</h2>
+              <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-4 sm:w-32 sm:mb-6"></div>
+              <p className="text-lg text-stone-700 font-light italic sm:text-xl md:text-2xl md:text-3xl">{aboutData.aboutMe.subtitle}</p>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-stone-200/50 sm:rounded-3xl sm:p-8 md:p-10 md:p-14" data-aos="fade-up" data-aos-duration="300" data-aos-delay="200">
+              <div className="prose prose-base max-w-none sm:prose-lg md:prose-xl">
+                {aboutData.aboutMe.content.split('\n\n').map((paragraph, index) => (
+                  <p 
+                    key={index} 
+                    className="text-stone-700 leading-relaxed mb-4 last:mb-0 text-base sm:text-lg sm:mb-6 md:text-xl"
+                    data-aos="fade-up"
+                    data-aos-duration="200"
+                    data-aos-delay={300 + (index * 100)}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Decorative Element */}
+            <div className="flex items-center justify-center space-x-2 mt-8 sm:space-x-3 sm:mt-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="500">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:w-16"></div>
+              <div className="w-2.5 h-2.5 bg-gradient-to-br from-amber-300 to-orange-400 rounded-full shadow-lg sm:w-3 sm:h-3"></div>
+              <div className="w-12 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:w-16"></div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* What We Do Section */}
       <section 
-        className="py-20 px-4"
+        className="py-16 px-4 sm:py-20"
         style={{ backgroundColor: aboutData.whatWeDo?.backgroundColor || '#F4EFE6' }}
         data-aos="fade-up"
         data-aos-duration="300"
       >
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
-            <h2 className="text-4xl md:text-5xl font-serif text-stone-800 mb-6">{aboutData.whatWeDo?.title || 'What we do'}</h2>
-            <div className="w-24 h-0.5 bg-stone-400 mx-auto mb-8"></div>
-            <p className="text-xl md:text-2xl text-stone-700 leading-relaxed max-w-4xl mx-auto font-light">
+          <div className="text-center mb-12 sm:mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
+            <h2 className="text-3xl font-serif text-stone-800 mb-4 sm:text-4xl md:text-5xl sm:mb-6">{aboutData.whatWeDo?.title || 'What we do'}</h2>
+            <div className="w-20 h-0.5 bg-stone-400 mx-auto mb-6 sm:w-24 sm:mb-8"></div>
+            <p className="text-lg text-stone-700 leading-relaxed max-w-4xl mx-auto font-light sm:text-xl md:text-2xl">
               {aboutData.whatWeDo?.description || 'The sessions work with your energetic system to cleanse, balance, and strengthen internal stability. The goal is to reduce internal resistance so you can hold your success with more ease.'}
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
             {aboutData.whatWeDo?.services?.map((service, index) => (
               <div 
                 key={index}

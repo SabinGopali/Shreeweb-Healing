@@ -1,4 +1,5 @@
 import express from 'express';
+import { verifyToken, requireAdmin } from '../controllers/shreeWebAuth.controller.js';
 import {
   getPrivacyPolicyContent,
   updatePrivacyPolicyContent,
@@ -7,13 +8,12 @@ import {
 
 const router = express.Router();
 
-// Get privacy policy content
-router.get('/', getPrivacyPolicyContent);
+// Public route for frontend
+router.get('/public', getPrivacyPolicyContent);
 
-// Update entire privacy policy content
-router.put('/', updatePrivacyPolicyContent);
-
-// Update specific section
-router.put('/section/:section', updatePrivacyPolicySection);
+// Protected routes for CMS
+router.get('/', verifyToken, requireAdmin, getPrivacyPolicyContent);
+router.put('/', verifyToken, requireAdmin, updatePrivacyPolicyContent);
+router.put('/section/:section', verifyToken, requireAdmin, updatePrivacyPolicySection);
 
 export default router;

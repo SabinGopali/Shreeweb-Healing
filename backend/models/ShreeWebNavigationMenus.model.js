@@ -16,12 +16,14 @@ const shreeWebNavigationMenusSchema = new mongoose.Schema(
   {
     navbarBrand: {
       logoText: { type: String, default: 'J' },
+      logoImageUrl: { type: String, default: '' },
       brandTitle: { type: String, default: 'JAPANDI' },
       brandSubtitle: { type: String, default: 'Energetic Alignment' },
     },
     navbarItems: { type: [menuItemSchema], default: [] },
     footerBrand: {
       logoText: { type: String, default: 'J' },
+      logoImageUrl: { type: String, default: '' },
       brandTitle: { type: String, default: 'JAPANDI' },
       brandSubtitle: { type: String, default: 'Energetic Alignment' },
       description: {

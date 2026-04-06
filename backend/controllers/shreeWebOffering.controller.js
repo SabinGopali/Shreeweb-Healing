@@ -120,7 +120,9 @@ export const createOffering = async (req, res, next) => {
       order,
       isActive,
       image,
-      features
+      features,
+      shopifyProductId,
+      shopifyVariantId,
     } = req.body;
 
     // Validate required fields
@@ -146,6 +148,8 @@ export const createOffering = async (req, res, next) => {
       isActive: isActive !== undefined ? isActive : true,
       image: image || '',
       features: Array.isArray(features) ? features.filter(f => f.trim()).map(f => f.trim()) : [],
+      shopifyProductId: typeof shopifyProductId === 'string' ? shopifyProductId.trim() : '',
+      shopifyVariantId: typeof shopifyVariantId === 'string' ? shopifyVariantId.trim() : '',
       createdBy: req.admin.adminId,
       updatedBy: req.admin.adminId
     });
@@ -181,7 +185,9 @@ export const updateOffering = async (req, res, next) => {
       order,
       isActive,
       image,
-      features
+      features,
+      shopifyProductId,
+      shopifyVariantId,
     } = req.body;
 
     const offering = await ShreeWebOffering.findById(id);
@@ -211,7 +217,13 @@ export const updateOffering = async (req, res, next) => {
     if (features !== undefined) {
       offering.features = Array.isArray(features) ? features.filter(f => f.trim()).map(f => f.trim()) : [];
     }
-    
+    if (shopifyProductId !== undefined) {
+      offering.shopifyProductId = typeof shopifyProductId === 'string' ? shopifyProductId.trim() : '';
+    }
+    if (shopifyVariantId !== undefined) {
+      offering.shopifyVariantId = typeof shopifyVariantId === 'string' ? shopifyVariantId.trim() : '';
+    }
+
     offering.updatedBy = req.admin.adminId;
 
     await offering.save();

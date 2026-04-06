@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { cmsTheme } from '../shreewebCmsTheme';
+import SingleImageUploader from '../components/ImageUploader';
 
 function uid() {
   return `fm-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -50,6 +51,7 @@ export default function CmsFooterMenu() {
   const [connectLinks, setConnectLinks] = useState([]);
   const [footerBrand, setFooterBrand] = useState({
     logoText: 'J',
+    logoImageUrl: '',
     brandTitle: 'JAPANDI',
     brandSubtitle: 'Energetic Alignment',
     description:
@@ -127,9 +129,23 @@ export default function CmsFooterMenu() {
       <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} w-full space-y-4 mb-6`}>
         <h2 className={`${cmsTheme.title} text-lg`}>Footer Content</h2>
 
+        <SingleImageUploader
+          image={footerBrand.logoImageUrl}
+          onChange={(url) => setFooterBrand((prev) => ({ ...prev, logoImageUrl: url }))}
+          label="Logo Image"
+          accept="image/*"
+          uploadText="Upload Logo Image"
+          description="Click to browse or drag and drop your logo"
+          recommendation="High-quality logo images • PNG, JPG, GIF, SVG"
+          previewAlt="Footer logo preview"
+          successMessage="Logo uploaded successfully"
+          successDescription="This logo will be displayed in the footer"
+        />
+        <p className="text-xs text-stone-500">If no image is uploaded, the logo text below will be displayed.</p>
+
         <div className="grid gap-4 md:grid-cols-3">
           <div>
-            <label className={cmsTheme.label}>Logo Text</label>
+            <label className={cmsTheme.label}>Logo Text (Fallback)</label>
             <input className={cmsTheme.input} value={footerBrand.logoText} onChange={(e) => setFooterBrand((p) => ({ ...p, logoText: e.target.value }))} />
           </div>
           <div className="md:col-span-2">

@@ -8,6 +8,7 @@ const ShreeWebContactPageContentSchema = new mongoose.Schema(
       text: { type: String, default: 'JAPANDI' },
       subtext: { type: String, default: 'Energetic Alignment' },
       letter: { type: String, default: 'J' },
+      imageUrl: { type: String, default: '' },
     },
 
     hero: {

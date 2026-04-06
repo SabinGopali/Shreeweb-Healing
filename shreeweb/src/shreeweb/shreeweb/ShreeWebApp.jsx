@@ -16,13 +16,17 @@ import ShreeWebLogin from './pages/ShreeWebLogin';
 import ShreeWebSignup from './pages/ShreeWebSignup';
 import ShreeWebForgotPassword from './pages/ShreeWebForgotPassword';
 import ShreeWebCmsLogin from './pages/ShreeWebCmsLogin';
+import ShreeWebCmsRegister from './pages/ShreeWebCmsRegister';
+import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider } from './contexts/AuthContext';
 
 export default function ShreeWebApp() {
   return (
     <AuthProvider>
+      <ScrollToTop />
       <Routes>
         <Route path="cms-login" element={<ShreeWebCmsLogin />} />
+        <Route path="cms-register" element={<ShreeWebCmsRegister />} />
         <Route path="cms/*" element={<ShreeWebCmsRoutes />} />
         <Route element={<ShreeWebLayout />}>
           <Route index element={<ShreeWebHome />} />

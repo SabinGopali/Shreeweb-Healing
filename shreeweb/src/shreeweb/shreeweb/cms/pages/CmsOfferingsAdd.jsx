@@ -13,7 +13,9 @@ export default function CmsOfferingsAdd() {
     price: '',
     category: 'single',
     featured: false,
-    features: ['']
+    features: [''],
+    shopifyProductId: '',
+    shopifyVariantId: '',
   });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
@@ -169,14 +171,15 @@ export default function CmsOfferingsAdd() {
                 />
               </div>
               <div>
-                <label className={cmsTheme.label}>Price</label>
+                <label className={cmsTheme.label}>Price (USD)</label>
                 <input
                   type="text"
                   value={form.price}
                   onChange={(e) => updateField('price')(e.target.value)}
-                  placeholder="e.g. $111 or Free"
+                  placeholder="e.g. $45 or Complimentary"
                   className={cmsTheme.input}
                 />
+                <p className="mt-1 text-xs text-stone-500">All amounts are in US dollars (USD).</p>
               </div>
               <div>
                 <label className={cmsTheme.label}>Category</label>
@@ -255,6 +258,36 @@ export default function CmsOfferingsAdd() {
                 )}
               </div>
             ))}
+          </div>
+
+          <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
+            <h2 className={`${cmsTheme.title} text-lg`}>Shopify checkout</h2>
+            <p className="text-sm text-stone-600">
+              Optional: set the Shopify product (and variant if needed) so this offering checks out with the correct
+              line item and price.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className={cmsTheme.label}>Shopify product ID</label>
+                <input
+                  type="text"
+                  value={form.shopifyProductId}
+                  onChange={(e) => updateField('shopifyProductId')(e.target.value)}
+                  placeholder="e.g. 8123456789012"
+                  className={`${cmsTheme.input} font-mono text-sm`}
+                />
+              </div>
+              <div>
+                <label className={cmsTheme.label}>Shopify variant ID (optional)</label>
+                <input
+                  type="text"
+                  value={form.shopifyVariantId}
+                  onChange={(e) => updateField('shopifyVariantId')(e.target.value)}
+                  placeholder="Numeric or gid://…"
+                  className={`${cmsTheme.input} font-mono text-sm`}
+                />
+              </div>
+            </div>
           </div>
 
           <div className={`${cmsTheme.card} w-full overflow-hidden p-0`}>

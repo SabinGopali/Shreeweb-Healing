@@ -35,8 +35,8 @@ const VideoSection = () => {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching video data from /backend/shreeweb-video-section');
-      const response = await fetch('/backend/shreeweb-video-section', { cache: 'no-store' });
+      console.log('Fetching video data from /backend/shreeweb-video-section/public');
+      const response = await fetch('/backend/shreeweb-video-section/public', { cache: 'no-store' });
       
       console.log('Response status:', response.status);
       
@@ -171,16 +171,6 @@ const VideoSection = () => {
                         />
                       )
                     ) : null}
-
-                    <div className="relative z-10 text-white text-center p-8">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
-                      <p className="text-lg font-medium">Video Preview</p>
-                      <p className="text-sm opacity-75">Click to watch on YouTube</p>
-                    </div>
                   </div>
                 )}
               </div>

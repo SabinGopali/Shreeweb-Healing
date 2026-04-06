@@ -121,7 +121,7 @@ const HeroSection = () => {
       return {}; // No background image for video
     }
     return {
-      backgroundImage: `url(${heroData.backgroundImage})`,
+      backgroundImage: `url(${resolveUrl(heroData.backgroundImage)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
       backgroundAttachment: 'fixed'

@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import EmailCapture from './EmailCapture';
+
+const resolveImage = (image) => {
+  if (!image) return '';
+  if (image.startsWith('blob:') || image.startsWith('data:')) return image;
+  if (/^https?:\/\//i.test(image)) return image;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  return image.startsWith('/') ? `${backendUrl}${image}` : `${backendUrl}/${image}`;
+};
 
 export default function ShreeWebFooter() {
   const [quickLinks, setQuickLinks] = useState([
@@ -18,6 +27,7 @@ export default function ShreeWebFooter() {
 
   const fallbackFooterBrand = {
     logoText: 'J',
+    logoImageUrl: '',
     brandTitle: 'JAPANDI',
     brandSubtitle: 'Energetic Alignment',
     description:
@@ -103,9 +113,21 @@ export default function ShreeWebFooter() {
             className="space-y-6 lg:col-span-2"
           >
             <div className="flex items-center gap-4">
-              <div className="grid h-14 w-14 place-items-center rounded-3xl bg-gradient-to-br from-stone-800 to-stone-700 text-white shadow-lg">
-                <span className="text-lg font-bold tracking-widest">{footerBrand.logoText}</span>
-              </div>
+              {footerBrand.logoImageUrl ? (
+                <img 
+                  src={resolveImage(footerBrand.logoImageUrl)} 
+                  alt={footerBrand.brandTitle}
+                  className="h-20 w-20 flex-shrink-0 object-contain"
+                  onError={(e) => {
+                    console.error('Footer logo failed to load:', footerBrand.logoImageUrl);
+                    e.target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-stone-800 to-stone-700 text-white shadow-lg">
+                  <span className="text-2xl font-bold tracking-widest">{footerBrand.logoText}</span>
+                </div>
+              )}
               <div className="leading-tight">
                 <div className="text-2xl font-serif tracking-wide text-stone-800">{footerBrand.brandTitle}</div>
                 <div className="text-sm text-stone-600 font-medium">{footerBrand.brandSubtitle}</div>
@@ -117,16 +139,11 @@ export default function ShreeWebFooter() {
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-stone-200/50">
               <h4 className="text-lg font-serif text-stone-800 mb-3">{footerBrand.newsletterTitle}</h4>
               <p className="text-stone-600 text-sm mb-4">{footerBrand.newsletterSubtitle}</p>
-              <div className="flex gap-3">
-                <input 
-                  type="email" 
-                  placeholder={footerBrand.newsletterPlaceholder}
-                  className="flex-1 px-4 py-2 rounded-full border border-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent text-sm"
-                />
-                <button className="px-6 py-2 bg-stone-800 text-white rounded-full hover:bg-stone-700 transition-colors text-sm font-medium">
-                  {footerBrand.newsletterButtonText}
-                </button>
-              </div>
+              <EmailCapture 
+                context="footer-newsletter"
+                buttonText={footerBrand.newsletterButtonText}
+                placeholderText={footerBrand.newsletterPlaceholder}
+              />
             </div>
           </div>
 

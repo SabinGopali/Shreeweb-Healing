@@ -3,7 +3,7 @@ import { cmsTheme } from '../shreewebCmsTheme';
 import { SHREEWEB_CMS_EMBEDS_KEY, readJsonStorage, writeJsonStorage } from '../../lib/shreewebStorage';
 
 const defaultEmbeds = {
-  shopifyHtml: '',
+  shopifyHtml: `<div id='product-component-1774716533863'></div><script type="text/javascript">/*<![CDATA[*/(function () {var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';if (window.ShopifyBuy) {if (window.ShopifyBuy.UI) {ShopifyBuyInit();} else {loadScript();}} else {loadScript();}function loadScript() {var script = document.createElement('script');script.async = true;script.src = scriptURL;(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);script.onload = ShopifyBuyInit;}function ShopifyBuyInit() {var client = ShopifyBuy.buildClient({domain: 'yxpnpq-d0.myshopify.com',storefrontAccessToken: '4af1e40438135ba379f6f66ab171c799',});ShopifyBuy.UI.onReady(client).then(function (ui) {ui.createComponent('product', {id: '7675570454624',node: document.getElementById('product-component-1774716533863'),moneyFormat: '%24%7B%7Bamount%7D%7D',options: {"product": {"styles": {"product": {"@media (min-width: 601px)": {"max-width": "calc(25% - 20px)","margin-left": "20px","margin-bottom": "50px"}}},"text": {"button": "Add to cart"}},"productSet": {"styles": {"products": {"@media (min-width: 601px)": {"margin-left": "-20px"}}}},"modalProduct": {"contents": {"img": false,"imgWithCarousel": true,"button": false,"buttonWithQuantity": true},"styles": {"product": {"@media (min-width: 601px)": {"max-width": "100%","margin-left": "0px","margin-bottom": "0px"}}},"text": {"button": "Add to cart"}},"option": {},"cart": {"text": {"total": "Subtotal","button": "Checkout"}},"toggle": {}},});});}})();/*]]>*/</script>`,
   calendarHtml: '',
 };
 
@@ -13,7 +13,13 @@ export default function CmsEmbeds() {
 
   useEffect(() => {
     const e = readJsonStorage(SHREEWEB_CMS_EMBEDS_KEY, null);
-    if (e && typeof e === 'object') setForm((f) => ({ ...f, ...e }));
+    if (e && typeof e === 'object') {
+      setForm((f) => ({ ...f, ...e }));
+    } else {
+      // Initialize with default Shopify embed if nothing saved
+      setForm(defaultEmbeds);
+      writeJsonStorage(SHREEWEB_CMS_EMBEDS_KEY, defaultEmbeds);
+    }
   }, []);
 
   const save = (ev) => {

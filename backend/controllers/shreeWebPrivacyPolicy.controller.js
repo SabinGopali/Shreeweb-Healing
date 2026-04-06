@@ -63,14 +63,22 @@ export const updatePrivacyPolicySection = async (req, res, next) => {
       });
     }
 
-    if (!privacyContent[section]) {
+    // Handle special case for lastUpdatedDate (string field)
+    if (section === 'lastUpdatedDate') {
+      privacyContent.lastUpdatedDate = updates;
+    } else if (section === 'introduction') {
+      // Handle introduction section
+      privacyContent.introduction = { ...privacyContent.introduction.toObject(), ...updates };
+    } else if (!privacyContent[section]) {
       return res.status(400).json({
         success: false,
         message: 'Invalid section name'
       });
+    } else {
+      // Handle object sections
+      privacyContent[section] = { ...privacyContent[section].toObject(), ...updates };
     }
 
-    privacyContent[section] = { ...privacyContent[section].toObject(), ...updates };
     privacyContent.lastUpdated = new Date();
 
     await privacyContent.save();

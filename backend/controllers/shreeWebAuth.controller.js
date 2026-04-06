@@ -12,6 +12,94 @@ const generateToken = (adminId) => {
   );
 };
 
+// Register new admin (temporary - for initial setup)
+export const register = async (req, res, next) => {
+  try {
+    const { username, email, password, firstName, lastName } = req.body;
+
+    console.log('ShreeWeb Admin Registration Attempt:', { username, email, timestamp: new Date().toISOString() });
+
+    // Validate input
+    if (!username || !email || !password) {
+      console.log('Registration failed: Missing required fields');
+      return next(errorHandler(400, 'Username, email, and password are required'));
+    }
+
+    if (password.length < 6) {
+      console.log('Registration failed: Password too short');
+      return next(errorHandler(400, 'Password must be at least 6 characters long'));
+    }
+
+    // Check if username already exists
+    const existingUsername = await ShreeWebAdmin.findOne({ 
+      username: username.toLowerCase() 
+    });
+
+    if (existingUsername) {
+      console.log('Registration failed: Username already exists');
+      return next(errorHandler(400, 'Username is already taken'));
+    }
+
+    // Check if email already exists
+    const existingEmail = await ShreeWebAdmin.findOne({ 
+      email: email.toLowerCase() 
+    });
+
+    if (existingEmail) {
+      console.log('Registration failed: Email already exists');
+      return next(errorHandler(400, 'Email is already registered'));
+    }
+
+    // Create new admin
+    const newAdmin = new ShreeWebAdmin({
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
+      password: password,
+      role: 'super_admin', // First admin gets super_admin role
+      isActive: true,
+      profile: {
+        firstName: firstName || username,
+        lastName: lastName || ''
+      },
+      permissions: {
+        canManageContent: true,
+        canManageUsers: true,
+        canManageSettings: true,
+        canViewAnalytics: true
+      }
+    });
+
+    await newAdmin.save();
+    console.log('Admin registered successfully:', newAdmin.username);
+
+    // Generate token
+    const token = generateToken(newAdmin._id);
+
+    // Remove password from response
+    const adminResponse = {
+      _id: newAdmin._id,
+      username: newAdmin.username,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      isActive: newAdmin.isActive,
+      profile: newAdmin.profile,
+      permissions: newAdmin.permissions,
+      createdAt: newAdmin.createdAt
+    };
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin account created successfully',
+      admin: adminResponse,
+      token
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    next(error);
+  }
+};
+
 // Login admin
 export const login = async (req, res, next) => {
   try {

@@ -200,6 +200,22 @@ const ShreeWebCmsLogin = () => {
             </button>
           </form>
 
+          {/* Registration Link */}
+          <div className="mt-6 text-center">
+            <p className="text-sm text-stone-600">
+              Don't have an admin account?{' '}
+              <Link
+                to="/shreeweb/cms-register"
+                className="text-purple-600 hover:text-purple-700 font-semibold transition-colors"
+              >
+                Create one here
+              </Link>
+            </p>
+            <p className="text-xs text-stone-500 mt-2">
+              ⚠️ Registration is temporary and will be removed after setup
+            </p>
+          </div>
+
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-stone-200 text-center">
             <Link

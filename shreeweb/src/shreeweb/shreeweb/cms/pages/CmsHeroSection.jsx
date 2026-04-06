@@ -341,7 +341,7 @@ export default function CmsHeroSection() {
           <div 
             className="relative h-64 rounded-xl overflow-hidden flex items-center justify-center"
             style={form.backgroundType === 'image' ? {
-              backgroundImage: `url(${form.backgroundImage})`,
+              backgroundImage: `url(${resolveUrl(form.backgroundImage)})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             } : {}}

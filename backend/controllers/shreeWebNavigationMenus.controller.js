@@ -156,3 +156,29 @@ export const updateFooterItems = async (req, res, next) => {
   }
 };
 
+export const uploadNavbarLogo = async (req, res, next) => {
+  try {
+    if (!req.file) return next(errorHandler(400, 'No logo file uploaded'));
+    const logoImageUrl = `/backend/uploads/${req.file.filename}`;
+    const doc = await getOrCreateActiveDoc();
+    doc.navbarBrand.logoImageUrl = logoImageUrl;
+    await doc.save();
+    return res.status(200).json({ success: true, logoImageUrl, data: toData(doc) });
+  } catch {
+    return next(errorHandler(500, 'Failed to upload navbar logo'));
+  }
+};
+
+export const uploadFooterLogo = async (req, res, next) => {
+  try {
+    if (!req.file) return next(errorHandler(400, 'No logo file uploaded'));
+    const logoImageUrl = `/backend/uploads/${req.file.filename}`;
+    const doc = await getOrCreateActiveDoc();
+    doc.footerBrand.logoImageUrl = logoImageUrl;
+    await doc.save();
+    return res.status(200).json({ success: true, logoImageUrl, data: toData(doc) });
+  } catch {
+    return next(errorHandler(500, 'Failed to upload footer logo'));
+  }
+};
+

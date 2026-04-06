@@ -174,30 +174,7 @@ export default function CookiePolicy() {
                 </div>
               </div>
 
-              {/* Note about comprehensive cookie management */}
-              <div className="border-l-4 border-blue-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Cookie Management</h2>
-                <div className="bg-blue-50 rounded-2xl p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Managing Your Cookie Preferences</h3>
-                      <p className="text-base text-stone-700 leading-relaxed mb-4">
-                        You have control over the cookies we use. Most browsers allow you to view, delete, and block cookies 
-                        through their privacy settings. You can also manage your preferences through our cookie consent banner 
-                        when you first visit our site.
-                      </p>
-                      <p className="text-sm text-stone-600">
-                        <strong>Note:</strong> Blocking essential cookies may affect website functionality.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             {/* Contact Section */}

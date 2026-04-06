@@ -15,14 +15,6 @@ export default function Home() {
       sectionDescription: 'Select the container that aligns with your current capacity and desired expansion.',
       backgroundColor: '#F4EFE6',
       cardBackground: '#EDE7DC'
-    },
-    additionalPrograms: {
-      enabled: true,
-      title: 'Looking for deeper transformation?',
-      programs: [
-        { name: 'Realignment Program', sessions: '8 Sessions' },
-        { name: 'Transformation Program', sessions: '12 Sessions' }
-      ]
     }
   });
 
@@ -267,7 +259,7 @@ export default function Home() {
 
       {/* Curated Offerings Section */}
       <section 
-        className="py-16 px-4 relative overflow-hidden" 
+        className="py-12 px-4 relative overflow-hidden sm:py-16" 
         style={{ backgroundColor: settings.section.backgroundColor }}
         data-aos="fade-up" 
         data-aos-duration="300"
@@ -286,7 +278,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 
-              className="text-4xl font-serif text-stone-800 mb-4"
+              className="text-2xl font-serif text-stone-800 mb-3 sm:text-3xl md:text-4xl sm:mb-4"
               data-aos="fade-up"
               data-aos-duration="200"
               data-aos-delay="100"
@@ -294,7 +286,7 @@ export default function Home() {
               {settings.section.sectionTitle}
             </h2>
             <p 
-              className="text-lg text-stone-600 mb-12"
+              className="text-base text-stone-600 mb-8 sm:text-lg sm:mb-12"
               data-aos="fade-up"
               data-aos-duration="200"
               data-aos-delay="200"
@@ -305,29 +297,6 @@ export default function Home() {
             <div data-aos="fade-up" data-aos-duration="300" data-aos-delay="300">
               <OffersSection customSettings={settings} />
             </div>
-            
-            {settings.additionalPrograms.enabled && (
-              <div className="mt-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="400">
-                <h3 className="text-2xl font-serif text-stone-700 mb-8">
-                  {settings.additionalPrograms.title}
-                </h3>
-                <div className="flex flex-wrap justify-center gap-4">
-                  {settings.additionalPrograms.programs.map((program, index) => (
-                    <Link
-                      key={index}
-                      to={`/shreeweb/booking?plan=${program.name.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="group relative overflow-hidden px-8 py-3 bg-white/20 backdrop-blur-md border border-orange-200/50 text-orange-800 rounded-full hover:bg-white/30 hover:border-orange-300/60 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
-                      data-aos-duration="200"
-                      data-aos-delay={500 + index * 100}
-                    >
-                      <span className="relative z-10">{program.name} ({program.sessions})</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-50/30 to-amber-50/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </section>
@@ -340,24 +309,24 @@ export default function Home() {
 
       {/* Hidden Cost Section */}
       <section 
-        className="py-16 px-4"
+        className="py-12 px-4 sm:py-16"
         data-aos="fade-up"
         data-aos-duration="300"
       >
         <div className="max-w-7xl mx-auto">
           <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="grid gap-8 items-center lg:grid-cols-2 lg:gap-12">
               <div data-aos="fade-right" data-aos-duration="300" data-aos-delay="100">
-                <div className="border-t-2 border-stone-300 pt-6 mb-8">
-                  <h2 className="text-3xl font-serif text-stone-800 italic mb-6">
+                <div className="border-t-2 border-stone-300 pt-4 mb-6 sm:pt-6 sm:mb-8">
+                  <h2 className="text-2xl font-serif text-stone-800 italic mb-4 sm:text-3xl sm:mb-6">
                     {stripTags(hiddenCost.title)}
                   </h2>
-                  <p className="text-stone-600 mb-4">{stripTags(hiddenCost.paragraph1)}</p>
-                  <p className="text-stone-600">{stripTags(hiddenCost.paragraph2)}</p>
+                  <p className="text-sm text-stone-600 mb-3 sm:text-base sm:mb-4">{stripTags(hiddenCost.paragraph1)}</p>
+                  <p className="text-sm text-stone-600 sm:text-base">{stripTags(hiddenCost.paragraph2)}</p>
                 </div>
               </div>
               <div className="relative" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
-                <div className="w-full h-80 md:h-96 rounded-2xl overflow-hidden shadow-lg">
+                <div className="w-full h-64 rounded-2xl overflow-hidden shadow-lg sm:h-80 md:h-96">
                   <img 
                     src={resolveHiddenImageUrl(hiddenCost.image)}
                     alt={hiddenCost.imageAlt || 'Healing and wellness imagery'}
@@ -372,12 +341,12 @@ export default function Home() {
 
       {/* When Growth Feels Heavy Section - Healing/Meditation Design with Background */}
       <section 
-        className="py-24 px-4 relative min-h-screen flex items-center"
+        className="py-16 px-4 relative min-h-[80vh] flex items-center sm:py-20 sm:min-h-screen"
         style={{
           backgroundImage: `url(${resolveGrowthImageUrl(growth.backgroundImage)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
-          backgroundAttachment: 'fixed'
+          backgroundAttachment: 'scroll'
         }}
       >
         {/* Healing Overlay - Reduced Opacity */}
@@ -396,74 +365,74 @@ export default function Home() {
           <div className="absolute top-1/3 left-1/6 w-1.5 h-1.5 bg-orange-300/50 rounded-full animate-pulse" style={{animationDelay: '6s'}}></div>
         </div>
         
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10 w-full">
           {/* Centered Content with Glass Morphism */}
-          <div className="text-center space-y-12">
+          <div className="text-center space-y-8 sm:space-y-12">
             
             {/* Main Heading with Enhanced Breathing Space */}
-            <div className="space-y-8">
-              <div className="bg-white/20 backdrop-blur-md rounded-3xl p-8 border border-white/30 shadow-xl">
-                <h2 className="text-3xl md:text-4xl font-light text-stone-800 leading-relaxed tracking-wide">
+            <div className="space-y-6 sm:space-y-8">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 shadow-xl sm:rounded-3xl sm:p-8">
+                <h2 className="text-2xl font-light text-stone-800 leading-relaxed tracking-wide sm:text-3xl md:text-4xl">
                   {stripTags(growth.title)}
-                  <span className="block text-stone-600 italic font-extralight mt-3 text-2xl md:text-3xl">
+                  <span className="block text-stone-600 italic font-extralight mt-2 text-xl sm:mt-3 sm:text-2xl md:text-3xl">
                     {stripTags(growth.subtitle)}
                   </span>
                 </h2>
                 
                 {/* Enhanced Zen-like Decorative Element */}
-                <div className="flex items-center justify-center space-x-3 mt-6">
-                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent"></div>
-                  <div className="w-3 h-3 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full shadow-lg"></div>
-                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent"></div>
+                <div className="flex items-center justify-center space-x-2 mt-4 sm:space-x-3 sm:mt-6">
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-12"></div>
+                  <div className="w-2.5 h-2.5 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full shadow-lg sm:w-3 sm:h-3"></div>
+                  <div className="w-8 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-12"></div>
                 </div>
               </div>
             </div>
             
             {/* Gentle Introduction with Glass Effect */}
-            <div className="space-y-8 max-w-4xl mx-auto">
-              <div className="bg-white/15 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-lg">
-                <p className="text-lg md:text-xl text-stone-700 leading-relaxed font-light mb-6">
+            <div className="space-y-6 max-w-4xl mx-auto sm:space-y-8">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl p-6 border border-white/20 shadow-lg sm:rounded-2xl sm:p-8">
+                <p className="text-base text-stone-700 leading-relaxed font-light mb-4 sm:text-lg md:text-xl sm:mb-6">
                   {stripTags(growth.introduction)}
                 </p>
                 
-                <p className="text-base md:text-lg text-stone-600 leading-relaxed mb-6">
+                <p className="text-sm text-stone-600 leading-relaxed mb-4 sm:text-base md:text-lg sm:mb-6">
                   {stripTags(growth.description1)}
                 </p>
                 
-                <p className="text-base text-stone-600 leading-relaxed">
+                <p className="text-sm text-stone-600 leading-relaxed sm:text-base">
                   {stripTags(growth.description2)}
                 </p>
               </div>
             </div>
             
             {/* Mindful Signs Section with Enhanced Glass Morphism */}
-            <div className="mt-16">
-              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/25 shadow-2xl">
-                <h3 className="text-xl font-light text-stone-700 mb-12 tracking-wide">
+            <div className="mt-12 sm:mt-16">
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/25 shadow-2xl sm:rounded-3xl sm:p-8">
+                <h3 className="text-lg font-light text-stone-700 mb-8 tracking-wide sm:text-xl sm:mb-12">
                   {growth.signsTitle}
                 </h3>
                 
                 {/* Enhanced Clean List with Better Glass Effects */}
-                <div className="space-y-6 max-w-3xl mx-auto">
+                <div className="space-y-4 max-w-3xl mx-auto sm:space-y-6">
                   {Array.isArray(growth.signs) &&
                     growth.signs.map((sign) => (
                       <div key={sign.id} className="group">
                         <div
-                          className={`flex items-start space-x-4 p-6 rounded-2xl backdrop-blur-sm border transition-all duration-500 shadow-lg hover:shadow-xl ${
+                          className={`flex items-start space-x-3 p-4 rounded-xl backdrop-blur-sm border transition-all duration-500 shadow-lg hover:shadow-xl sm:space-x-4 sm:p-6 sm:rounded-2xl ${
                             sign.featured
                               ? 'bg-gradient-to-r from-white/25 to-orange-100/30 border-orange-200/40'
                               : 'bg-white/20 border-white/30 hover:bg-white/30 hover:border-white/40'
                           }`}
                         >
                           <div
-                            className={`w-2 h-2 rounded-full mt-3 flex-shrink-0 shadow-md ${
+                            className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 shadow-md sm:w-2 sm:h-2 sm:mt-3 ${
                               sign.featured
                                 ? 'bg-gradient-to-br from-orange-400 to-orange-500'
                                 : 'bg-gradient-to-br from-orange-300 to-orange-400'
                             }`}
                           ></div>
                           <span
-                            className={`leading-relaxed font-light ${
+                            className={`text-sm leading-relaxed font-light sm:text-base ${
                               sign.featured ? 'text-stone-800 font-normal text-center w-full' : 'text-stone-700'
                             }`}
                           >
@@ -477,28 +446,28 @@ export default function Home() {
             </div>
             
             {/* Enhanced Call to Action with Healing Aesthetic */}
-            <div className="mt-16 pt-8">
-              <div className="bg-white/15 backdrop-blur-lg rounded-3xl p-10 border border-white/25 shadow-2xl">
-                <div className="space-y-8">
-                  <p className="text-stone-600 italic font-light leading-relaxed text-lg">
+            <div className="mt-12 pt-6 sm:mt-16 sm:pt-8">
+              <div className="bg-white/15 backdrop-blur-lg rounded-2xl p-6 border border-white/25 shadow-2xl sm:rounded-3xl sm:p-10">
+                <div className="space-y-6 sm:space-y-8">
+                  <p className="text-stone-600 italic font-light leading-relaxed text-base sm:text-lg">
                     {stripTags(growth.ctaText)}
                   </p>
                   
                   {/* Enhanced Breathing Space with Healing Elements */}
-                  <div className="py-6 flex items-center justify-center space-x-4">
-                    <div className="w-8 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent"></div>
-                    <div className="w-2 h-2 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full animate-pulse shadow-lg"></div>
-                    <div className="w-16 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent"></div>
-                    <div className="w-2 h-2 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full animate-pulse shadow-lg" style={{animationDelay: '1s'}}></div>
-                    <div className="w-8 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent"></div>
+                  <div className="py-4 flex items-center justify-center space-x-2 sm:py-6 sm:space-x-4">
+                    <div className="w-6 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-8"></div>
+                    <div className="w-1.5 h-1.5 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full animate-pulse shadow-lg sm:w-2 sm:h-2"></div>
+                    <div className="w-12 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-16"></div>
+                    <div className="w-1.5 h-1.5 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full animate-pulse shadow-lg sm:w-2 sm:h-2" style={{animationDelay: '1s'}}></div>
+                    <div className="w-6 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-8"></div>
                   </div>
                   
                   <Link
-                    to="/shreeweb/booking?plan=discovery"
-                    className="inline-flex items-center px-12 py-4 bg-white/30 backdrop-blur-md border border-white/40 text-stone-700 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-500 font-light tracking-wide shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
+                    to="/shreeweb/offers"
+                    className="inline-flex items-center px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 text-stone-700 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-500 font-light tracking-wide shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
                   >
                     <span>{stripTags(growth.ctaButtonText)}</span>
-                    <div className="ml-3 w-1.5 h-1.5 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full shadow-md"></div>
+                    <div className="ml-2 w-1 h-1 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full shadow-md sm:ml-3 sm:w-1.5 sm:h-1.5"></div>
                   </Link>
                 </div>
               </div>
@@ -516,7 +485,7 @@ export default function Home() {
 
       {/* Energetic Alignment Process */}
       <section 
-        className="py-16 px-4"
+        className="py-12 px-4 sm:py-16"
         data-aos="fade-up"
         data-aos-duration="300"
       >
@@ -529,7 +498,7 @@ export default function Home() {
             >
               <CmsHtmlPreview
                 html={process.title}
-                className="text-3xl font-serif text-stone-800 mb-4"
+                className="text-2xl font-serif text-stone-800 mb-3 sm:text-3xl sm:mb-4"
               />
             </div>
             <div
@@ -539,25 +508,25 @@ export default function Home() {
             >
               <CmsHtmlPreview
                 html={process.description}
-                className="text-lg text-stone-600 mb-12"
+                className="text-base text-stone-600 mb-8 sm:text-lg sm:mb-12"
               />
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
               {Array.isArray(process.steps) &&
                 process.steps.slice(0, 6).map((step, i) => (
                   <div 
                     key={step.id || i}
-                    className="bg-[#EDE7DC] rounded-2xl p-8"
+                    className="bg-[#EDE7DC] rounded-2xl p-6 sm:p-8"
                     data-aos="fade-up"
                     data-aos-duration="200"
                     data-aos-delay={300 + i * 100}
                   >
-                    <div className="w-16 h-16 bg-stone-300 rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <div className="w-12 h-12 bg-stone-300 rounded-full mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
                       {renderProcessIcon(step.icon)}
                     </div>
-                    <h3 className="text-xl font-serif text-stone-800 mb-4">{stripTags(step.title)}</h3>
-                    <p className="text-stone-600">{stripTags(step.description)}</p>
+                    <h3 className="text-lg font-serif text-stone-800 mb-3 sm:text-xl sm:mb-4">{stripTags(step.title)}</h3>
+                    <p className="text-sm text-stone-600 sm:text-base">{stripTags(step.description)}</p>
                   </div>
                 ))}
             </div>
@@ -567,7 +536,7 @@ export default function Home() {
 
       {/* Target Audience Section */}
       <section 
-        className="py-20 px-4 relative overflow-hidden"
+        className="py-16 px-4 relative overflow-hidden sm:py-20"
         data-aos="fade-up"
         data-aos-duration="300"
       >
@@ -703,12 +672,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-5xl mx-auto">
             {/* Main Heading */}
-            <div className="text-center mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
-              <h2 className="text-4xl md:text-5xl font-serif text-stone-800 mb-6 leading-tight">
+            <div className="text-center mb-12 sm:mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
+              <h2 className="text-3xl font-serif text-stone-800 mb-4 leading-tight sm:text-4xl md:text-5xl sm:mb-6">
                 {stripTags(targetAudience.title || 'This work is designed for')}
               </h2>
-              <div className="w-32 h-0.5 bg-amber-400 mx-auto mb-8"></div>
-              <p className="text-xl text-stone-600 max-w-3xl mx-auto leading-relaxed">
+              <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-32 sm:mb-8"></div>
+              <p className="text-lg text-stone-600 max-w-3xl mx-auto leading-relaxed sm:text-xl">
                 {stripTags(
                   targetAudience.subtitle ||
                     'Individuals ready to address the energetic foundations of sustainable success'
@@ -717,7 +686,7 @@ export default function Home() {
             </div>
             
             {/* Target Audience Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
               {(Array.isArray(targetAudience.audiences) ? targetAudience.audiences : []).map((aud, idx) => {
                 const scheme = aud?.colorScheme || 'stone';
                 const isFeatured = Boolean(aud?.featured);
@@ -751,17 +720,17 @@ export default function Home() {
                     data-aos-delay={delay}
                   >
                     <div
-                      className={`${outerBg} backdrop-blur-sm rounded-3xl p-8 shadow-lg ${border} hover:shadow-xl hover:scale-105 transition-all duration-300 h-full flex flex-col`}
+                      className={`${outerBg} backdrop-blur-sm rounded-2xl p-6 shadow-lg ${border} hover:shadow-xl hover:scale-105 transition-all duration-300 h-full flex flex-col sm:rounded-3xl sm:p-8`}
                     >
                       <div
-                        className={`w-16 h-16 ${iconBg} rounded-2xl mx-auto mb-6 flex items-center justify-center transition-all duration-300`}
+                        className={`w-12 h-12 ${iconBg} rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 sm:w-16 sm:h-16 sm:mb-6`}
                       >
-                        <div className={`w-8 h-8 ${iconInner} rounded-lg`}></div>
+                        <div className={`w-6 h-6 ${iconInner} rounded-lg sm:w-8 sm:h-8`}></div>
                       </div>
-                      <h3 className="text-xl font-serif text-stone-800 text-center mb-4">
+                      <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
                         {stripTags(aud?.title || '')}
                       </h3>
-                      <p className="text-stone-600 text-center leading-relaxed flex-grow">
+                      <p className="text-sm text-stone-600 text-center leading-relaxed flex-grow sm:text-base">
                         {stripTags(aud?.description || '')}
                       </p>
                     </div>
@@ -771,18 +740,18 @@ export default function Home() {
             </div>
             
             {/* Bottom Call to Action */}
-            <div className="mt-16 text-center" data-aos="fade-up" data-aos-duration="200" data-aos-delay="700">
-              <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-stone-200/50 max-w-3xl mx-auto">
-                <p className="text-lg text-stone-700 mb-6 italic">
+            <div className="mt-12 text-center sm:mt-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="700">
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 max-w-3xl mx-auto sm:rounded-3xl sm:p-8">
+                <p className="text-base text-stone-700 mb-4 italic sm:text-lg sm:mb-6">
                   "{stripTags(targetAudience.ctaQuote || "Ready to explore what's possible when your energy and ambition are aligned?")}"
                 </p>
                 <Link
-                  to="/shreeweb/booking?plan=discovery"
-                  className="group relative overflow-hidden inline-flex items-center px-12 py-4 bg-gradient-to-r from-orange-500/90 to-amber-500/90 backdrop-blur-md text-white rounded-full hover:from-orange-600/90 hover:to-amber-600/90 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
+                  to="/shreeweb/offers"
+                  className="group relative overflow-hidden inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500/90 to-amber-500/90 backdrop-blur-md text-white rounded-full hover:from-orange-600/90 hover:to-amber-600/90 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
                     {stripTags(targetAudience.ctaText || 'Start with a Discovery Call')}
-                    <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </span>
@@ -801,7 +770,7 @@ export default function Home() {
 
       {/* Email Capture */}
       <section 
-        className={`py-20 px-4 ${getEmailCaptureBgClass(emailCaptureSection.backgroundColor)} relative overflow-hidden mb-0`}
+        className={`py-16 px-4 ${getEmailCaptureBgClass(emailCaptureSection.backgroundColor)} relative overflow-hidden mb-0 sm:py-20`}
         data-aos="fade-up"
         data-aos-duration="300"
       >
@@ -816,31 +785,31 @@ export default function Home() {
           <div className="max-w-5xl mx-auto text-center">
             {/* Icon */}
             <div 
-              className="w-20 h-20 bg-gradient-to-br from-stone-200 to-amber-200 rounded-2xl mx-auto mb-8 flex items-center justify-center"
+              className="w-16 h-16 bg-gradient-to-br from-stone-200 to-amber-200 rounded-2xl mx-auto mb-6 flex items-center justify-center sm:w-20 sm:h-20 sm:mb-8"
               data-aos="zoom-in"
               data-aos-duration="200"
               data-aos-delay="100"
             >
-              <svg className="w-10 h-10 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-stone-700 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             
             {/* Heading */}
             <h2 
-              className="text-4xl md:text-5xl font-serif text-stone-800 mb-6 leading-tight"
+              className="text-3xl font-serif text-stone-800 mb-4 leading-tight sm:text-4xl md:text-5xl sm:mb-6"
             >
               <CmsHtmlPreview html={emailCaptureSection.title} />
             </h2>
             
             {/* Decorative Line */}
             <div 
-              className="w-24 h-0.5 bg-amber-400 mx-auto mb-8"
+              className="w-20 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-24 sm:mb-8"
             ></div>
             
             {/* Description */}
             <p 
-              className="text-xl text-stone-600 mb-12 leading-relaxed max-w-2xl mx-auto"
+              className="text-lg text-stone-600 mb-8 leading-relaxed max-w-2xl mx-auto sm:text-xl sm:mb-12"
             >
               <CmsHtmlPreview html={emailCaptureSection.description} />
               <span className="block mt-2 font-medium text-stone-700">
@@ -850,7 +819,7 @@ export default function Home() {
             
             {/* Email Capture Component */}
             <div 
-              className="max-w-xl mx-auto mb-16"
+              className="max-w-xl mx-auto mb-12 sm:mb-16"
             >
               <EmailCapture
                 context="Homepage updates"
@@ -860,8 +829,8 @@ export default function Home() {
             </div>
             
             {/* Benefits Section */}
-            <div className="mb-12">
-              <div className="grid md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
+            <div className="mb-8 sm:mb-12">
+              <div className="grid gap-6 text-center max-w-4xl mx-auto sm:gap-8 md:grid-cols-3">
                 {(Array.isArray(emailCaptureSection.benefits) ? emailCaptureSection.benefits : []).map((b, i) => {
                   const icon = b?.icon || 'star';
                   const iconWrapClass =
@@ -877,31 +846,31 @@ export default function Home() {
                   return (
                     <div key={b?.id || i} className="flex flex-col items-center group">
                       <div
-                        className={`w-16 h-16 ${iconWrapClass} rounded-full flex items-center justify-center mb-4 transition-colors duration-300`}
+                        className={`w-12 h-12 ${iconWrapClass} rounded-full flex items-center justify-center mb-3 transition-colors duration-300 sm:w-16 sm:h-16 sm:mb-4`}
                       >
                         {icon === 'clock' && (
-                          <svg className={`w-8 h-8 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-6 h-6 ${iconColor} sm:w-8 sm:h-8`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         )}
                         {icon === 'lightbulb' && (
-                          <svg className={`w-8 h-8 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-6 h-6 ${iconColor} sm:w-8 sm:h-8`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                           </svg>
                         )}
                         {icon === 'heart' && (
-                          <svg className={`w-8 h-8 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-6 h-6 ${iconColor} sm:w-8 sm:h-8`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
                         )}
                         {!['clock', 'lightbulb', 'heart'].includes(icon) && (
-                          <svg className={`w-8 h-8 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className={`w-6 h-6 ${iconColor} sm:w-8 sm:h-8`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                           </svg>
                         )}
                       </div>
-                      <h3 className="text-lg font-serif text-stone-800 mb-2">{stripTags(b?.title || '')}</h3>
-                      <p className="text-stone-600 text-sm leading-relaxed">{stripTags(b?.description || '')}</p>
+                      <h3 className="text-base font-serif text-stone-800 mb-2 sm:text-lg">{stripTags(b?.title || '')}</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed sm:text-sm">{stripTags(b?.description || '')}</p>
                     </div>
                   );
                 })}
@@ -910,9 +879,9 @@ export default function Home() {
             
             {/* Bottom Note */}
             <div 
-              className="border-t border-stone-300/50 pt-8"
+              className="border-t border-stone-300/50 pt-6 sm:pt-8"
             >
-              <p className="text-stone-500 italic leading-relaxed">
+              <p className="text-sm text-stone-500 italic leading-relaxed sm:text-base">
                 <CmsHtmlPreview html={emailCaptureSection.bottomNote} />
               </p>
             </div>

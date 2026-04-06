@@ -11,6 +11,14 @@ const shreeWebAboutSchema = new mongoose.Schema(
       backgroundColor: { type: String, default: 'from-[#F4EFE6] via-amber-50 to-orange-50' }
     },
 
+    // About Me Section
+    aboutMe: {
+      title: { type: String, default: 'About me' },
+      subtitle: { type: String, default: 'Holding space for visionaries.' },
+      content: { type: String, default: 'This work didn\'t begin as something I planned — it grew quietly, through people who came to me when they needed support.\n\nAt first, it was physical — chronic pain, ongoing issues, things that felt stuck. But over time, I started noticing something more. The shifts weren\'t just in the body. They were happening in the moments that mattered.\n\nConfidence before important conversations. Clarity before big decisions. Things opening up… before they needed to. That\'s when I began to understand the deeper nature of this work.\n\nYour external reality — your business, your results, the way life responds to you — is deeply connected to your internal state. When that internal space is clear, things move differently. With more ease. More precision. Less force.\n\nWhat started as helping people heal has naturally expanded into supporting alignment, clarity, and energetic balance — especially for those who are building and leading.\n\nIt\'s not about doing more. It\'s about being clear enough to let it flow.' },
+      backgroundColor: { type: String, default: 'from-stone-50 to-amber-50' }
+    },
+
     // What We Do Section
     whatWeDo: {
       title: { type: String, default: 'What we do' },

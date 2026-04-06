@@ -49,6 +49,18 @@ const shreeWebOfferingSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  /** Optional Shopify Admin numeric product id for Storefront Cart / checkout (per offering). */
+  shopifyProductId: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  /** Optional Shopify variant id (numeric or gid) when a product has multiple variants. */
+  shopifyVariantId: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ShreeWebAdmin'

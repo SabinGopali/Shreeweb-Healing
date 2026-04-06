@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import ShreeWebNavbar from './components/ShreeWebNavbar';
 import ShreeWebFooter from './components/ShreeWebFooter';
+import BackToTopButton from './components/BackToTopButton';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -33,7 +34,7 @@ export default function ShreeWebLayout() {
         <Outlet />
       </main>
       <ShreeWebFooter />
+      <BackToTopButton />
     </div>
   );
 }
-

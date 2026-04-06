@@ -14,7 +14,9 @@ export default function CmsOfferingsEdit() {
     price: '',
     category: 'single',
     featured: false,
-    features: ['']
+    features: [''],
+    shopifyProductId: '',
+    shopifyVariantId: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -60,7 +62,9 @@ export default function CmsOfferingsEdit() {
           price: offering.price || '',
           category: offering.category || 'single',
           featured: offering.featured || false,
-          features: offering.features && offering.features.length > 0 ? offering.features : ['']
+          features: offering.features && offering.features.length > 0 ? offering.features : [''],
+          shopifyProductId: offering.shopifyProductId || '',
+          shopifyVariantId: offering.shopifyVariantId || '',
         });
       }
     } catch (error) {
@@ -282,14 +286,15 @@ export default function CmsOfferingsEdit() {
                 />
               </div>
               <div>
-                <label className={cmsTheme.label}>Price</label>
+                <label className={cmsTheme.label}>Price (USD)</label>
                 <input
                   type="text"
                   value={form.price}
                   onChange={(e) => updateField('price')(e.target.value)}
-                  placeholder="e.g. $111 or Free"
+                  placeholder="e.g. $45 or Complimentary"
                   className={cmsTheme.input}
                 />
+                <p className="mt-1 text-xs text-stone-500">All amounts are in US dollars (USD).</p>
               </div>
               <div>
                 <label className={cmsTheme.label}>Category</label>
@@ -368,6 +373,37 @@ export default function CmsOfferingsEdit() {
                 )}
               </div>
             ))}
+          </div>
+
+          <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
+            <h2 className={`${cmsTheme.title} text-lg`}>Shopify checkout</h2>
+            <p className="text-sm text-stone-600">
+              Link this offering to a product in Shopify so booking opens the correct paid item. Find the numeric
+              product ID in Shopify Admin → Products → product → URL or “API” section. Variant ID is only needed if
+              the product has multiple variants.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className={cmsTheme.label}>Shopify product ID</label>
+                <input
+                  type="text"
+                  value={form.shopifyProductId}
+                  onChange={(e) => updateField('shopifyProductId')(e.target.value)}
+                  placeholder="e.g. 8123456789012"
+                  className={`${cmsTheme.input} font-mono text-sm`}
+                />
+              </div>
+              <div>
+                <label className={cmsTheme.label}>Shopify variant ID (optional)</label>
+                <input
+                  type="text"
+                  value={form.shopifyVariantId}
+                  onChange={(e) => updateField('shopifyVariantId')(e.target.value)}
+                  placeholder="Numeric or gid://shopify/ProductVariant/…"
+                  className={`${cmsTheme.input} font-mono text-sm`}
+                />
+              </div>
+            </div>
           </div>
 
           <div className={`${cmsTheme.card} w-full overflow-hidden p-0`}>

@@ -286,6 +286,62 @@ export default function CmsAbout() {
           </form>
         </div>
 
+        {/* About Me Section */}
+        <div className={`${cmsTheme.card} ${cmsTheme.cardPadding}`}>
+          <h2 className={`${cmsTheme.title} text-xl mb-4`}>About Me Section</h2>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const updates = {
+              title: formData.get('title'),
+              subtitle: formData.get('subtitle'),
+              content: formData.get('content'),
+            };
+            updateSection('aboutMe', updates);
+          }} className="space-y-4">
+            <div>
+              <label className={cmsTheme.label}>Title</label>
+              <input
+                type="text"
+                name="title"
+                defaultValue={aboutData.aboutMe?.title}
+                className={cmsTheme.input}
+                placeholder="About me"
+              />
+            </div>
+            <div>
+              <label className={cmsTheme.label}>Subtitle</label>
+              <input
+                type="text"
+                name="subtitle"
+                defaultValue={aboutData.aboutMe?.subtitle}
+                className={cmsTheme.input}
+                placeholder="Holding space for visionaries."
+              />
+            </div>
+            <div>
+              <label className={cmsTheme.label}>Content</label>
+              <textarea
+                name="content"
+                defaultValue={aboutData.aboutMe?.content}
+                rows={12}
+                className={cmsTheme.input}
+                placeholder="This work didn't begin as something I planned..."
+              />
+              <p className="text-xs text-stone-500 mt-1">
+                Use double line breaks (press Enter twice) to create new paragraphs
+              </p>
+            </div>
+            <button
+              type="submit"
+              disabled={saving}
+              className={cmsTheme.btnPrimary}
+            >
+              {saving ? 'Saving...' : 'Update About Me Section'}
+            </button>
+          </form>
+        </div>
+
         {/* What We Do Section */}
         <div className={`${cmsTheme.card} ${cmsTheme.cardPadding}`}>
           <h2 className={`${cmsTheme.title} text-xl mb-4`}>What We Do Section</h2>

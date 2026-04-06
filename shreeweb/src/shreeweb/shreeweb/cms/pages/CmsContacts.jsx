@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cmsTheme } from '../shreewebCmsTheme';
+import SingleImageUploader from '../components/ImageUploader';
 
 export default function CmsContacts() {
   const [query, setQuery] = useState('');
@@ -242,9 +243,24 @@ export default function CmsContacts() {
           {/* Logo Section */}
           <div className="border-b border-stone-200 pb-6">
             <h3 className="text-base font-medium text-stone-800 mb-4">Logo Settings</h3>
-            <div className="grid gap-4 md:grid-cols-3">
+            
+            <SingleImageUploader
+              image={pageContent.logo?.imageUrl || ''}
+              onChange={(url) => updateField('logo.imageUrl', url)}
+              label="Logo Image"
+              accept="image/*"
+              uploadText="Upload Logo Image"
+              description="Click to browse or drag and drop your logo"
+              recommendation="High-quality logo images • PNG, JPG, GIF, SVG"
+              previewAlt="Contact page logo preview"
+              successMessage="Logo uploaded successfully"
+              successDescription="This logo will be displayed on the contact page"
+            />
+            <p className="text-xs text-stone-500 mt-2">If no image is uploaded, the logo text below will be displayed.</p>
+
+            <div className="grid gap-4 md:grid-cols-3 mt-4">
               <div>
-                <label className={cmsTheme.label}>Logo Text</label>
+                <label className={cmsTheme.label}>Logo Text (Fallback)</label>
                 <input
                   className={cmsTheme.input}
                   value={pageContent.logo?.text || ''}
@@ -547,12 +563,6 @@ export default function CmsContacts() {
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center text-stone-600">
                     <p className="font-medium text-stone-800">No contact messages found.</p>
-                    <p className="mt-2 text-sm">
-                      Send a test from{' '}
-                      <Link className="text-amber-900 underline decoration-amber-400/70" to="/shreeweb/contact">
-                        /shreeweb/contact
-                      </Link>
-                    </p>
                   </td>
                 </tr>
               ) : (

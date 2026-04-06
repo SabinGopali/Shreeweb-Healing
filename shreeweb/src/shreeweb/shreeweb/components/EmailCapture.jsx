@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SHREEWEB_EMAIL_CAPTURE_KEY } from '../lib/shreewebStorage';
 
 function EmailCapture({
   context = '',
@@ -28,19 +27,30 @@ function EmailCapture({
 
     setLoading(true);
     try {
-      const entry = {
-        email: val,
-        context,
-        at: new Date().toISOString(),
-      };
-      window.localStorage.setItem(
-        SHREEWEB_EMAIL_CAPTURE_KEY,
-        JSON.stringify([entry, ...(JSON.parse(window.localStorage.getItem(SHREEWEB_EMAIL_CAPTURE_KEY) || '[]') || [])].slice(0, 500))
-      );
+      const response = await fetch('/backend/email-captures/capture', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: val,
+          source: 'shreeweb',
+          context: context || 'general',
+          tags: context ? [context] : []
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to save email');
+      }
+
       setSuccess('Thanks! We\'ll reach out with updates and availability.');
       setEmail('');
     } catch (err) {
-      setError('Failed to save email. Please try again.');
+      console.error('Error capturing email:', err);
+      setError(err.message || 'Failed to save email. Please try again.');
     } finally {
       setLoading(false);
     }

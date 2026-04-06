@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useShreewebAuth } from '../hooks/useShreewebAuth';
 
+const resolveImage = (image) => {
+  if (!image) return '';
+  if (image.startsWith('blob:') || image.startsWith('data:')) return image;
+  if (/^https?:\/\//i.test(image)) return image;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  return image.startsWith('/') ? `${backendUrl}${image}` : `${backendUrl}/${image}`;
+};
+
 const navItemClass = ({ isActive }) =>
   `block rounded-full px-4 py-2 text-sm font-medium transition lg:inline-block ${
     isActive ? 'bg-orange-100 text-orange-800' : 'text-stone-700 hover:bg-orange-50'
@@ -17,6 +25,7 @@ const fallbackLinks = [
 
 const fallbackBrand = {
   logoText: 'J',
+  logoImageUrl: '',
   brandTitle: 'JAPANDI',
   brandSubtitle: 'Energetic Alignment',
 };
@@ -65,17 +74,29 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-[#F4EFE6]/80 backdrop-blur supports-[backdrop-filter]:bg-[#F4EFE6]/60">
-      <div className={`${shellClass} flex items-center justify-between gap-3 py-3 sm:py-4`}>
+      <div className={`${shellClass} flex items-center justify-between gap-2 py-3 sm:gap-3 sm:py-4`}>
         <Link
           to="/shreeweb/home"
-          className="flex min-w-0 flex-shrink-0 items-center gap-3"
+          className="flex min-w-0 flex-shrink items-center gap-2 sm:gap-3"
           onClick={() => setMobileOpen(false)}
         >
-          <div className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-2xl bg-stone-800 text-white">
-            <span className="text-sm font-bold tracking-widest">{brand.logoText}</span>
-          </div>
-          <div className="min-w-0 leading-tight">
-            <div className="truncate text-lg font-serif tracking-wide text-stone-800">{brand.brandTitle}</div>
+          {brand.logoImageUrl ? (
+            <img 
+              src={resolveImage(brand.logoImageUrl)} 
+              alt={brand.brandTitle}
+              className="h-12 w-12 flex-shrink-0 object-contain sm:h-14 sm:w-14"
+              onError={(e) => {
+                console.error('Navbar logo failed to load:', brand.logoImageUrl);
+                e.target.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl bg-stone-800 text-white sm:h-14 sm:w-14">
+              <span className="text-sm font-bold tracking-widest sm:text-base">{brand.logoText}</span>
+            </div>
+          )}
+          <div className="hidden min-w-0 leading-tight xs:block sm:block">
+            <div className="truncate text-base font-serif tracking-wide text-stone-800 sm:text-lg">{brand.brandTitle}</div>
             <div className="truncate text-xs text-stone-600">{brand.brandSubtitle}</div>
           </div>
         </Link>
@@ -100,20 +121,9 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
           ))}
         </nav>
 
-        <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
-          {!loading && !user ? (
-            <>
-              <Link
-                to="/shreeweb/login"
-                className="group relative overflow-hidden rounded-full border-2 border-orange-200 bg-white px-6 py-2.5 text-sm font-semibold text-orange-800 transition-all duration-300 hover:border-orange-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-              >
-                <span className="relative z-10">Login</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-amber-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-              </Link>
-            </>
-          ) : null}
+        <div className="flex flex-shrink-0 items-center gap-1.5 sm:gap-2">
           {!loading && user ? (
-            <div className="flex max-w-[140px] items-center gap-2">
+            <div className="hidden items-center gap-2 sm:flex sm:max-w-[140px]">
               <span className="truncate text-xs font-medium text-stone-600" title={user.email || ''}>
                 {displayName(user)}
               </span>
@@ -130,18 +140,12 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
             </div>
           ) : null}
           <Link
-            to="/shreeweb/cms/overview"
-            className="hidden rounded-full border border-orange-200 bg-[#F4EFE6] px-6 py-2.5 text-sm font-semibold text-orange-900 transition-all duration-300 hover:bg-orange-50 hover:border-orange-300 hover:shadow-md lg:inline-block"
+            to="/shreeweb/offers"
+            className="group relative hidden overflow-hidden rounded-full border border-orange-200 bg-[#F4EFE6] px-4 py-2 text-xs font-semibold text-orange-900 transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-50 hover:shadow-md active:translate-y-0 sm:px-6 sm:py-2.5 sm:text-sm lg:inline-flex"
           >
-            Dashboard
-          </Link>
-          <Link
-            to="/shreeweb/booking"
-            className="group relative overflow-hidden rounded-full border border-orange-200 bg-[#F4EFE6] px-6 py-2.5 text-sm font-semibold text-orange-900 transition-all duration-300 hover:bg-orange-50 hover:border-orange-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 sm:px-8 sm:py-3"
-          >
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
               Book Now
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </span>
@@ -149,7 +153,7 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-800 transition-all duration-200 hover:bg-stone-50 hover:shadow-md lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-2.5 py-1.5 text-xs font-medium text-stone-800 transition-all duration-200 hover:bg-stone-50 hover:shadow-md sm:px-3 sm:py-2 sm:text-sm lg:hidden"
             aria-expanded={mobileOpen}
             aria-label="Open menu"
             onClick={() => setMobileOpen((o) => !o)}
@@ -185,18 +189,6 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
                 </NavLink>
               )
             ))}
-            {!loading && !user ? (
-              <div className="mt-2 flex flex-col gap-2">
-                <Link
-                  to="/shreeweb/login"
-                  className="group relative overflow-hidden block rounded-full border-2 border-orange-200 bg-white px-4 py-3 text-center text-sm font-semibold text-orange-800 transition-all duration-300 hover:border-orange-300 hover:shadow-lg"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <span className="relative z-10">Login</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-amber-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                </Link>
-              </div>
-            ) : null}
             {!loading && user ? (
               <div className="mt-3 rounded-2xl border border-stone-200 bg-stone-50/80 px-4 py-3">
                 <p className="truncate text-xs text-stone-500">Signed in</p>
@@ -214,14 +206,7 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
               </div>
             ) : null}
             <Link
-              to="/shreeweb/cms/overview"
-              className="mt-2 block rounded-full border border-orange-200 bg-[#F4EFE6] px-4 py-3 text-center text-sm font-semibold text-orange-900 transition-all duration-300 hover:bg-orange-50 hover:border-orange-300"
-              onClick={() => setMobileOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/shreeweb/booking"
+              to="/shreeweb/offers"
               className="group relative overflow-hidden mt-2 block rounded-full border border-orange-200 bg-[#F4EFE6] px-4 py-3 text-center text-sm font-semibold text-orange-900 transition-all duration-300 hover:bg-orange-50 hover:border-orange-300 hover:shadow-md"
               onClick={() => setMobileOpen(false)}
             >

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import TestimonialsSection from '../components/TestimonialsSection';
 import OffersSection from '../components/OffersSection';
 import ClaritySection from '../components/ClaritySection';
-import { Link } from 'react-router-dom';
 
 export default function Offerings() {
   const [settings, setSettings] = useState({
@@ -11,14 +10,6 @@ export default function Offerings() {
       sectionDescription: 'Select the container that aligns with your current capacity and desired expansion.',
       backgroundColor: '#F4EFE6',
       cardBackground: '#EDE7DC'
-    },
-    additionalPrograms: {
-      enabled: true,
-      title: 'Looking for deeper transformation?',
-      programs: [
-        { name: 'Realignment Program', sessions: '8 Sessions' },
-        { name: 'Transformation Program', sessions: '12 Sessions' }
-      ]
     }
   });
 
@@ -48,7 +39,7 @@ export default function Offerings() {
     <div className="w-full">
       {/* Hero Section */}
       <section 
-        className="py-20 px-4 text-center relative overflow-hidden"
+        className="py-12 px-4 text-center relative overflow-hidden sm:py-16 md:py-20"
         style={{ backgroundColor: settings.section.backgroundColor }}
         data-aos="fade-in"
         data-aos-duration="300"
@@ -63,7 +54,7 @@ export default function Offerings() {
         
         <div className="max-w-4xl mx-auto relative z-10">
           <h1 
-            className="text-5xl font-serif text-stone-800 mb-6"
+            className="text-3xl font-serif text-stone-800 mb-4 sm:text-4xl md:text-5xl sm:mb-6"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="200"
@@ -71,7 +62,7 @@ export default function Offerings() {
             {settings.section.sectionTitle}
           </h1>
           <p 
-            className="text-xl text-stone-600 mb-12 font-serif"
+            className="text-lg text-stone-600 mb-8 font-serif sm:text-xl sm:mb-12"
             data-aos="fade-up"
             data-aos-duration="200"
             data-aos-delay="300"
@@ -83,7 +74,7 @@ export default function Offerings() {
 
       {/* Offerings Grid */}
       <section 
-        className="py-16 px-4 relative"
+        className="py-12 px-4 relative sm:py-16"
         style={{ backgroundColor: settings.section.backgroundColor }}
         data-aos="fade-up"
         data-aos-duration="300"
@@ -97,45 +88,6 @@ export default function Offerings() {
           </div>
         </div>
       </section>
-
-      {/* Deeper Transformation Section */}
-      {settings.additionalPrograms.enabled && (
-        <section 
-          className="py-16 px-4 bg-[#F4EFE6]"
-          data-aos="fade-up"
-          data-aos-duration="300"
-        >
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 
-              className="text-3xl font-serif text-stone-700 mb-12"
-              data-aos="fade-up"
-              data-aos-duration="200"
-              data-aos-delay="100"
-            >
-              {settings.additionalPrograms.title}
-            </h2>
-            <div 
-              className="flex flex-wrap justify-center gap-6"
-              data-aos="fade-up"
-              data-aos-duration="200"
-              data-aos-delay="200"
-            >
-              {settings.additionalPrograms.programs.map((program, index) => (
-                <Link
-                  key={index}
-                  to={`/shreeweb/booking?plan=${program.name.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="px-8 py-4 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
-                  data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
-                  data-aos-duration="200"
-                  data-aos-delay={300 + index * 100}
-                >
-                  {program.name} ({program.sessions})
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Call to Action - Now using CMS-managed content */}
       <div data-aos="fade-up" data-aos-duration="300">

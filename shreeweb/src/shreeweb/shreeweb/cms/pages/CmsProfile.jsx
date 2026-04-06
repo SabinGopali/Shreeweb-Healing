@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SHREEWEB_CMS_SETTINGS_KEY, writeJsonStorage, readJsonStorage } from '../../lib/shreewebStorage';
+import { useAuth } from '../../contexts/AuthContext';
 
 const UserIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -13,31 +13,6 @@ const EmailIcon = () => (
   </svg>
 );
 
-const PhoneIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-  </svg>
-);
-
-const BusinessIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-  </svg>
-);
-
-const LocationIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-
-const WebsiteIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-  </svg>
-);
-
 const SaveIcon = () => (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -45,26 +20,50 @@ const SaveIcon = () => (
 );
 
 export default function CmsProfile() {
+  const { admin } = useAuth();
   const [profile, setProfile] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    businessName: '',
-    location: '',
-    website: '',
-    bio: '',
-    specialties: '',
-    certifications: '',
-    experience: ''
+    firstName: '',
+    lastName: '',
+    email: ''
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const settings = readJsonStorage(SHREEWEB_CMS_SETTINGS_KEY, {});
-    if (settings.profile) {
-      setProfile(settings.profile);
-    }
+    fetchProfile();
   }, []);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await fetch('/backend/shreeweb-auth/profile', {
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Failed to fetch profile');
+      }
+
+      if (data.success && data.admin) {
+        setProfile({
+          firstName: data.admin.profile?.firstName || '',
+          lastName: data.admin.profile?.lastName || '',
+          email: data.admin.email || ''
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+      setError(err.message || 'Failed to load profile');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setProfile(prev => ({
@@ -73,16 +72,51 @@ export default function CmsProfile() {
     }));
   };
 
-  const handleSave = () => {
-    const settings = readJsonStorage(SHREEWEB_CMS_SETTINGS_KEY, {});
-    const updatedSettings = {
-      ...settings,
-      profile
-    };
-    writeJsonStorage(SHREEWEB_CMS_SETTINGS_KEY, updatedSettings);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setError('');
+
+      const response = await fetch('/backend/shreeweb-auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(profile),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Failed to update profile');
+      }
+
+      if (data.success) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      setError(err.message || 'Failed to update profile');
+      alert(err.message || 'Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="bg-white rounded-2xl border border-stone-200 p-6">
+          <div className="animate-pulse">
+            <div className="h-8 bg-stone-200 rounded w-1/3 mb-4"></div>
+            <div className="h-4 bg-stone-200 rounded w-2/3"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -94,10 +128,16 @@ export default function CmsProfile() {
           </div>
           <div>
             <h2 className="text-2xl font-serif text-stone-900">Practitioner Profile</h2>
-            <p className="text-stone-600 mt-1">Manage your professional information and practice details</p>
+            <p className="text-stone-600 mt-1">Manage your professional information and account details</p>
           </div>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <p className="text-red-800 text-sm">{error}</p>
+        </div>
+      )}
 
       {/* Profile Form */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -111,20 +151,55 @@ export default function CmsProfile() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-2">
-                Full Name
+                First Name
               </label>
               <input
                 type="text"
-                value={profile.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
+                value={profile.firstName}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
                 className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="Your full name"
+                placeholder="Your first name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-2 flex items-center gap-2">
-                <EmailIcon />
+              <label className="block text-sm font-medium text-stone-700 mb-2">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={profile.lastName}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                placeholder="Your last name"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Account Information */}
+        <div className="bg-white rounded-2xl border border-stone-200 p-6">
+          <h3 className="text-lg font-semibold text-stone-900 mb-6 flex items-center gap-2">
+            <EmailIcon />
+            Account Information
+          </h3>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-700 mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                value={admin?.username || ''}
+                disabled
+                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl bg-stone-50 text-stone-500 cursor-not-allowed"
+              />
+              <p className="text-xs text-stone-500 mt-1">Username cannot be changed</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-700 mb-2">
                 Email Address
               </label>
               <input
@@ -137,174 +212,77 @@ export default function CmsProfile() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-2 flex items-center gap-2">
-                <PhoneIcon />
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                value={profile.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="+1 (555) 123-4567"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Business Information */}
-        <div className="bg-white rounded-2xl border border-stone-200 p-6">
-          <h3 className="text-lg font-semibold text-stone-900 mb-6 flex items-center gap-2">
-            <BusinessIcon />
-            Business Information
-          </h3>
-          
-          <div className="space-y-4">
-            <div>
               <label className="block text-sm font-medium text-stone-700 mb-2">
-                Business/Practice Name
+                Role
               </label>
               <input
                 type="text"
-                value={profile.businessName}
-                onChange={(e) => handleInputChange('businessName', e.target.value)}
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="Your practice name"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-stone-700 mb-2 flex items-center gap-2">
-                <LocationIcon />
-                Location
-              </label>
-              <input
-                type="text"
-                value={profile.location}
-                onChange={(e) => handleInputChange('location', e.target.value)}
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="City, State/Country"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-stone-700 mb-2 flex items-center gap-2">
-                <WebsiteIcon />
-                Website URL
-              </label>
-              <input
-                type="url"
-                value={profile.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-                placeholder="https://yourwebsite.com"
+                value={admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                disabled
+                className="w-full px-4 py-2.5 border border-stone-300 rounded-xl bg-stone-50 text-stone-500 cursor-not-allowed"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Professional Details */}
+      {/* Account Details */}
       <div className="bg-white rounded-2xl border border-stone-200 p-6">
-        <h3 className="text-lg font-semibold text-stone-900 mb-6">Professional Details</h3>
+        <h3 className="text-lg font-semibold text-stone-900 mb-6">Account Details</h3>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-2">
-              Bio/About
-            </label>
-            <textarea
-              value={profile.bio}
-              onChange={(e) => handleInputChange('bio', e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-none"
-              placeholder="Brief description of your practice and approach..."
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-stone-50 rounded-xl p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Account Status</p>
+            <p className="text-lg font-medium text-stone-900">
+              {admin?.isActive ? (
+                <span className="inline-flex items-center gap-2 text-green-600">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Active
+                </span>
+              ) : (
+                <span className="text-red-600">Inactive</span>
+              )}
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-2">
-              Specialties
-            </label>
-            <textarea
-              value={profile.specialties}
-              onChange={(e) => handleInputChange('specialties', e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-none"
-              placeholder="Energy healing, chakra alignment, meditation..."
-            />
+          <div className="bg-stone-50 rounded-xl p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Last Login</p>
+            <p className="text-lg font-medium text-stone-900">
+              {admin?.lastLogin ? new Date(admin.lastLogin).toLocaleDateString() : 'Never'}
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-2">
-              Certifications
-            </label>
-            <textarea
-              value={profile.certifications}
-              onChange={(e) => handleInputChange('certifications', e.target.value)}
-              rows={3}
-              className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-none"
-              placeholder="List your relevant certifications..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-2">
-              Years of Experience
-            </label>
-            <input
-              type="text"
-              value={profile.experience}
-              onChange={(e) => handleInputChange('experience', e.target.value)}
-              className="w-full px-4 py-2.5 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
-              placeholder="e.g., 5+ years in energy healing"
-            />
+          <div className="bg-stone-50 rounded-xl p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Member Since</p>
+            <p className="text-lg font-medium text-stone-900">
+              {admin?.createdAt ? new Date(admin.createdAt).toLocaleDateString() : 'N/A'}
+            </p>
           </div>
         </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <button
-          onClick={handleSave}
-          className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-            saved
-              ? 'bg-green-600 text-white'
-              : 'bg-amber-600 hover:bg-amber-700 text-white shadow-sm hover:shadow-md'
-          }`}
-        >
-          <SaveIcon />
-          {saved ? 'Profile Saved!' : 'Save Profile'}
-        </button>
       </div>
 
       {/* Profile Preview */}
-      {(profile.name || profile.businessName) && (
+      {(profile.firstName || profile.lastName) && (
         <div className="bg-gradient-to-br from-stone-50 to-amber-50 rounded-2xl border border-stone-200 p-6">
           <h3 className="text-lg font-semibold text-stone-900 mb-4">Profile Preview</h3>
           <div className="bg-white rounded-xl p-6 border border-stone-200">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
-                <UserIcon />
+                <span className="text-lg font-bold">
+                  {profile.firstName?.[0] || profile.lastName?.[0] || 'A'}
+                </span>
               </div>
               <div className="flex-1">
                 <h4 className="text-xl font-serif text-stone-900">
-                  {profile.name || 'Your Name'}
+                  {[profile.firstName, profile.lastName].filter(Boolean).join(' ') || 'Your Name'}
                 </h4>
-                {profile.businessName && (
-                  <p className="text-amber-700 font-medium">{profile.businessName}</p>
-                )}
-                {profile.location && (
-                  <p className="text-stone-600 text-sm mt-1">{profile.location}</p>
-                )}
-                {profile.bio && (
-                  <p className="text-stone-700 mt-3 leading-relaxed">{profile.bio}</p>
-                )}
-                {profile.specialties && (
-                  <div className="mt-3">
-                    <span className="text-sm font-medium text-stone-600">Specialties: </span>
-                    <span className="text-sm text-stone-700">{profile.specialties}</span>
-                  </div>
+                {profile.email && (
+                  <p className="text-stone-600 text-sm mt-1 flex items-center gap-2">
+                    <EmailIcon />
+                    {profile.email}
+                  </p>
                 )}
               </div>
             </div>

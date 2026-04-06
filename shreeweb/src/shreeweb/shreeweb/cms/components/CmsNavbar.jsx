@@ -85,6 +85,10 @@ export default function CmsNavbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(0);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [brandData, setBrandData] = useState({
     logoText: 'J',
     brandTitle: 'JAPANDI',
@@ -95,6 +99,7 @@ export default function CmsNavbar() {
   const searchWrapRef = useRef(null);
   const inputRef = useRef(null);
   const userMenuRef = useRef(null);
+  const notificationsRef = useRef(null);
 
   // Fetch brand data from navbar menu settings
   useEffect(() => {
@@ -111,6 +116,94 @@ export default function CmsNavbar() {
     };
     fetchBrandData();
   }, []);
+
+  // Fetch notifications and unread count
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000); // Poll every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const res = await fetch('/backend/shreeweb-notifications/unread-count', {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setUnreadCount(data.unreadCount);
+      }
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    if (notificationsLoading) return;
+    
+    try {
+      setNotificationsLoading(true);
+      const res = await fetch('/backend/shreeweb-notifications?limit=10', {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setNotifications(data.notifications);
+        setUnreadCount(data.unreadCount);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setNotificationsLoading(false);
+    }
+  };
+
+  const handleNotificationClick = async (notification) => {
+    // Mark as read
+    if (!notification.isRead) {
+      try {
+        await fetch(`/backend/shreeweb-notifications/${notification._id}/read`, {
+          method: 'PUT',
+          credentials: 'include'
+        });
+        // Update local state
+        setNotifications(prev => 
+          prev.map(n => n._id === notification._id ? { ...n, isRead: true } : n)
+        );
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
+    }
+
+    // Navigate if link exists
+    if (notification.link) {
+      navigate(notification.link);
+      setShowNotifications(false);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      const res = await fetch('/backend/shreeweb-notifications/mark-all-read', {
+        method: 'PUT',
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        setUnreadCount(0);
+      }
+    } catch (error) {
+      console.error('Error marking all as read:', error);
+    }
+  };
+
+  const toggleNotifications = () => {
+    if (!showNotifications) {
+      fetchNotifications();
+    }
+    setShowNotifications(!showNotifications);
+  };
 
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim();
@@ -130,6 +223,9 @@ export default function CmsNavbar() {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
         setShowUserMenu(false);
       }
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
     };
     document.addEventListener('mousedown', onDoc);
     return () => document.removeEventListener('mousedown', onDoc);
@@ -139,6 +235,7 @@ export default function CmsNavbar() {
     setMobileOpen(false);
     setSearchOpen(false);
     setShowUserMenu(false);
+    setShowNotifications(false);
   }, [pathname]);
 
   const go = useCallback(
@@ -198,19 +295,114 @@ export default function CmsNavbar() {
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:order-3 lg:ml-auto">
             {/* Notifications Icon */}
-            <button
-              type="button"
-              className="relative flex items-center justify-center rounded-xl border border-stone-300/90 bg-white p-2.5 text-stone-600 shadow-sm transition hover:border-stone-400 hover:bg-stone-50 hover:text-stone-800"
-              title="Notifications"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              {/* Notification badge - you can conditionally show this based on unread notifications */}
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                3
-              </span>
-            </button>
+            <div className="relative" ref={notificationsRef}>
+              <button
+                type="button"
+                onClick={toggleNotifications}
+                className="relative flex items-center justify-center rounded-xl border border-stone-300/90 bg-white p-2.5 text-stone-600 shadow-sm transition hover:border-stone-400 hover:bg-stone-50 hover:text-stone-800"
+                title="Notifications"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <div className="absolute right-0 top-[calc(100%+8px)] z-[55] w-96 max-w-[calc(100vw-2rem)] rounded-2xl border border-stone-200 bg-white shadow-xl">
+                  <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
+                    <h3 className="text-sm font-semibold text-stone-900">Notifications</h3>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={handleMarkAllAsRead}
+                        className="text-xs font-medium text-amber-600 hover:text-amber-700 transition"
+                      >
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="max-h-[400px] overflow-y-auto">
+                    {notificationsLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-spin rounded-full h-6 w-6 border-2 border-stone-300 border-t-amber-600"></div>
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="py-8 text-center">
+                        <svg className="w-12 h-12 mx-auto text-stone-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <p className="text-sm text-stone-500">No notifications</p>
+                      </div>
+                    ) : (
+                      <div className="divide-y divide-stone-100">
+                        {notifications.map((notification) => (
+                          <button
+                            key={notification._id}
+                            onClick={() => handleNotificationClick(notification)}
+                            className={`w-full text-left px-4 py-3 transition hover:bg-stone-50 ${
+                              !notification.isRead ? 'bg-amber-50/30' : ''
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
+                                notification.priority === 'high' ? 'bg-red-100 text-red-600' :
+                                notification.priority === 'medium' ? 'bg-amber-100 text-amber-600' :
+                                'bg-stone-100 text-stone-600'
+                              }`}>
+                                {notification.icon === 'email' && (
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                  </svg>
+                                )}
+                                {notification.icon === 'message' && (
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                  </svg>
+                                )}
+                                {notification.icon === 'calendar' && (
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                )}
+                                {(notification.icon === 'info' || notification.icon === 'bell') && (
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-sm ${!notification.isRead ? 'font-semibold text-stone-900' : 'font-medium text-stone-700'}`}>
+                                  {notification.title}
+                                </p>
+                                <p className="text-xs text-stone-500 mt-0.5 line-clamp-2">
+                                  {notification.message}
+                                </p>
+                                <p className="text-[10px] text-stone-400 mt-1">
+                                  {new Date(notification.createdAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              </div>
+                              {!notification.isRead && (
+                                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-amber-500 mt-1.5"></div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* User Menu */}
             <div className="relative" ref={userMenuRef}>
@@ -266,16 +458,6 @@ export default function CmsNavbar() {
                 </div>
               )}
             </div>
-
-            <Link
-              to="/shreeweb/home"
-              className="hidden items-center gap-2 rounded-xl bg-stone-800 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-stone-900 sm:inline-flex"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              View {brandData.brandTitle}
-            </Link>
 
             <button
               type="button"
@@ -369,17 +551,22 @@ export default function CmsNavbar() {
         <div className="border-t border-stone-200/80 bg-[#EDE8DF] lg:hidden">
           <nav className="max-h-[min(70vh,480px)] overflow-y-auto px-4 py-4">
             {/* Mobile Notifications */}
-            <div className="mb-4 flex items-center justify-between rounded-xl bg-white/80 px-3 py-2.5 ring-1 ring-stone-200/80">
+            <button
+              onClick={toggleNotifications}
+              className="mb-4 w-full flex items-center justify-between rounded-xl bg-white/80 px-3 py-2.5 ring-1 ring-stone-200/80 hover:bg-white transition"
+            >
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
                 <span className="text-sm font-medium text-stone-800">Notifications</span>
               </div>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                3
-              </span>
-            </div>
+              {unreadCount > 0 && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
             
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500">All pages</p>
             <ul className="space-y-1">
@@ -400,16 +587,6 @@ export default function CmsNavbar() {
                 </li>
               ))}
             </ul>
-            <Link
-              to="/shreeweb/home"
-              className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-stone-800 py-3 text-center text-sm font-medium text-white"
-              onClick={() => setMobileOpen(false)}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              View {brandData.brandTitle}
-            </Link>
           </nav>
         </div>
       ) : null}

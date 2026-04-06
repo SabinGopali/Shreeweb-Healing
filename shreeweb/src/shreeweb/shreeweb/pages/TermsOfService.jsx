@@ -1,7 +1,58 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function TermsOfService() {
+  const [termsData, setTermsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTermsData();
+  }, []);
+
+  const fetchTermsData = async () => {
+    try {
+      const response = await fetch('/backend/shreeweb-terms-of-service/public');
+      const data = await response.json();
+      
+      if (data.success) {
+        setTermsData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching terms of service data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fallback data
+  const fallbackData = {
+    hero: {
+      tag: 'Terms of Service',
+      title: 'Clear expectations',
+      subtitle: 'for your journey',
+      description: 'These terms are designed to create clarity, mutual respect, and energetic integrity within this work.'
+    },
+    lastUpdatedDate: '6 April 2026',
+    introduction: {
+      description: 'By accessing this website or engaging with Om Shree Guidance, you agree to the following:'
+    }
+  };
+
+  const data = termsData || fallbackData;
+
+  if (loading) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-center py-24">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-stone-600">Loading terms of service...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -14,21 +65,25 @@ export default function TermsOfService() {
         </div>
         
         <div className="max-w-5xl mx-auto relative z-10">
-          <div className="text-sm font-medium text-stone-600 mb-6 tracking-[0.2em] uppercase">Terms of Service</div>
+          <div className="text-sm font-medium text-stone-600 mb-6 tracking-[0.2em] uppercase">
+            {data.hero?.tag || 'Terms of Service'}
+          </div>
           <h1 className="text-6xl md:text-7xl font-serif text-stone-800 mb-8 leading-tight">
-            Clear expectations 
-            <span className="block text-stone-600 italic font-light mt-2">for your journey</span>
+            {data.hero?.title || 'Clear expectations'} 
+            <span className="block text-stone-600 italic font-light mt-2">
+              {data.hero?.subtitle || 'for your journey'}
+            </span>
           </h1>
           <div className="w-32 h-0.5 bg-amber-400 mx-auto mb-8"></div>
           <p className="text-xl md:text-2xl text-stone-700 leading-relaxed max-w-4xl mx-auto font-light">
-            Establishing mutual understanding and clear boundaries for our energetic alignment sessions and services.
+            {data.hero?.description || 'These terms are designed to create clarity, mutual respect, and energetic integrity within this work.'}
           </p>
         </div>
       </section>
 
       {/* Content Section */}
       <section className="py-20 px-4 bg-[#F4EFE6]">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-lg border border-stone-200/50">
             
             {/* Last Updated */}
@@ -37,472 +92,206 @@ export default function TermsOfService() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Last Updated: March 2026 | Effective: Immediately
-              </div>
-            </div>
-            <div className="space-y-12">
-              {/* Agreement */}
-              <div className="border-l-4 border-amber-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Agreement to Terms</h2>
-                
-                <div className="bg-amber-50 rounded-2xl p-8 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Your Acceptance</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        By accessing and using this website, booking sessions, or engaging with our services, you agree to be bound by these Terms of Service. 
-                        If you do not agree to these terms, please do not use our services.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-stone-50 rounded-2xl p-6">
-                    <h3 className="text-lg font-serif text-stone-800 mb-3">Legal Capacity</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      You must be at least 18 years old or have parental consent to use our services. 
-                      By agreeing to these terms, you represent that you have the legal capacity to enter into this agreement.
-                    </p>
-                  </div>
-
-                  <div className="bg-amber-50 rounded-2xl p-6">
-                    <h3 className="text-lg font-serif text-stone-800 mb-3">Modifications</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      We reserve the right to modify these terms at any time. Changes will be posted on this page 
-                      with an updated effective date. Continued use constitutes acceptance of modified terms.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Nature of Services */}
-              <div className="border-l-4 border-stone-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Nature of Our Services</h2>
-                
-                <div className="bg-stone-50 rounded-2xl p-8 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Wellness & Energetic Alignment</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        Our services focus on energetic alignment, wellness coaching, and holistic approaches to personal development. 
-                        All sessions are complementary wellness experiences designed to support your overall well-being and personal growth.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                      </svg>
-                      Not Medical Treatment
-                    </h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Our services are NOT a substitute for medical diagnosis, treatment, or professional healthcare. 
-                      We do not diagnose, treat, cure, or prevent any medical conditions. Always consult qualified healthcare professionals for medical concerns.
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Complementary Approach</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Our energetic alignment sessions are designed to complement, not replace, conventional medical care. 
-                      We encourage you to maintain regular healthcare relationships and inform your healthcare providers about all wellness practices you engage in.
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Individual Results</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Results from our services vary by individual. We make no guarantees about specific outcomes, 
-                      healing, or results. Your experience and results depend on many factors including your commitment, openness, and individual circumstances.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* Your Responsibilities */}
-              <div className="border-l-4 border-orange-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Your Responsibilities</h2>
-                
-                <div className="space-y-6">
-                  <div className="bg-orange-50 rounded-2xl p-8">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-orange-200 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-serif text-stone-800 mb-3">Accurate Information</h3>
-                        <p className="text-base text-stone-700 leading-relaxed mb-4">
-                          You are responsible for providing accurate, complete, and current information during booking, 
-                          intake processes, and throughout our professional relationship.
-                        </p>
-                        <ul className="text-sm text-stone-600 space-y-1">
-                          <li>• Complete intake forms honestly and thoroughly</li>
-                          <li>• Update us on any changes in your health or circumstances</li>
-                          <li>• Provide accurate contact and payment information</li>
-                          <li>• Inform us of any medications or treatments you're receiving</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-amber-50 rounded-2xl p-8">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-serif text-stone-800 mb-3">Open Communication</h3>
-                        <p className="text-base text-stone-700 leading-relaxed mb-4">
-                          Effective sessions require honest, open communication. Please share any concerns, questions, 
-                          or changes that may affect your experience.
-                        </p>
-                        <ul className="text-sm text-stone-600 space-y-1">
-                          <li>• Communicate comfort levels and boundaries</li>
-                          <li>• Ask questions when you need clarification</li>
-                          <li>• Provide feedback about your experience</li>
-                          <li>• Report any concerns or adverse reactions immediately</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-stone-50 rounded-2xl p-8">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-serif text-stone-800 mb-3">Professional Boundaries</h3>
-                        <p className="text-base text-stone-700 leading-relaxed mb-4">
-                          We maintain a professional environment built on mutual respect, clear boundaries, and ethical conduct.
-                        </p>
-                        <ul className="text-sm text-stone-600 space-y-1">
-                          <li>• Respect appointment times and scheduling policies</li>
-                          <li>• Maintain appropriate professional boundaries</li>
-                          <li>• Treat all staff and practitioners with respect</li>
-                          <li>• Follow facility guidelines and policies</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Booking & Payment */}
-              <div className="border-l-4 border-amber-600 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Booking, Payment & Cancellation Terms</h2>
-                
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <div className="bg-amber-50 rounded-2xl p-6">
-                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                      Booking Confirmation
-                    </h3>
-                    <p className="text-base text-stone-700 leading-relaxed mb-3">
-                      Bookings are confirmed upon payment completion and receipt of confirmation email.
-                    </p>
-                    <ul className="text-sm text-stone-600 space-y-1">
-                      <li>• Payment required to secure appointment</li>
-                      <li>• Confirmation email serves as appointment receipt</li>
-                      <li>• Session details and preparation instructions included</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-stone-50 rounded-2xl p-6">
-                    <h3 className="text-xl font-serif text-stone-800 mb-3 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
-                      Payment Terms
-                    </h3>
-                    <p className="text-base text-stone-700 leading-relaxed mb-3">
-                      All payments are processed securely through trusted third-party payment processors.
-                    </p>
-                    <ul className="text-sm text-stone-600 space-y-1">
-                      <li>• Payment due at time of booking</li>
-                      <li>• Secure payment processing</li>
-                      <li>• Receipts provided for all transactions</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-2xl p-8 border border-stone-200">
-                  <h3 className="text-xl font-serif text-stone-800 mb-4">Cancellation & Rescheduling Policy</h3>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <h4 className="font-medium text-stone-800 mb-2">24+ Hours Notice</h4>
-                      <p className="text-sm text-stone-600">Full refund or free rescheduling available</p>
-                    </div>
-                    
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                        </svg>
-                      </div>
-                      <h4 className="font-medium text-stone-800 mb-2">Less Than 24 Hours</h4>
-                      <p className="text-sm text-stone-600">50% refund or rescheduling fee may apply</p>
-                    </div>
-                    
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </div>
-                      <h4 className="font-medium text-stone-800 mb-2">No-Show</h4>
-                      <p className="text-sm text-stone-600">No refund, full session fee applies</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Liability & Disclaimers */}
-              <div className="border-l-4 border-stone-600 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Liability & Disclaimers</h2>
-                
-                <div className="bg-stone-50 rounded-2xl p-8 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Assumption of Risk</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        By participating in our services, you acknowledge that you understand the nature of energetic alignment work 
-                        and voluntarily assume any risks associated with participation. You participate at your own risk and discretion.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Limitation of Liability</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      To the fullest extent permitted by law, we shall not be liable for any indirect, incidental, special, 
-                      consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Service Availability</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      We strive to provide consistent, high-quality services but cannot guarantee uninterrupted availability. 
-                      Services may be temporarily unavailable due to maintenance, technical issues, or unforeseen circumstances.
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Third-Party Services</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Our website may integrate with third-party services (payment processors, scheduling platforms). 
-                      We are not responsible for the availability, accuracy, or reliability of these external services.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Privacy & Confidentiality */}
-              <div className="border-l-4 border-amber-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Privacy & Confidentiality</h2>
-                
-                <div className="bg-amber-50 rounded-2xl p-8 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Client Confidentiality</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        We maintain strict confidentiality regarding your personal information, session content, and wellness journey. 
-                        Information shared during sessions is kept private and secure, subject to legal and ethical obligations.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Information Protection</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Your personal and session information is protected according to our Privacy Policy. 
-                      We implement appropriate security measures to safeguard your data.
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Required Disclosures</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      Confidentiality may be limited by legal requirements, such as reporting obligations 
-                      for safety concerns or as required by law enforcement or court orders.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Intellectual Property */}
-              <div className="border-l-4 border-orange-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Intellectual Property & Content</h2>
-                
-                <div className="space-y-6">
-                  <div className="bg-orange-50 rounded-2xl p-8">
-                    <h3 className="text-xl font-serif text-stone-800 mb-3">Our Content</h3>
-                    <p className="text-base text-stone-700 leading-relaxed mb-4">
-                      All content on this website, including text, graphics, logos, images, and software, is our property 
-                      or licensed to us and is protected by copyright and other intellectual property laws.
-                    </p>
-                    <ul className="text-sm text-stone-600 space-y-1">
-                      <li>• Website content and design</li>
-                      <li>• Session materials and methodologies</li>
-                      <li>• Educational resources and guides</li>
-                      <li>• Branding and marketing materials</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-white rounded-2xl p-6 border border-stone-200">
-                    <h3 className="text-lg font-serif text-stone-800 mb-2">Permitted Use</h3>
-                    <p className="text-base text-stone-700 leading-relaxed">
-                      You may view and use our website content for personal, non-commercial purposes. 
-                      You may not reproduce, distribute, modify, or create derivative works without written permission.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Termination */}
-              <div className="border-l-4 border-stone-400 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Termination & Suspension</h2>
-                
-                <div className="bg-stone-50 rounded-2xl p-8">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Your Rights</h3>
-                      <p className="text-base text-stone-700 leading-relaxed mb-3">
-                        You may discontinue services at any time by providing appropriate notice according to our cancellation policy.
-                      </p>
-                      <ul className="text-sm text-stone-600 space-y-1">
-                        <li>• Cancel individual sessions with proper notice</li>
-                        <li>• Discontinue ongoing programs with notice</li>
-                        <li>• Request account closure and data deletion</li>
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Our Rights</h3>
-                      <p className="text-base text-stone-700 leading-relaxed mb-3">
-                        We reserve the right to suspend or terminate services for violations of these terms or inappropriate conduct.
-                      </p>
-                      <ul className="text-sm text-stone-600 space-y-1">
-                        <li>• Violation of terms or policies</li>
-                        <li>• Inappropriate or disruptive behavior</li>
-                        <li>• Non-payment or fraudulent activity</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Governing Law */}
-              <div className="border-l-4 border-amber-600 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Governing Law & Dispute Resolution</h2>
-                
-                <div className="bg-amber-50 rounded-2xl p-8">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Applicable Law</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        These terms are governed by and construed in accordance with applicable local and federal laws. 
-                        Any disputes will be resolved in the appropriate jurisdiction.
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-xl font-serif text-stone-800 mb-3">Dispute Resolution</h3>
-                      <p className="text-base text-stone-700 leading-relaxed">
-                        We encourage open communication to resolve any concerns. For formal disputes, 
-                        we prefer mediation or arbitration before litigation when appropriate.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact Information */}
-              <div className="border-l-4 border-stone-600 pl-8">
-                <h2 className="text-3xl font-serif text-stone-800 mb-6">Questions & Contact Information</h2>
-                
-                <div className="bg-stone-50 rounded-2xl p-8">
-                  <div className="text-center">
-                    <h3 className="text-xl font-serif text-stone-800 mb-4">Need Clarification?</h3>
-                    <p className="text-base text-stone-700 leading-relaxed mb-6 max-w-2xl mx-auto">
-                      If you have questions about these Terms of Service or need clarification about any aspect of our services, 
-                      we're here to help. Clear communication is fundamental to our practice.
-                    </p>
-                    
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <Link
-                        to="/shreeweb/contact"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                        Contact Us
-                      </Link>
-                      <Link
-                        to="/shreeweb/booking?plan=discovery"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-orange-50 border border-orange-200 text-orange-800 rounded-full hover:bg-orange-100 hover:border-orange-300 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V6a2 2 0 012-2h4a2 2 0 012 2v1m-6 0h6m-6 0l-.5 8.5A2 2 0 0013.5 21h-3A2 2 0 019 19.5L8.5 7m0 0V6a2 2 0 012-2h4a2 2 0 012 2v1" />
-                        </svg>
-                        Book Discovery Call
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                Last Updated: {data.lastUpdatedDate || '6 April 2026'}
               </div>
             </div>
 
-            {/* Acknowledgment */}
-            <div className="mt-12 pt-8 border-t border-stone-300/50 text-center">
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8">
-                <p className="text-stone-600 italic leading-relaxed max-w-3xl mx-auto">
-                  "By using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. 
-                  We look forward to supporting you on your journey toward energetic alignment and sustainable growth."
+            {/* Introduction */}
+            <div className="mb-12 text-center">
+              <p className="text-lg text-stone-700 leading-relaxed">
+                {data.introduction?.description || 'By accessing this website or engaging with Om Shree Guidance, you agree to the following:'}
+              </p>
+            </div>
+
+            <div className="space-y-10">
+              {/* 1. Nature of Services */}
+              <div className="border-l-4 border-amber-400 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.natureOfServices?.title || '1. Nature of Services'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.natureOfServices?.description || 'All services are conducted online and are based on subtle energy work and personal support practices.'}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed italic">
+                  {data.natureOfServices?.note || 'This work is intended to support clarity, alignment, and energetic balance. No physical sessions are provided.'}
                 </p>
               </div>
+
+              {/* 2. Scope & Expectations */}
+              <div className="border-l-4 border-stone-400 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.scopeExpectations?.title || '2. Scope & Expectations'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.scopeExpectations?.description || 'This work operates on an energetic and experiential level. Results may vary based on individual readiness, openness, and external factors.'}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed italic">
+                  {data.scopeExpectations?.note || 'No specific outcomes are guaranteed.'}
+                </p>
+              </div>
+
+              {/* 3. Not a Substitute */}
+              <div className="border-l-4 border-orange-400 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.notSubstitute?.title || '3. Not a Substitute for Professional Advice'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.notSubstitute?.description || 'These services do not replace medical, psychological, legal, or financial guidance.'}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed italic">
+                  {data.notSubstitute?.note || 'You are advised to consult a qualified professional for any such matters.'}
+                </p>
+              </div>
+
+              {/* 4. Personal Responsibility */}
+              <div className="border-l-4 border-amber-600 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.personalResponsibility?.title || '4. Personal Responsibility'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.personalResponsibility?.description || 'By engaging in this work, you acknowledge that:'}
+                </p>
+                <ul className="space-y-2">
+                  {data.personalResponsibility?.items?.map((item, index) => (
+                    <li key={index} className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                      <span className="text-amber-600 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  )) || (
+                    <>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">•</span>
+                        <span>You are fully responsible for your decisions, actions, and outcomes</span>
+                      </li>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">•</span>
+                        <span>You are participating voluntarily and with awareness</span>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+
+              {/* 5. Payments & Commitment */}
+              <div className="border-l-4 border-stone-600 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.paymentsCommitment?.title || '5. Payments & Commitment'}
+                </h2>
+                <ul className="space-y-2">
+                  {data.paymentsCommitment?.items?.map((item, index) => (
+                    <li key={index} className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                      <span className="text-stone-600 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  )) || (
+                    <>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-stone-600 mt-1">•</span>
+                        <span>All sessions must be booked in advance</span>
+                      </li>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-stone-600 mt-1">•</span>
+                        <span>Payment is required to confirm your booking</span>
+                      </li>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-stone-600 mt-1">•</span>
+                        <span>Sessions may be rescheduled up to three times</span>
+                      </li>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-stone-600 mt-1">•</span>
+                        <span>All payments are final. Refunds are not provided once a booking is confirmed.</span>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+
+              {/* 6. Rescheduling & Missed Sessions */}
+              <div className="border-l-4 border-amber-500 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.reschedulingMissed?.title || '6. Rescheduling & Missed Sessions'}
+                </h2>
+                <ul className="space-y-2">
+                  {data.reschedulingMissed?.items?.map((item, index) => (
+                    <li key={index} className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                      <span className="text-amber-600 mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  )) || (
+                    <>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">•</span>
+                        <span>A minimum of 24 hours' notice is required for rescheduling</span>
+                      </li>
+                      <li className="text-base text-stone-700 leading-relaxed flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">•</span>
+                        <span>Missed sessions or late cancellations may not be accommodated or refunded</span>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+
+              {/* 7. Energetic Boundaries */}
+              <div className="border-l-4 border-stone-500 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.energeticBoundaries?.title || '7. Energetic Boundaries'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.energeticBoundaries?.description || 'This work is offered within clear energetic and professional boundaries.'}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed italic">
+                  {data.energeticBoundaries?.note || 'Respect for time, space, and process is essential. Any form of misuse, disrespect, or misalignment may result in refusal or discontinuation of services.'}
+                </p>
+              </div>
+
+              {/* 8. Intellectual Property */}
+              <div className="border-l-4 border-orange-500 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.intellectualProperty?.title || '8. Intellectual Property'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed mb-3">
+                  {data.intellectualProperty?.description || 'All content, materials, and branding associated with Om Shree Guidance are protected.'}
+                </p>
+                <p className="text-base text-stone-600 leading-relaxed italic">
+                  {data.intellectualProperty?.note || 'They may not be copied, distributed, or reused without explicit permission.'}
+                </p>
+              </div>
+
+              {/* 9. Limitation of Liability */}
+              <div className="border-l-4 border-amber-400 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.limitationLiability?.title || '9. Limitation of Liability'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed">
+                  {data.limitationLiability?.description || 'By engaging in these services, you agree that Om Shree Guidance is not liable for any direct or indirect outcomes arising from your participation.'}
+                </p>
+              </div>
+
+              {/* 10. Updates to Terms */}
+              <div className="border-l-4 border-stone-400 pl-6">
+                <h2 className="text-2xl font-serif text-stone-800 mb-4">
+                  {data.updatesToTerms?.title || '10. Updates to Terms'}
+                </h2>
+                <p className="text-base text-stone-700 leading-relaxed">
+                  {data.updatesToTerms?.description || 'These terms may evolve as the work expands. Continued use indicates acceptance of any updates.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Footer Links */}
+            <div className="mt-16 pt-8 border-t border-stone-200 text-center">
+              <p className="text-sm text-stone-600 mb-4">
+                For questions about these terms, please review our{' '}
+                <Link to="/shreeweb/privacy-policy" className="text-amber-600 hover:text-amber-700 underline">
+                  Privacy Policy
+                </Link>
+                {' '}or{' '}
+                <Link to="/shreeweb/contact" className="text-amber-600 hover:text-amber-700 underline">
+                  contact us
+                </Link>
+                .
+              </p>
             </div>
           </div>
         </div>

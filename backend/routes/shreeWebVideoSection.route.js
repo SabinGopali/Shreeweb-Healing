@@ -5,19 +5,17 @@ import {
   createVideoSection,
   deleteVideoSection
 } from '../controllers/shreeWebVideoSection.controller.js';
+import { verifyToken, requireAdmin } from '../controllers/shreeWebAuth.controller.js';
 
 const router = express.Router();
 
-// GET /backend/shreeweb-video-section - Get video section data
-router.get('/', getVideoSection);
+// Public route for frontend
+router.get('/public', getVideoSection);
 
-// PUT /backend/shreeweb-video-section - Update video section data
-router.put('/', updateVideoSection);
-
-// POST /backend/shreeweb-video-section - Create new video section
-router.post('/', createVideoSection);
-
-// DELETE /backend/shreeweb-video-section/:id - Delete video section
-router.delete('/:id', deleteVideoSection);
+// Protected routes for CMS (require admin authentication)
+router.get('/', verifyToken, requireAdmin, getVideoSection);
+router.put('/', verifyToken, requireAdmin, updateVideoSection);
+router.post('/', verifyToken, requireAdmin, createVideoSection);
+router.delete('/:id', verifyToken, requireAdmin, deleteVideoSection);
 
 export default router;
