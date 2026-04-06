@@ -187,14 +187,16 @@ export const deleteCampaign = async (req, res, next) => {
 // Send campaign
 export const sendCampaign = async (req, res, next) => {
   try {
+    console.log('📧 [1] Starting sendCampaign function');
     const campaign = await EmailCampaign.findById(req.params.id);
 
     if (!campaign) {
       return next(errorHandler(404, 'Campaign not found'));
     }
 
+    console.log('📧 [2] Campaign found:', campaign.name);
+
     if (campaign.status === 'sent') {
-      // Allow recovery resend for legacy campaigns that were marked sent but delivered 0.
       if ((campaign.recipients?.sentCount || 0) > 0) {
         return next(errorHandler(400, 'Campaign has already been sent'));
       }
@@ -210,21 +212,15 @@ export const sendCampaign = async (req, res, next) => {
     // Get recipients
     const filterBy = campaign.recipients?.filterBy || { subscribedOnly: true };
     const filter = buildRecipientFilter(filterBy);
-    console.log('\n📧 ========== SENDING CAMPAIGN ==========');
-    console.log('📧 Campaign ID:', campaign._id);
-    console.log('📧 Campaign Name:', campaign.name);
-    console.log('📧 Campaign filterBy:', JSON.stringify(campaign.recipients.filterBy, null, 2));
-    console.log('📧 Built MongoDB filter:', JSON.stringify(filter, null, 2));
+    console.log('📧 [3] Building recipient filter');
     
     let recipients = await EmailCapture.find(filter).lean();
-    console.log('📧 Found recipients:', recipients.length);
+    console.log('📧 [4] Found recipients:', recipients.length);
 
-    // Safety fallback: if a strict filter returns no rows but there are subscribed users,
-    // fall back to subscribed users instead of silently sending to nobody.
     if (recipients.length === 0) {
       const subscribedCount = await EmailCapture.countDocuments({ subscribed: true });
       if (subscribedCount > 0) {
-        console.warn('⚠️  No recipients matched filter. Falling back to all subscribed users.');
+        console.warn('⚠️ No recipients matched filter. Falling back to all subscribed users.');
         recipients = await EmailCapture.find({ subscribed: true }).lean();
         campaign.recipients.filterBy = { subscribedOnly: true };
         campaign.recipients.totalCount = recipients.length;
@@ -232,16 +228,6 @@ export const sendCampaign = async (req, res, next) => {
       }
     }
     
-    if (recipients.length > 0) {
-      console.log('📧 Recipients list:');
-      recipients.forEach((r, i) => {
-        console.log(`   ${i + 1}. ${r.email} - ${r.name || 'No name'} - subscribed: ${r.subscribed}`);
-      });
-    } else {
-      console.log('⚠️  NO RECIPIENTS FOUND! Check your filters.');
-    }
-    console.log('📧 =====================================\n');
-
     if (recipients.length === 0) {
       campaign.status = 'failed';
       campaign.recipients.totalCount = 0;
@@ -249,25 +235,45 @@ export const sendCampaign = async (req, res, next) => {
       return next(errorHandler(400, 'No subscribed recipients found for this campaign'));
     }
 
-    // Ensure SMTP is reachable before moving campaign into "sending".
-    const emailReady = await emailService.verifyConnection();
+    console.log('📧 [5] About to verify email service...');
+    
+    // Add try-catch specifically for email service
+    let emailReady;
+    try {
+      console.log('📧 [5a] Importing/accessing emailService...');
+      console.log('📧 [5b] emailService type:', typeof emailService);
+      console.log('📧 [5c] emailService.verifyConnection type:', typeof emailService.verifyConnection);
+      
+      emailReady = await emailService.verifyConnection();
+      console.log('📧 [6] Email service verification result:', emailReady);
+    } catch (serviceError) {
+      console.error('📧 [ERROR] Email service verification threw an exception:', serviceError.message);
+      console.error(serviceError.stack);
+      campaign.status = 'failed';
+      await campaign.save();
+      return next(errorHandler(500, `Email service error: ${serviceError.message}`));
+    }
+
     if (!emailReady.success) {
+      console.error('📧 [7] Email service not ready:', emailReady.message);
       campaign.status = 'failed';
       await campaign.save();
       return next(errorHandler(500, `Email service is not ready: ${emailReady.message}`));
     }
 
-    // Update status to sending
+    console.log('📧 [8] Email service ready, updating campaign status...');
     campaign.status = 'sending';
     await campaign.save();
 
-    // Send emails in background
+    console.log('📧 [9] Starting background email sending...');
+    // Send emails in background (don't await)
     sendCampaignEmails(campaign._id, recipients, {
       subject: campaign.subject,
       html: campaign.htmlContent,
       text: campaign.textContent
     });
 
+    console.log('📧 [10] Campaign send initiated successfully');
     return res.status(200).json({
       success: true,
       message: 'Campaign is being sent',
@@ -276,7 +282,8 @@ export const sendCampaign = async (req, res, next) => {
       }
     });
   } catch (error) {
-    console.error('Error sending campaign:', error);
+    console.error('📧 [ERROR] sendCampaign caught exception:', error);
+    console.error('Stack:', error.stack);
     next(error);
   }
 };

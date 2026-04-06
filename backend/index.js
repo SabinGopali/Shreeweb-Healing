@@ -173,6 +173,25 @@ app.get('/api/debug-env', (req, res) => {
   });
 });
 
+// Add this before your API routes
+app.get('/api/test-email-load', async (req, res) => {
+  try {
+    const emailService = await import('../utils/emailService.js');
+    res.json({
+      success: true,
+      hasDefault: !!emailService.default,
+      type: typeof emailService.default,
+      hasVerify: !!(emailService.default && typeof emailService.default.verifyConnection === 'function')
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      error: error.message,
+      stack: error.stack
+    });
+  }
+});
+
   // ========== API ROUTES ==========
   app.use('/backend/shreeweb-auth', shreeWebAuthRoute);
   app.use('/backend/shreeweb-cms', shreeWebCMSRoute);
