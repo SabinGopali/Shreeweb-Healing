@@ -235,33 +235,37 @@ export const sendCampaign = async (req, res, next) => {
       return next(errorHandler(400, 'No subscribed recipients found for this campaign'));
     }
 
-    console.log('📧 [5] About to verify email service...');
+    console.log('📧 [5] SKIPPING email service verification (temporary fix)');
     
-    // Add try-catch specifically for email service
-    let emailReady;
-    try {
-      console.log('📧 [5a] Importing/accessing emailService...');
-      console.log('📧 [5b] emailService type:', typeof emailService);
-      console.log('📧 [5c] emailService.verifyConnection type:', typeof emailService.verifyConnection);
-      
-      emailReady = await emailService.verifyConnection();
-      console.log('📧 [6] Email service verification result:', emailReady);
-    } catch (serviceError) {
-      console.error('📧 [ERROR] Email service verification threw an exception:', serviceError.message);
-      console.error(serviceError.stack);
-      campaign.status = 'failed';
-      await campaign.save();
-      return next(errorHandler(500, `Email service error: ${serviceError.message}`));
-    }
+    // TEMPORARY: Skip verification to bypass timeout issues
+    // The email service will still try to send, but we won't wait for verification
+    const emailReady = { success: true, message: 'Verification skipped - attempting direct send' };
+    
+    // Note: The original verification code is commented out below
+    // let emailReady;
+    // try {
+    //   console.log('📧 [5a] Importing/accessing emailService...');
+    //   console.log('📧 [5b] emailService type:', typeof emailService);
+    //   console.log('📧 [5c] emailService.verifyConnection type:', typeof emailService.verifyConnection);
+    //   
+    //   emailReady = await emailService.verifyConnection();
+    //   console.log('📧 [6] Email service verification result:', emailReady);
+    // } catch (serviceError) {
+    //   console.error('📧 [ERROR] Email service verification threw an exception:', serviceError.message);
+    //   console.error(serviceError.stack);
+    //   campaign.status = 'failed';
+    //   await campaign.save();
+    //   return next(errorHandler(500, `Email service error: ${serviceError.message}`));
+    // }
+    //
+    // if (!emailReady.success) {
+    //   console.error('📧 [7] Email service not ready:', emailReady.message);
+    //   campaign.status = 'failed';
+    //   await campaign.save();
+    //   return next(errorHandler(500, `Email service is not ready: ${emailReady.message}`));
+    // }
 
-    if (!emailReady.success) {
-      console.error('📧 [7] Email service not ready:', emailReady.message);
-      campaign.status = 'failed';
-      await campaign.save();
-      return next(errorHandler(500, `Email service is not ready: ${emailReady.message}`));
-    }
-
-    console.log('📧 [8] Email service ready, updating campaign status...');
+    console.log('📧 [8] Updating campaign status to sending...');
     campaign.status = 'sending';
     await campaign.save();
 
