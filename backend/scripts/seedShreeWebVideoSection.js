@@ -26,9 +26,9 @@ const seedVideoSection = async () => {
       cta1Link: '/shreeweb/booking?plan=discovery',
       cta2Link: '/shreeweb/booking?plan=session',
       socialLinks: [
-        { name: 'Facebook', url: 'https://facebook.com/japandi' },
-        { name: 'Instagram', url: 'https://instagram.com/japandi' },
-        { name: 'TikTok', url: 'https://tiktok.com/@japandi' }
+        { name: 'Facebook', url: 'https://facebook.com/OMSHREEGUIDANCE' },
+        { name: 'Instagram', url: 'https://instagram.com/OMSHREEGUIDANCE' },
+        { name: 'TikTok', url: 'https://tiktok.com/@OMSHREEGUIDANCE' }
       ],
       isActive: true
     });

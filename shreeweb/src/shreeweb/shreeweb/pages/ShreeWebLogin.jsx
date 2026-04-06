@@ -107,7 +107,7 @@ export default function ShreeWebLogin() {
               </div>
               <h1 className="mb-6 font-serif text-4xl text-stone-800 sm:text-5xl leading-tight">
                 Welcome back to
-                <span className="block text-amber-700 italic mt-2">JAPANDI</span>
+                <span className="block text-amber-700 italic mt-2">OMSHREEGUIDANCE</span>
               </h1>
               <p className="text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
                 Continue your journey of energetic alignment and sustainable growth
@@ -176,7 +176,7 @@ export default function ShreeWebLogin() {
               {/* Enhanced Forgot Password Link */}
               <div className="text-right">
                 <Link 
-                  to="/shreeweb/forgot-password" 
+                  to="/forgot-password" 
                   className="inline-flex items-center gap-2 text-sm font-medium text-orange-700 hover:text-orange-800 transition-colors duration-200 group"
                 >
                   <span className="underline decoration-orange-400/50 group-hover:decoration-orange-500/70 transition-colors">
@@ -201,7 +201,7 @@ export default function ShreeWebLogin() {
                     </>
                   ) : (
                     <>
-                      Sign in to JAPANDI
+                      Sign in to OMSHREEGUIDANCE
                       <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
@@ -228,9 +228,9 @@ export default function ShreeWebLogin() {
             <div className="mt-8 text-center">
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                 <p className="text-sm text-stone-600">
-                  New to JAPANDI?{' '}
+                  New to OMSHREEGUIDANCE?{' '}
                   <Link 
-                    to="/shreeweb/signup" 
+                    to="/signup" 
                     className="inline-flex items-center gap-1 font-semibold text-orange-700 hover:text-orange-800 transition-colors duration-200 group"
                   >
                     <span className="underline decoration-orange-400/50 group-hover:decoration-orange-500/70 transition-colors">

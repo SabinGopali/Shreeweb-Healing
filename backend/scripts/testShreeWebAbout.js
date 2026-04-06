@@ -30,7 +30,7 @@ async function testShreeWebAboutAPI() {
     // Test PUT endpoint for hero section
     console.log('\n📤 Testing PUT /backend/shreeweb-about/section/hero');
     const heroUpdate = {
-      title: 'JAPANDI TEST',
+      title: 'OMSHREEGUIDANCE TEST',
       subtitle: 'Energy Sessions Updated',
       description: 'Test update from API script'
     };
@@ -61,7 +61,7 @@ async function testShreeWebAboutAPI() {
       console.log('✅ Verification successful');
       console.log('📝 Current hero title:', verifyData.data?.hero?.title);
       
-      if (verifyData.data?.hero?.title === 'JAPANDI TEST') {
+      if (verifyData.data?.hero?.title === 'OMSHREEGUIDANCE TEST') {
         console.log('🎉 Update was persisted correctly!');
       } else {
         console.log('⚠️  Update may not have been persisted');

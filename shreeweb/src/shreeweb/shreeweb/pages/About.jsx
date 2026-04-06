@@ -37,7 +37,7 @@ export default function About() {
       setAboutData({
         hero: {
           tag: 'About',
-          title: 'JAPANDI',
+          title: 'OMSHREEGUIDANCE',
           subtitle: 'Energy Sessions',
           description: 'A calm, structured approach to help you scan your energetic field, release what\'s stuck, and return to balance.',
           backgroundColor: 'from-[#F4EFE6] via-amber-50 to-orange-50'
@@ -68,7 +68,7 @@ export default function About() {
           ]
         },
         philosophy: {
-          title: 'The Japandi Approach',
+          title: 'The OMSHREEGUIDANCE Approach',
           description: 'Inspired by the minimalist principles of Japanese and Scandinavian design, our approach emphasizes simplicity, natural harmony, and sustainable well-being.',
           backgroundColor: 'from-stone-50 to-amber-50'
         },
@@ -146,7 +146,7 @@ export default function About() {
             data-aos-duration="300"
             data-aos-delay="300"
           >
-            {aboutData.hero?.title || 'JAPANDI'}
+            {aboutData.hero?.title || 'OMSHREEGUIDANCE'}
             <span className="block text-stone-600 italic font-light mt-2">{aboutData.hero?.subtitle || 'Energy Sessions'}</span>
           </h1>
           <div 
@@ -334,7 +334,7 @@ export default function About() {
         
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif text-stone-800 mb-6">{aboutData.philosophy?.title || 'The Japandi Approach'}</h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-stone-800 mb-6">{aboutData.philosophy?.title || 'The OMSHREEGUIDANCE Approach'}</h2>
             <div className="w-32 h-0.5 bg-amber-400 mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-stone-600 leading-relaxed max-w-4xl mx-auto font-light">
               {aboutData.philosophy?.description || 'Inspired by the minimalist principles of Japanese and Scandinavian design, our approach emphasizes simplicity, natural harmony, and sustainable well-being.'}
@@ -427,7 +427,7 @@ export default function About() {
                 </p>
                 <div className="mt-6">
                   <Link
-                    to="/shreeweb/offers"
+                    to="/offers"
                     className="inline-block px-6 py-3 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
                   >
                     View Offerings
@@ -464,7 +464,7 @@ export default function About() {
                 </p>
                 <div className="mt-6">
                   <Link
-                    to="/shreeweb/booking"
+                    to="/booking"
                     className="inline-block px-6 py-3 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
                   >
                     Book Session

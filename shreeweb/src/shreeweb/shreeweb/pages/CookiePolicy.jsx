@@ -183,7 +183,7 @@ export default function CookiePolicy() {
                 {data.contactSection.description}
               </p>
               <Link
-                to="/shreeweb/contact"
+                to="/contact"
                 className="inline-block px-8 py-4 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
                 {data.contactSection.buttonText}

@@ -63,6 +63,89 @@ export default function CmsEmbeds() {
         />
       </div>
 
+      {/* Shopify Redirect Script */}
+      <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} w-full`}>
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h2 className={`${cmsTheme.title} text-lg`}>Shopify Order Status Redirect Script</h2>
+            <p className="mt-1 text-sm text-stone-600">
+              Copy this script and paste it into: <strong>Shopify Admin → Settings → Checkout → Order status page → Additional scripts</strong>
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const script = document.getElementById('shopify-redirect-script').textContent;
+              navigator.clipboard.writeText(script);
+              alert('Script copied to clipboard! Now paste it in Shopify Admin.');
+            }}
+            className={cmsTheme.btnGhost}
+          >
+            📋 Copy Script
+          </button>
+        </div>
+
+        <div className="bg-stone-900 rounded-lg p-4 overflow-x-auto">
+          <pre id="shopify-redirect-script" className="text-xs text-green-400 font-mono whitespace-pre-wrap">
+{`{% if first_time_accessed %}
+<div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-left: 4px solid #f59e0b; border-radius: 8px; text-align: center;">
+  <h3 style="margin: 0 0 10px 0; color: #92400e; font-size: 20px;">🎉 Payment Successful!</h3>
+  <p style="margin: 0 0 15px 0; color: #78716c; font-size: 16px;">
+    Now let's schedule your session...
+  </p>
+  <p style="margin: 0 0 15px 0; color: #57534e; font-size: 14px;">
+    You'll be redirected automatically in <span id="countdown">3</span> seconds
+  </p>
+  <a href="https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}" 
+     style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    Schedule Now →
+  </a>
+</div>
+
+<script>
+(function() {
+  var countdown = 3;
+  var countdownElement = document.getElementById('countdown');
+  var redirectUrl = 'https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}';
+  
+  var timer = setInterval(function() {
+    countdown--;
+    if (countdownElement) {
+      countdownElement.textContent = countdown;
+    }
+    
+    if (countdown <= 0) {
+      clearInterval(timer);
+      window.location.href = redirectUrl;
+    }
+  }, 1000);
+  
+  // Fallback redirect after 5 seconds
+  setTimeout(function() {
+    window.location.href = redirectUrl;
+  }, 5000);
+})();
+</script>
+{% endif %}`}
+          </pre>
+        </div>
+
+        <div className="mt-4 p-4 bg-amber-50 border-l-4 border-amber-500 rounded">
+          <h3 className="font-semibold text-amber-900 mb-2">📝 Setup Instructions:</h3>
+          <ol className="text-sm text-amber-800 space-y-2 list-decimal list-inside">
+            <li>Click "Copy Script" button above</li>
+            <li>Go to Shopify Admin → Settings → Checkout</li>
+            <li>Scroll to "Order status page" section</li>
+            <li>Find "Additional scripts" text area</li>
+            <li>Paste the script</li>
+            <li>Click "Save" at the bottom</li>
+          </ol>
+          <p className="text-xs text-amber-700 mt-3">
+            ℹ️ After payment, customers will be automatically redirected to your booking calendar to schedule their session.
+          </p>
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" className={cmsTheme.btnPrimary}>
           Save embeds

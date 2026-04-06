@@ -115,7 +115,7 @@ const ShreeWebCmsLogin = () => {
             <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <span className="text-2xl font-bold text-white">J</span>
             </div>
-            <h1 className="text-2xl font-serif text-stone-900 mb-2">JAPANDI Studio</h1>
+            <h1 className="text-2xl font-serif text-stone-900 mb-2">OMSHREEGUIDANCE Studio</h1>
             <p className="text-stone-600 text-sm">CMS Administrator Access</p>
           </div>
 
@@ -200,26 +200,10 @@ const ShreeWebCmsLogin = () => {
             </button>
           </form>
 
-          {/* Registration Link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-stone-600">
-              Don't have an admin account?{' '}
-              <Link
-                to="/shreeweb/cms-register"
-                className="text-purple-600 hover:text-purple-700 font-semibold transition-colors"
-              >
-                Create one here
-              </Link>
-            </p>
-            <p className="text-xs text-stone-500 mt-2">
-              ⚠️ Registration is temporary and will be removed after setup
-            </p>
-          </div>
-
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-stone-200 text-center">
             <Link
-              to="/shreeweb/home"
+              to="/home"
               className="text-sm text-stone-500 hover:text-stone-700 transition-colors inline-flex items-center gap-1"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

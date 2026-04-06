@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children, requirePermission = null, requireSuperAdmin 
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/shreeweb/cms-login" state={{ from: location }} replace />;
+    return <Navigate to="/cms-login" state={{ from: location }} replace />;
   }
 
   // Check if user has valid admin role

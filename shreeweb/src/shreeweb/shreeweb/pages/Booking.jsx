@@ -158,7 +158,7 @@ export default function Booking() {
               <h3 className="text-base font-serif text-stone-800 mb-2 sm:text-lg">Different Session?</h3>
               <p className="text-xs text-stone-600 mb-3 sm:text-sm sm:mb-4">Explore other offerings that might suit your needs.</p>
               <Link
-                to="/shreeweb/offers"
+                to="/offers"
                 className="inline-flex w-full items-center justify-center rounded-full border border-orange-200 bg-orange-50 px-4 py-2.5 text-xs font-semibold text-orange-800 hover:bg-orange-100 transition-colors sm:text-sm sm:py-3"
               >
                 View All Offerings
@@ -170,7 +170,7 @@ export default function Booking() {
               <h3 className="text-base font-serif text-stone-800 mb-2 sm:text-lg">Need Help?</h3>
               <p className="text-xs text-stone-600 mb-3 sm:text-sm sm:mb-4">Contact us if you have questions before booking.</p>
               <Link
-                to="/shreeweb/contact"
+                to="/contact"
                 className="inline-flex w-full items-center justify-center rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 text-xs font-semibold text-stone-800 hover:bg-stone-100 transition-colors sm:text-sm sm:py-3"
               >
                 Contact Us

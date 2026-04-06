@@ -97,7 +97,7 @@ export default function ClaritySection() {
           
           <div className="flex justify-center">
             <Link
-              to="/shreeweb/booking?plan=discovery"
+              to="/booking?plan=discovery"
               className="inline-flex items-center px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 transform"
               style={{ 
                 backgroundColor: clarityData.buttonColor,

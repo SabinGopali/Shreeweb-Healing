@@ -49,6 +49,8 @@ import shreeWebUserAuthRoute from './routes/shreeWebUserAuth.route.js';
 import emailCaptureRoute from './routes/emailCapture.route.js';
 import emailCampaignRoute from './routes/emailCampaign.routes.js';
 import contactRoute from './routes/contact.route.js';
+import shopifyWebhookRoute from './routes/shopifyWebhook.route.js';
+import bookingRoute from './routes/booking.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -75,12 +77,20 @@ const startServer = async () => {
     }
   }
   
-  // Middleware
+  // CORS middleware
   app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true
   }));
+  
   app.use(cookieParser());
+  
+  // Shopify webhook route - MUST come before express.json() to preserve raw body
+  app.use('/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+    req.rawBody = req.body.toString('utf8');
+    next();
+  }, shopifyWebhookRoute);
+  
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   
@@ -141,23 +151,26 @@ const startServer = async () => {
   app.use('/backend/email-captures', emailCaptureRoute);
   app.use('/backend/email-campaigns', emailCampaignRoute);
   app.use('/backend/contact', contactRoute);
+  app.use('/backend/bookings', bookingRoute);
   
   // ========== SERVE FRONTEND IN PRODUCTION ==========
   if (process.env.NODE_ENV === 'production') {
-    // Serve static files from the 'public' directory
+    // Serve static files from the 'public' directory (where frontend builds to)
     app.use(express.static(path.join(__dirname, 'public')));
     
     // For any route that doesn't start with /backend or /api, serve index.html
     app.get('*', (req, res) => {
-      if (req.path.startsWith('/backend') || req.path.startsWith('/api')) {
+      // Skip API and backend routes
+      if (req.path.startsWith('/backend') || req.path.startsWith('/api') || req.path.startsWith('/webhook')) {
         return res.status(404).json({ error: 'API endpoint not found' });
       }
+      // Serve the React app
       res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
   } else {
     // Development mode - helpful message
     app.get('*', (req, res) => {
-      if (!req.path.startsWith('/backend') && !req.path.startsWith('/api')) {
+      if (!req.path.startsWith('/backend') && !req.path.startsWith('/api') && !req.path.startsWith('/webhook')) {
         res.status(200).json({ 
           message: 'Frontend not served in development mode',
           instruction: 'Run: cd shreeweb && npm run dev',
@@ -166,16 +179,6 @@ const startServer = async () => {
       }
     });
   }
-  
-  // 404 handler for undefined API routes
-  app.use((req, res) => {
-    if (req.path.startsWith('/backend') || req.path.startsWith('/api')) {
-      res.status(404).json({ 
-        error: 'Route not found',
-        path: req.originalUrl 
-      });
-    }
-  });
   
   // Global error handler
   app.use((err, req, res, next) => {

@@ -60,7 +60,7 @@ export default function ShreeWebForgotPassword() {
                 <span className="text-xl font-bold tracking-widest">J</span>
               </div>
               <div className="min-w-0 leading-tight">
-                <div className="truncate text-2xl font-serif tracking-wide text-stone-800">JAPANDI</div>
+                <div className="truncate text-2xl font-serif tracking-wide text-stone-800">OMSHREEGUIDANCE</div>
                 <div className="truncate text-sm text-stone-600">Energetic Alignment</div>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function ShreeWebForgotPassword() {
               
               <div className="space-y-3">
                 <Link
-                  to="/shreeweb/login"
+                  to="/login"
                   className="block w-full rounded-full bg-orange-100 py-3 text-sm font-medium text-orange-800 transition hover:bg-orange-200"
                 >
                   Back to Sign In
@@ -129,7 +129,7 @@ export default function ShreeWebForgotPassword() {
               <span className="text-xl font-bold tracking-widest">J</span>
             </div>
             <div className="min-w-0 leading-tight">
-              <div className="truncate text-2xl font-serif tracking-wide text-stone-800">JAPANDI</div>
+              <div className="truncate text-2xl font-serif tracking-wide text-stone-800">OMSHREEGUIDANCE</div>
               <div className="truncate text-sm text-stone-600">Energetic Alignment</div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function ShreeWebForgotPassword() {
 
             <div className="mt-6 text-center">
               <Link 
-                to="/shreeweb/login" 
+                to="/login" 
                 className="text-sm font-medium text-stone-600 hover:text-stone-800 underline decoration-stone-400/70"
               >
                 ← Back to Sign In

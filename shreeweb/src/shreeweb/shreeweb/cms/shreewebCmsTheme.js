@@ -1,4 +1,4 @@
-/** Shared JAPANDI CMS dashboard tokens (Tailwind-friendly class strings) */
+/** Shared OMSHREEGUIDANCE CMS dashboard tokens (Tailwind-friendly class strings) */
 export const cmsTheme = {
   /** Full-width page shell (use inside CMS main) */
   pageWrap: 'w-full min-w-0 space-y-6',

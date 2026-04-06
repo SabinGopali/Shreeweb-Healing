@@ -11,22 +11,25 @@ import ShreeWebPrivacyPolicy from './pages/PrivacyPolicy';
 import ShreeWebCookiePolicy from './pages/CookiePolicy';
 import ShreeWebTermsOfService from './pages/TermsOfService';
 import ShreeWebBooking from './pages/Booking';
+import ShreeWebBookingConfirmation from './pages/BookingConfirmation';
 import ShreeWebPaymentConfirmation from './pages/PaymentConfirmation';
 import ShreeWebLogin from './pages/ShreeWebLogin';
 import ShreeWebSignup from './pages/ShreeWebSignup';
 import ShreeWebForgotPassword from './pages/ShreeWebForgotPassword';
 import ShreeWebCmsLogin from './pages/ShreeWebCmsLogin';
-import ShreeWebCmsRegister from './pages/ShreeWebCmsRegister';
 import ScrollToTop from './components/ScrollToTop';
 import { AuthProvider } from './contexts/AuthContext';
+import { useFavicon } from './hooks/useFavicon';
 
 export default function ShreeWebApp() {
+  // Update favicon and page title dynamically
+  useFavicon();
+
   return (
     <AuthProvider>
       <ScrollToTop />
       <Routes>
         <Route path="cms-login" element={<ShreeWebCmsLogin />} />
-        <Route path="cms-register" element={<ShreeWebCmsRegister />} />
         <Route path="cms/*" element={<ShreeWebCmsRoutes />} />
         <Route element={<ShreeWebLayout />}>
           <Route index element={<ShreeWebHome />} />
@@ -42,6 +45,7 @@ export default function ShreeWebApp() {
           <Route path="cookie-policy" element={<ShreeWebCookiePolicy />} />
           <Route path="terms-of-service" element={<ShreeWebTermsOfService />} />
           <Route path="booking" element={<ShreeWebBooking />} />
+          <Route path="booking-confirmation" element={<ShreeWebBookingConfirmation />} />
           <Route path="payment-confirmation" element={<ShreeWebPaymentConfirmation />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

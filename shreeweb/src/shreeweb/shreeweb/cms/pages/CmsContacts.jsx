@@ -13,7 +13,7 @@ export default function CmsContacts() {
   const defaultPageContent = {
     isActive: true,
     logo: {
-      text: 'JAPANDI',
+      text: 'OMSHREEGUIDANCE',
       subtext: 'Energetic Alignment',
       letter: 'J',
     },
@@ -32,7 +32,7 @@ export default function CmsContacts() {
       line1: 'Kathmandu, Nepal',
       line2: '(Online sessions available worldwide)',
     },
-    contactInfo: { email: 'info@japandi.example', phone: '+977-98XXXXXXXX' },
+    contactInfo: { email: 'info@OMSHREEGUIDANCE.example', phone: '+977-98XXXXXXXX' },
     follow: {
       description: 'Stay connected and get updates on our latest offerings and insights.',
       socials: {
@@ -215,7 +215,7 @@ export default function CmsContacts() {
         <p className="text-sm text-stone-600">
           Review and manage messages sent from the public{' '}
           <Link
-            to="/shreeweb/contact"
+            to="/contact"
             className="font-medium text-amber-900 underline decoration-amber-400/70 hover:text-stone-900"
           >
             Contact
@@ -266,7 +266,7 @@ export default function CmsContacts() {
                   value={pageContent.logo?.text || ''}
                   onChange={(e) => updateField('logo.text', e.target.value)}
                   disabled={pageContentLoading || pageContentSaving}
-                  placeholder="JAPANDI"
+                  placeholder="OMSHREEGUIDANCE"
                 />
               </div>
               <div>

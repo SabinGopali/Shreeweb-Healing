@@ -252,7 +252,7 @@ export default function CmsAbout() {
                   name="title"
                   defaultValue={aboutData.hero?.title}
                   className={cmsTheme.input}
-                  placeholder="JAPANDI"
+                  placeholder="OMSHREEGUIDANCE"
                 />
               </div>
               <div>
@@ -445,7 +445,7 @@ export default function CmsAbout() {
                 name="title"
                 defaultValue={aboutData.philosophy?.title}
                 className={cmsTheme.input}
-                placeholder="The Japandi Approach"
+                placeholder="The OMSHREEGUIDANCE Approach"
               />
             </div>
             <div>

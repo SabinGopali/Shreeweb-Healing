@@ -91,7 +91,7 @@ export default function CmsNavbar() {
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [brandData, setBrandData] = useState({
     logoText: 'J',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
   });
 
@@ -280,7 +280,7 @@ export default function CmsNavbar() {
         {/* Mobile: logo + actions row; lg: contents → logo & actions become flex siblings with search between */}
         <div className="flex items-center justify-between gap-3 lg:contents">
           <Link
-            to="/shreeweb/cms/overview"
+            to="/cms/overview"
             className="flex min-w-0 flex-shrink-0 items-center gap-2.5 sm:gap-3 lg:order-1"
             onClick={() => setMobileOpen(false)}
           >
@@ -435,7 +435,7 @@ export default function CmsNavbar() {
                   
                   <div className="py-1">
                     <Link
-                      to="/shreeweb/cms/profile"
+                      to="/cms/profile"
                       onClick={() => setShowUserMenu(false)}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
                     >

@@ -11,7 +11,7 @@ export default function CmsNavbarMenu() {
   const [brand, setBrand] = useState({
     logoText: 'J',
     logoImageUrl: '',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
   });
   const [loading, setLoading] = useState(true);

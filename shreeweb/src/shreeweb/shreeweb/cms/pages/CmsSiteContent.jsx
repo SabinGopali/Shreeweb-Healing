@@ -16,7 +16,7 @@ const SITE_PREVIEW_ROWS = [
 ];
 
 const defaultSite = {
-  heroTitle: 'JAPANDI',
+  heroTitle: 'OMSHREEGUIDANCE',
   heroSubtitle: 'Energetic Alignment',
   offeringsEyebrow: 'Curated Offerings',
   offeringsLead: 'Select the container that aligns with your current capacity and desired expansion.',

@@ -142,111 +142,111 @@ export default function CmsSidebar() {
   const NavBlock = () => (
     <>
       <p className={groupLabel}>Dashboard & Analytics</p>
-      <NavLink to="/shreeweb/cms/overview" className={itemClass} end onClick={() => setOpen(false)}>
+      <NavLink to="/cms/overview" className={itemClass} end onClick={() => setOpen(false)}>
         <OverviewIcon />
         Dashboard Overview
       </NavLink>
 
       <p className={groupLabel}>Page Content Sections</p>
-      <NavLink to="/shreeweb/cms/hero-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/hero-section" className={itemClass} onClick={() => setOpen(false)}>
         <HomeIcon />
         Hero Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/video-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/video-section" className={itemClass} onClick={() => setOpen(false)}>
         <VideoIcon />
         Video Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/process-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/process-section" className={itemClass} onClick={() => setOpen(false)}>
         <ProcessIcon />
         Process Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/target-audience" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/target-audience" className={itemClass} onClick={() => setOpen(false)}>
         <UsersIcon />
         Target Audience
       </NavLink>
-      <NavLink to="/shreeweb/cms/hidden-cost-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/hidden-cost-section" className={itemClass} onClick={() => setOpen(false)}>
         <CostIcon />
         Hidden Cost Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/growth-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/growth-section" className={itemClass} onClick={() => setOpen(false)}>
         <GrowthIcon />
         Growth Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/clarity-section" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/clarity-section" className={itemClass} onClick={() => setOpen(false)}>
         <ClarityIcon />
         Clarity Section
       </NavLink>
-      <NavLink to="/shreeweb/cms/social-services" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/social-services" className={itemClass} onClick={() => setOpen(false)}>
         <SocialServicesIcon />
         Social Services
       </NavLink>
-      <NavLink to="/shreeweb/cms/email-capture" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/email-capture" className={itemClass} onClick={() => setOpen(false)}>
         <EmailIcon />
         Email Capture
       </NavLink>
-      <NavLink to="/shreeweb/cms/navbar-menu" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/navbar-menu" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         Navbar Menu
       </NavLink>
-      <NavLink to="/shreeweb/cms/footer-menu" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/footer-menu" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         Footer Menu
       </NavLink>
 
       <p className={groupLabel}>Content & Media</p>
-      <NavLink to="/shreeweb/cms/about" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/about" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         About Page
       </NavLink>
-      <NavLink to="/shreeweb/cms/privacy-policy" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/privacy-policy" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         Privacy Policy
       </NavLink>
-      <NavLink to="/shreeweb/cms/cookie-policy" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/cookie-policy" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         Cookie Policy
       </NavLink>
-      <NavLink to="/shreeweb/cms/terms-of-service" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/terms-of-service" className={itemClass} onClick={() => setOpen(false)}>
         <ContentIcon />
         Terms of Service
       </NavLink>
-      <NavLink to="/shreeweb/cms/offerings" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/offerings" className={itemClass} onClick={() => setOpen(false)}>
         <OfferingsIcon />
         Service Offerings
       </NavLink>
-      <NavLink to="/shreeweb/cms/testimonials-enhanced" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/testimonials-enhanced" className={itemClass} onClick={() => setOpen(false)}>
         <TestimonialsIcon />
         Client Testimonials
       </NavLink>
 
       <p className={groupLabel}>Lead Management</p>
-      <NavLink to="/shreeweb/cms/leads" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/leads" className={itemClass} onClick={() => setOpen(false)}>
         <LeadsIcon />
         Email Subscribers
       </NavLink>
-      <NavLink to="/shreeweb/cms/email-campaigns" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/email-campaigns" className={itemClass} onClick={() => setOpen(false)}>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
         Email Campaigns
       </NavLink>
-      <NavLink to="/shreeweb/cms/contacts" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/contacts" className={itemClass} onClick={() => setOpen(false)}>
         <ContactIcon />
         Contact Messages
       </NavLink>
 
       <p className={groupLabel}>Account & Profile</p>
-      <NavLink to="/shreeweb/cms/profile" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/profile" className={itemClass} onClick={() => setOpen(false)}>
         <ProfileIcon />
         Practitioner Profile
       </NavLink>
 
       <p className={groupLabel}>System Configuration</p>
-      <NavLink to="/shreeweb/cms/embeds" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/embeds" className={itemClass} onClick={() => setOpen(false)}>
         <IntegrationsIcon />
         Third-party Integrations
       </NavLink>
-      <NavLink to="/shreeweb/cms/settings" className={itemClass} onClick={() => setOpen(false)}>
+      <NavLink to="/cms/settings" className={itemClass} onClick={() => setOpen(false)}>
         <SettingsIcon />
         System Settings
       </NavLink>

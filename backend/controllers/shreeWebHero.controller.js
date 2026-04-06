@@ -9,7 +9,7 @@ export const getActiveHero = async (req, res, next) => {
     // If no hero exists, create default one
     if (!hero) {
       hero = new ShreeWebHero({
-        title: 'JAPANDI',
+        title: 'OMSHREEGUIDANCE',
         subtitle: 'Energetic alignment for sustainable expansion',
         ctaText: 'Begin Your Journey',
         backgroundType: 'image',
@@ -42,7 +42,7 @@ export const getHero = async (req, res, next) => {
     // If no hero exists, create default one
     if (!hero) {
       hero = new ShreeWebHero({
-        title: 'JAPANDI',
+        title: 'OMSHREEGUIDANCE',
         subtitle: 'Energetic alignment for sustainable expansion',
         ctaText: 'Begin Your Journey',
         backgroundType: 'image',
@@ -113,7 +113,7 @@ export const updateHero = async (req, res, next) => {
     if (!hero) {
       // Create new hero if none exists
       hero = new ShreeWebHero({
-        title: title || 'JAPANDI',
+        title: title || 'OMSHREEGUIDANCE',
         subtitle: subtitle || 'Energetic alignment for sustainable expansion',
         ctaText: ctaText || 'Begin Your Journey',
         backgroundType: backgroundType || 'image',
@@ -168,7 +168,7 @@ export const resetHero = async (req, res, next) => {
       });
     } else {
       // Reset to defaults
-      hero.title = 'JAPANDI';
+      hero.title = 'OMSHREEGUIDANCE';
       hero.subtitle = 'Energetic alignment for sustainable expansion';
       hero.ctaText = 'Begin Your Journey';
       hero.backgroundType = 'image';

@@ -9,10 +9,27 @@ export default function CmsEmailCampaigns() {
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ total: 0, pages: 1 });
+  const [totalRecipients, setTotalRecipients] = useState(0);
+  const [sendingCampaigns, setSendingCampaigns] = useState(new Set());
 
   useEffect(() => {
     fetchCampaigns();
   }, [page]);
+
+  useEffect(() => {
+    fetchRecipients();
+  }, []);
+
+  // Poll for sending campaigns
+  useEffect(() => {
+    if (sendingCampaigns.size === 0) return;
+
+    const interval = setInterval(() => {
+      fetchCampaigns();
+    }, 2000); // Poll every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [sendingCampaigns]);
 
   const fetchCampaigns = async () => {
     try {
@@ -28,21 +45,73 @@ export default function CmsEmailCampaigns() {
         credentials: 'include'
       });
 
+      console.log('Campaign fetch response status:', response.status);
+
+      if (response.status === 401 || response.status === 403) {
+        // Not authenticated, redirect to login
+        navigate('/shreeweb/cms/login');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch campaigns');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Campaign fetch error:', errorData);
+        throw new Error(errorData.message || 'Failed to fetch campaigns');
       }
 
       const data = await response.json();
+      console.log('Campaign data:', data);
 
       if (data.success) {
         setCampaigns(data.data || []);
         setPagination(data.pagination || { total: 0, pages: 1 });
+        
+        // Track sending campaigns
+        const sending = new Set();
+        (data.data || []).forEach(campaign => {
+          if (campaign.status === 'sending') {
+            sending.add(campaign._id);
+          }
+        });
+        setSendingCampaigns(sending);
       }
     } catch (err) {
       console.error('Error fetching campaigns:', err);
       setError(err.message || 'Failed to load campaigns');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchRecipients = async () => {
+    try {
+      const params = new URLSearchParams({
+        subscribed: 'true',
+        limit: '1'
+      });
+
+      const response = await fetch(`/backend/email-captures?${params.toString()}`, {
+        credentials: 'include'
+      });
+
+      console.log('Recipients fetch response status:', response.status);
+
+      if (!response.ok) {
+        console.error('Failed to fetch recipients count');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Recipients data:', data);
+
+      if (data.success && data.pagination) {
+        console.log('Setting total recipients to:', data.pagination.total);
+        setTotalRecipients(data.pagination.total);
+      } else {
+        console.log('No pagination data found in response');
+      }
+    } catch (err) {
+      console.error('Error fetching recipients:', err);
     }
   };
 
@@ -76,19 +145,72 @@ export default function CmsEmailCampaigns() {
     if (!confirm('Are you sure you want to send this campaign? This action cannot be undone.')) return;
 
     try {
+      console.log('Sending campaign:', id);
+      
+      // Add to sending campaigns immediately for UI feedback
+      setSendingCampaigns(prev => new Set([...prev, id]));
+      
       const response = await fetch(`/backend/email-campaigns/${id}/send`, {
         method: 'POST',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      if (!response.ok) throw new Error('Failed to send campaign');
+      console.log('Send response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Send error:', errorData);
+        setSendingCampaigns(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+        throw new Error(errorData.message || 'Failed to send campaign');
+      }
 
       const data = await response.json();
-      alert(`Campaign is being sent to ${data.data.recipientCount} recipients`);
-      fetchCampaigns();
+      console.log('Send response:', data);
+      
+      if (data.success) {
+        alert(`✅ Campaign is being sent to ${data.data.recipientCount} recipients!\n\nThe status will update automatically.`);
+        fetchCampaigns();
+      } else {
+        setSendingCampaigns(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+        throw new Error(data.message || 'Failed to send campaign');
+      }
     } catch (error) {
       console.error('Error sending campaign:', error);
-      alert('Failed to send campaign');
+      alert(`❌ Failed to send campaign: ${error.message}`);
+    }
+  };
+
+  const handleFixRecipients = async (id) => {
+    try {
+      const response = await fetch(`/backend/email-campaigns/${id}/fix-recipients`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fix recipients');
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`✅ Recipients updated: ${data.data.oldCount} → ${data.data.newCount}`);
+        fetchCampaigns();
+      }
+    } catch (error) {
+      console.error('Error fixing recipients:', error);
+      alert('Failed to fix recipients');
     }
   };
 
@@ -96,14 +218,23 @@ export default function CmsEmailCampaigns() {
     const badges = {
       draft: 'bg-gray-100 text-gray-700',
       scheduled: 'bg-blue-100 text-blue-700',
-      sending: 'bg-yellow-100 text-yellow-700',
+      sending: 'bg-yellow-100 text-yellow-700 animate-pulse',
       sent: 'bg-green-100 text-green-700',
       failed: 'bg-red-100 text-red-700'
     };
 
+    const icons = {
+      draft: '📝',
+      scheduled: '📅',
+      sending: '⏳',
+      sent: '✅',
+      failed: '❌'
+    };
+
     return (
-      <span className={`inline-block px-2 py-1 text-xs rounded-full ${badges[status] || badges.draft}`}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+      <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${badges[status] || badges.draft}`}>
+        <span>{icons[status] || icons.draft}</span>
+        <span>{status.charAt(0).toUpperCase() + status.slice(1)}</span>
       </span>
     );
   };
@@ -125,13 +256,18 @@ export default function CmsEmailCampaigns() {
 
       {/* Stats */}
       <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} w-full`}>
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <p className="text-sm text-stone-600">Total Campaigns</p>
             <p className="text-2xl font-serif text-stone-800">{pagination.total}</p>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-stone-600">Page {page} of {pagination.pages}</p>
+          <div>
+            <p className="text-sm text-stone-600">Total Recipients</p>
+            <p className="text-2xl font-serif text-stone-800">{totalRecipients}</p>
+          </div>
+          <div className="text-left sm:text-right">
+            <p className="text-sm text-stone-600">Current Page</p>
+            <p className="text-2xl font-serif text-stone-800">{page} / {pagination.pages}</p>
           </div>
         </div>
       </div>
@@ -179,8 +315,28 @@ export default function CmsEmailCampaigns() {
                     <td className="px-4 py-3 text-stone-600">{campaign.subject}</td>
                     <td className="px-4 py-3">{getStatusBadge(campaign.status)}</td>
                     <td className="px-4 py-3 text-stone-600">{campaign.recipients.totalCount}</td>
-                    <td className="px-4 py-3 text-stone-600">
-                      {campaign.recipients.sentCount} / {campaign.recipients.totalCount}
+                    <td className="px-4 py-3">
+                      {campaign.status === 'sending' ? (
+                        <div className="space-y-1">
+                          <div className="text-xs text-yellow-600 font-medium">
+                            {campaign.recipients.sentCount} / {campaign.recipients.totalCount}
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div 
+                              className="bg-yellow-500 h-1.5 rounded-full transition-all duration-300"
+                              style={{ 
+                                width: `${campaign.recipients.totalCount > 0 
+                                  ? (campaign.recipients.sentCount / campaign.recipients.totalCount * 100) 
+                                  : 0}%` 
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-stone-600">
+                          {campaign.recipients.sentCount} / {campaign.recipients.totalCount}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-stone-600">
                       {campaign.analytics.uniqueOpens.length}
@@ -198,6 +354,15 @@ export default function CmsEmailCampaigns() {
                             >
                               Edit
                             </button>
+                            {campaign.recipients.totalCount === 0 && (
+                              <button
+                                onClick={() => handleFixRecipients(campaign._id)}
+                                className="text-xs text-purple-600 hover:text-purple-800 font-medium"
+                                title="Recalculate recipient count"
+                              >
+                                Fix
+                              </button>
+                            )}
                             <button
                               onClick={() => handleSendCampaign(campaign._id)}
                               className="text-xs text-green-600 hover:text-green-800 font-medium"
@@ -206,20 +371,44 @@ export default function CmsEmailCampaigns() {
                             </button>
                           </>
                         )}
+                        {campaign.status === 'sending' && (
+                          <span className="text-xs text-yellow-600 font-medium">Sending...</span>
+                        )}
                         {campaign.status === 'sent' && (
+                          <>
+                            <button
+                              onClick={() => navigate(`/shreeweb/cms/email-campaigns/view/${campaign._id}`)}
+                              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                              View
+                            </button>
+                            {campaign.recipients?.sentCount === 0 && (
+                              <button
+                                onClick={() => handleSendCampaign(campaign._id)}
+                                className="text-xs text-orange-600 hover:text-orange-800 font-medium"
+                                title="Resend campaign because previous send delivered 0 emails"
+                              >
+                                Resend
+                              </button>
+                            )}
+                          </>
+                        )}
+                        {campaign.status === 'failed' && (
                           <button
-                            onClick={() => navigate(`/shreeweb/cms/email-campaigns/view/${campaign._id}`)}
-                            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                            onClick={() => handleEditCampaign(campaign)}
+                            className="text-xs text-orange-600 hover:text-orange-800 font-medium"
                           >
-                            View
+                            Retry
                           </button>
                         )}
-                        <button
-                          onClick={() => handleDeleteCampaign(campaign._id)}
-                          className="text-xs text-red-600 hover:text-red-800 font-medium"
-                        >
-                          Delete
-                        </button>
+                        {campaign.status !== 'sending' && (
+                          <button
+                            onClick={() => handleDeleteCampaign(campaign._id)}
+                            className="text-xs text-red-600 hover:text-red-800 font-medium"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

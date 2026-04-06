@@ -19,14 +19,29 @@ export const getAllCampaigns = async (req, res, next) => {
       EmailCampaign.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
-        .lean(),
+        .limit(limit),
       EmailCampaign.countDocuments(filter)
     ]);
 
+    // Recalculate recipient counts for draft campaigns
+    const updatedCampaigns = await Promise.all(
+      campaigns.map(async (campaign) => {
+        if (campaign.status === 'draft' || campaign.status === 'scheduled') {
+          const recipientFilter = buildRecipientFilter(campaign.recipients?.filterBy);
+          const actualCount = await EmailCapture.countDocuments(recipientFilter);
+          
+          if (actualCount !== campaign.recipients?.totalCount) {
+            campaign.recipients.totalCount = actualCount;
+            await campaign.save();
+          }
+        }
+        return campaign.toObject();
+      })
+    );
+
     return res.status(200).json({
       success: true,
-      data: campaigns,
+      data: updatedCampaigns,
       pagination: {
         page,
         limit,
@@ -179,23 +194,72 @@ export const sendCampaign = async (req, res, next) => {
     }
 
     if (campaign.status === 'sent') {
-      return next(errorHandler(400, 'Campaign has already been sent'));
+      // Allow recovery resend for legacy campaigns that were marked sent but delivered 0.
+      if ((campaign.recipients?.sentCount || 0) > 0) {
+        return next(errorHandler(400, 'Campaign has already been sent'));
+      }
+      campaign.status = 'draft';
+      campaign.sentAt = null;
+      campaign.recipients.failedCount = 0;
     }
 
     if (campaign.status === 'sending') {
       return next(errorHandler(400, 'Campaign is currently being sent'));
     }
 
+    // Get recipients
+    const filterBy = campaign.recipients?.filterBy || { subscribedOnly: true };
+    const filter = buildRecipientFilter(filterBy);
+    console.log('\n📧 ========== SENDING CAMPAIGN ==========');
+    console.log('📧 Campaign ID:', campaign._id);
+    console.log('📧 Campaign Name:', campaign.name);
+    console.log('📧 Campaign filterBy:', JSON.stringify(campaign.recipients.filterBy, null, 2));
+    console.log('📧 Built MongoDB filter:', JSON.stringify(filter, null, 2));
+    
+    let recipients = await EmailCapture.find(filter).lean();
+    console.log('📧 Found recipients:', recipients.length);
+
+    // Safety fallback: if a strict filter returns no rows but there are subscribed users,
+    // fall back to subscribed users instead of silently sending to nobody.
+    if (recipients.length === 0) {
+      const subscribedCount = await EmailCapture.countDocuments({ subscribed: true });
+      if (subscribedCount > 0) {
+        console.warn('⚠️  No recipients matched filter. Falling back to all subscribed users.');
+        recipients = await EmailCapture.find({ subscribed: true }).lean();
+        campaign.recipients.filterBy = { subscribedOnly: true };
+        campaign.recipients.totalCount = recipients.length;
+        await campaign.save();
+      }
+    }
+    
+    if (recipients.length > 0) {
+      console.log('📧 Recipients list:');
+      recipients.forEach((r, i) => {
+        console.log(`   ${i + 1}. ${r.email} - ${r.name || 'No name'} - subscribed: ${r.subscribed}`);
+      });
+    } else {
+      console.log('⚠️  NO RECIPIENTS FOUND! Check your filters.');
+    }
+    console.log('📧 =====================================\n');
+
+    if (recipients.length === 0) {
+      campaign.status = 'failed';
+      campaign.recipients.totalCount = 0;
+      await campaign.save();
+      return next(errorHandler(400, 'No subscribed recipients found for this campaign'));
+    }
+
+    // Ensure SMTP is reachable before moving campaign into "sending".
+    const emailReady = await emailService.verifyConnection();
+    if (!emailReady.success) {
+      campaign.status = 'failed';
+      await campaign.save();
+      return next(errorHandler(500, `Email service is not ready: ${emailReady.message}`));
+    }
+
     // Update status to sending
     campaign.status = 'sending';
     await campaign.save();
-
-    // Get recipients
-    const filter = buildRecipientFilter(campaign.recipients.filterBy);
-    console.log('📧 Campaign filter:', JSON.stringify(campaign.recipients.filterBy, null, 2));
-    console.log('📧 Built filter:', JSON.stringify(filter, null, 2));
-    const recipients = await EmailCapture.find(filter).lean();
-    console.log('📧 Found recipients:', recipients.length);
 
     // Send emails in background
     sendCampaignEmails(campaign._id, recipients, {
@@ -288,29 +352,85 @@ export const getCampaignAnalytics = async (req, res, next) => {
   }
 };
 
+// Fix campaign recipients - recalculate based on filters
+export const fixCampaignRecipients = async (req, res, next) => {
+  try {
+    const campaign = await EmailCampaign.findById(req.params.id);
+
+    if (!campaign) {
+      return next(errorHandler(404, 'Campaign not found'));
+    }
+
+    // Recalculate recipient count
+    const filter = buildRecipientFilter(campaign.recipients?.filterBy);
+    const actualCount = await EmailCapture.countDocuments(filter);
+    
+    const oldCount = campaign.recipients.totalCount;
+    campaign.recipients.totalCount = actualCount;
+    await campaign.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Campaign recipients recalculated',
+      data: {
+        oldCount,
+        newCount: actualCount,
+        filter: campaign.recipients.filterBy
+      }
+    });
+  } catch (error) {
+    console.error('Error fixing campaign recipients:', error);
+    next(error);
+  }
+};
+
 // Helper function to build recipient filter
 function buildRecipientFilter(filterBy = {}) {
   const filter = {};
 
+  console.log('🔍 buildRecipientFilter input:', JSON.stringify(filterBy, null, 2));
+
   // Always filter by subscribed unless explicitly set to false
   if (filterBy.subscribedOnly !== false) {
     filter.subscribed = true;
+    console.log('🔍 Added subscribed filter: true');
   }
+
+  // Only include valid email rows for campaign sending.
+  filter.email = { $type: 'string', $regex: /\S+@\S+\.\S+/i };
 
   // Only add source filter if it's not 'all' and is a valid string
   if (filterBy.source && filterBy.source !== 'all' && typeof filterBy.source === 'string') {
     filter.source = filterBy.source;
+    console.log('🔍 Added source filter:', filterBy.source);
   }
 
-  // Only add tags filter if tags exist and array has items
+  // Only add tags filter if tags exist and array has items.
+  // Be defensive here because legacy campaigns may store non-string tag values.
   if (filterBy.tags && Array.isArray(filterBy.tags) && filterBy.tags.length > 0) {
-    filter.tags = { $in: filterBy.tags };
+    const validTags = filterBy.tags
+      .map(tag => (typeof tag === 'string' ? tag.trim() : ''))
+      .filter(tag => tag.length > 0);
+    if (validTags.length > 0) {
+      // Case-insensitive tag matching; keeps campaign sends resilient to tag casing.
+      filter.tags = {
+        $in: validTags.map(tag => new RegExp(`^${escapeRegex(tag)}$`, 'i'))
+      };
+      console.log('🔍 Added tags filter:', validTags);
+    } else {
+      console.log('🔍 Tags array was empty after sanitizing, skipping tags filter');
+    }
+  } else {
+    console.log('🔍 No valid tags to filter by');
   }
 
-  console.log('🔍 Building filter from:', JSON.stringify(filterBy, null, 2));
-  console.log('🔍 Result filter:', JSON.stringify(filter, null, 2));
+  console.log('🔍 Final MongoDB filter:', JSON.stringify(filter, null, 2));
 
   return filter;
+}
+
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // Background function to send campaign emails
@@ -323,8 +443,12 @@ async function sendCampaignEmails(campaignId, recipients, emailContent) {
 
     campaign.recipients.sentCount = results.sent;
     campaign.recipients.failedCount = results.failed;
-    campaign.status = 'sent';
-    campaign.sentAt = new Date();
+    if (results.sent > 0) {
+      campaign.status = 'sent';
+      campaign.sentAt = new Date();
+    } else {
+      campaign.status = 'failed';
+    }
     await campaign.save();
 
     console.log(`Campaign ${campaignId} sent: ${results.sent} successful, ${results.failed} failed`);
