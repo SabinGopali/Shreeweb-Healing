@@ -430,6 +430,10 @@ const CART_CREATE_WITH_LINES = `
         id
         checkoutUrl
         totalQuantity
+        attributes {
+          key
+          value
+        }
       }
       userErrors {
         field
@@ -489,8 +493,14 @@ export async function createCheckoutUrlForVariant(
     ...(lineAttributes.length > 0 ? { attributes: lineAttributes } : {}),
   };
 
+  // Add cart-level attributes to track source (for redirect script)
+  const cartAttributes = [
+    { key: 'source', value: 'website' }
+  ];
+
   const input = {
     lines: [line],
+    attributes: cartAttributes,
   };
 
   const data = await storefrontGraphql(domain, storefrontAccessToken, CART_CREATE_WITH_LINES, { input });

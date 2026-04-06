@@ -88,46 +88,71 @@ export default function CmsEmbeds() {
         <div className="bg-stone-900 rounded-lg p-4 overflow-x-auto">
           <pre id="shopify-redirect-script" className="text-xs text-green-400 font-mono whitespace-pre-wrap">
 {`{% if first_time_accessed %}
-<div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-left: 4px solid #f59e0b; border-radius: 8px; text-align: center;">
-  <h3 style="margin: 0 0 10px 0; color: #92400e; font-size: 20px;">🎉 Payment Successful!</h3>
-  <p style="margin: 0 0 15px 0; color: #78716c; font-size: 16px;">
-    Now let's schedule your session...
-  </p>
-  <p style="margin: 0 0 15px 0; color: #57534e; font-size: 14px;">
-    You'll be redirected automatically in <span id="countdown">3</span> seconds
-  </p>
-  <a href="https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}" 
-     style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-    Schedule Now →
-  </a>
-</div>
+  <div id="redirect-banner" style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-left: 4px solid #f59e0b; border-radius: 8px; text-align: center;">
+    <h3 style="margin: 0 0 10px 0; color: #92400e; font-size: 20px;">🎉 Payment Successful!</h3>
+    <p style="margin: 0 0 15px 0; color: #78716c; font-size: 16px;">
+      Now let's schedule your session...
+    </p>
+    <p style="margin: 0 0 15px 0; color: #57534e; font-size: 14px;">
+      You'll be redirected automatically in <span id="countdown">3</span> seconds
+    </p>
+    <a href="https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}" 
+       style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      Schedule Now →
+    </a>
+  </div>
 
-<script>
-(function() {
-  var countdown = 3;
-  var countdownElement = document.getElementById('countdown');
-  var redirectUrl = 'https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}';
-  
-  var timer = setInterval(function() {
-    countdown--;
-    if (countdownElement) {
-      countdownElement.textContent = countdown;
-    }
+  <script>
+  (function() {
+    console.log('🚀 Redirect script loaded');
+    console.log('Order ID: {{ order.id }}');
+    console.log('Order Number: {{ order.order_number }}');
+    console.log('Email: {{ order.email }}');
     
-    if (countdown <= 0) {
-      clearInterval(timer);
+    var countdown = 3;
+    var countdownElement = document.getElementById('countdown');
+    var redirectUrl = 'https://omshreeguidance.com/shreeweb/booking-confirmation?order_id={{ order.id }}&order_number={{ order.order_number }}&email={{ order.email }}';
+    
+    console.log('Redirect URL:', redirectUrl);
+    console.log('Starting countdown...');
+    
+    var timer = setInterval(function() {
+      countdown--;
+      console.log('Countdown:', countdown);
+      
+      if (countdownElement) {
+        countdownElement.textContent = countdown;
+      }
+      
+      if (countdown <= 0) {
+        clearInterval(timer);
+        console.log('⏰ Countdown complete, redirecting now...');
+        window.location.href = redirectUrl;
+      }
+    }, 1000);
+    
+    // Fallback safety redirect
+    setTimeout(function() {
+      console.log('⚠️ Fallback redirect triggered');
       window.location.href = redirectUrl;
-    }
-  }, 1000);
-  
-  // Fallback redirect after 5 seconds
-  setTimeout(function() {
-    window.location.href = redirectUrl;
-  }, 5000);
-})();
-</script>
+    }, 5000);
+  })();
+  </script>
 {% endif %}`}
           </pre>
+        </div>
+
+        <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded mb-4">
+          <h3 className="font-semibold text-blue-900 mb-2">🐛 Debug Version (Use This First)</h3>
+          <p className="text-sm text-blue-800 mb-2">
+            This version includes console.log statements to help debug. After pasting in Shopify:
+          </p>
+          <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+            <li>Make a test purchase</li>
+            <li>On the thank you page, press F12 to open browser console</li>
+            <li>Look for messages starting with 🚀, ⏰, or ⚠️</li>
+            <li>Share what you see in the console</li>
+          </ol>
         </div>
 
         <div className="mt-4 p-4 bg-amber-50 border-l-4 border-amber-500 rounded">
@@ -137,11 +162,13 @@ export default function CmsEmbeds() {
             <li>Go to Shopify Admin → Settings → Checkout</li>
             <li>Scroll to "Order status page" section</li>
             <li>Find "Additional scripts" text area</li>
-            <li>Paste the script</li>
+            <li>Paste the script (replace any existing script)</li>
             <li>Click "Save" at the bottom</li>
+            <li>Make a NEW test purchase (old orders won't work)</li>
+            <li>Open browser console (F12) on thank you page</li>
           </ol>
-          <p className="text-xs text-amber-700 mt-3">
-            ℹ️ After payment, customers will be automatically redirected to your booking calendar to schedule their session.
+          <p className="text-xs text-amber-700 mt-3 font-semibold">
+            ⚠️ CRITICAL: You MUST make a NEW purchase after saving the script. Old thank you pages are cached.
           </p>
         </div>
       </div>
