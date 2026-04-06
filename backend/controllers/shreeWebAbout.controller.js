@@ -10,7 +10,7 @@ export const getAboutContent = async (req, res, next) => {
       aboutContent = new ShreeWebAbout({
         hero: {
           tag: 'About',
-          title: 'JAPANDI',
+          title: 'OMSHREEGUIDANCE',
           subtitle: 'Energy Sessions',
           description: 'A calm, structured approach to help you scan your energetic field, release what\'s stuck, and return to balance.',
           backgroundColor: 'from-[#F4EFE6] via-amber-50 to-orange-50'
@@ -47,7 +47,7 @@ export const getAboutContent = async (req, res, next) => {
           ]
         },
         philosophy: {
-          title: 'The Japandi Approach',
+          title: 'The OMSHREEGUIDANCE Approach',
           description: 'Inspired by the minimalist principles of Japanese and Scandinavian design, our approach emphasizes simplicity, natural harmony, and sustainable well-being.',
           backgroundColor: 'from-stone-50 to-amber-50',
           principles: [

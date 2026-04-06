@@ -283,11 +283,11 @@ export default function TermsOfService() {
             <div className="mt-16 pt-8 border-t border-stone-200 text-center">
               <p className="text-sm text-stone-600 mb-4">
                 For questions about these terms, please review our{' '}
-                <Link to="/shreeweb/privacy-policy" className="text-amber-600 hover:text-amber-700 underline">
+                <Link to="/privacy-policy" className="text-amber-600 hover:text-amber-700 underline">
                   Privacy Policy
                 </Link>
                 {' '}or{' '}
-                <Link to="/shreeweb/contact" className="text-amber-600 hover:text-amber-700 underline">
+                <Link to="/contact" className="text-amber-600 hover:text-amber-700 underline">
                   contact us
                 </Link>
                 .

@@ -48,6 +48,8 @@ import shreeWebUserAuthRoute from './routes/shreeWebUserAuth.route.js';
 import emailCaptureRoute from './routes/emailCapture.route.js';
 import emailCampaignRoute from './routes/emailCampaign.routes.js';
 import contactRoute from './routes/contact.route.js';
+import shopifyWebhookRoute from './routes/shopifyWebhook.route.js';
+import bookingRoute from './routes/booking.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -87,6 +89,14 @@ const startServer = async () => {
     credentials: true
   }));
   app.use(cookieParser()); // Parse cookies
+  
+  // Shopify webhook route - MUST come before express.json() to preserve raw body
+  app.use('/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+    // Store raw body for signature verification
+    req.rawBody = req.body.toString('utf8');
+    next();
+  }, shopifyWebhookRoute);
+  
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   
@@ -161,6 +171,9 @@ const startServer = async () => {
   
   // Contact routes
   app.use('/backend/contact', contactRoute);
+  
+  // Booking routes
+  app.use('/backend/bookings', bookingRoute);
   
   // 404 handler for undefined routes
   app.use((req, res) => {

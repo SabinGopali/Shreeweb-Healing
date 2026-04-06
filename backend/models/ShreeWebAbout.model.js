@@ -5,7 +5,7 @@ const shreeWebAboutSchema = new mongoose.Schema(
     // Hero Section
     hero: {
       tag: { type: String, default: 'About' },
-      title: { type: String, default: 'JAPANDI' },
+      title: { type: String, default: 'OMSHREEGUIDANCE' },
       subtitle: { type: String, default: 'Energy Sessions' },
       description: { type: String, default: 'A calm, structured approach to help you scan your energetic field, release what\'s stuck, and return to balance.' },
       backgroundColor: { type: String, default: 'from-[#F4EFE6] via-amber-50 to-orange-50' }
@@ -36,7 +36,7 @@ const shreeWebAboutSchema = new mongoose.Schema(
 
     // Philosophy Section
     philosophy: {
-      title: { type: String, default: 'The Japandi Approach' },
+      title: { type: String, default: 'The OMSHREEGUIDANCE Approach' },
       description: { type: String, default: 'Inspired by the minimalist principles of Japanese and Scandinavian design, our approach emphasizes simplicity, natural harmony, and sustainable well-being.' },
       backgroundColor: { type: String, default: 'from-stone-50 to-amber-50' },
       principles: [

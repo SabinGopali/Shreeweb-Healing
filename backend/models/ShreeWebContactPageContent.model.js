@@ -5,7 +5,7 @@ const ShreeWebContactPageContentSchema = new mongoose.Schema(
     isActive: { type: Boolean, default: true },
 
     logo: {
-      text: { type: String, default: 'JAPANDI' },
+      text: { type: String, default: 'OMSHREEGUIDANCE' },
       subtext: { type: String, default: 'Energetic Alignment' },
       letter: { type: String, default: 'J' },
       imageUrl: { type: String, default: '' },
@@ -42,7 +42,7 @@ const ShreeWebContactPageContentSchema = new mongoose.Schema(
     },
 
     contactInfo: {
-      email: { type: String, default: 'info@japandi.example' },
+      email: { type: String, default: 'info@OMSHREEGUIDANCE.example' },
       phone: { type: String, default: '+977-98XXXXXXXX' },
     },
 

@@ -28,7 +28,7 @@ const resolveUrl = (url) => {
 };
 
 const defaultHero = {
-  title: 'JAPANDI',
+  title: 'OMSHREEGUIDANCE',
   subtitle: 'Energetic alignment for sustainable expansion',
   ctaText: 'Begin Your Journey',
   backgroundType: 'image',
@@ -210,7 +210,7 @@ export default function CmsHeroSection() {
             label="Main Title"
             value={form.title}
             onChange={updateField('title')}
-            placeholder="JAPANDI"
+            placeholder="OMSHREEGUIDANCE"
             minHeight="sm"
           />
           

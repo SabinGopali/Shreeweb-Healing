@@ -29,7 +29,7 @@ export const useHeroData = () => {
       
       // Fallback to default data
       setHeroData({
-        title: 'JAPANDI',
+        title: 'OMSHREEGUIDANCE',
         subtitle: 'Energetic alignment for sustainable expansion',
         ctaText: 'Begin Your Journey',
         backgroundType: 'image',

@@ -4,7 +4,7 @@ const shreeWebHeroSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    default: 'JAPANDI'
+    default: 'OMSHREEGUIDANCE'
   },
   subtitle: {
     type: String,

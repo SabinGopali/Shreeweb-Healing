@@ -12,7 +12,7 @@ export default function Contact() {
   const [content, setContent] = useState({
     isActive: true,
     logo: {
-      text: 'JAPANDI',
+      text: 'OMSHREEGUIDANCE',
       subtext: 'Energetic Alignment',
       letter: 'J',
       imageUrl: '',
@@ -32,7 +32,7 @@ export default function Contact() {
       line1: 'Kathmandu, Nepal',
       line2: '(Online sessions available worldwide)',
     },
-    contactInfo: { email: 'info@japandi.example', phone: '+977-98XXXXXXXX' },
+    contactInfo: { email: 'info@OMSHREEGUIDANCE.example', phone: '+977-98XXXXXXXX' },
     follow: {
       description:
         'Stay connected and get updates on our latest offerings and insights.',
@@ -160,7 +160,7 @@ export default function Contact() {
               </div>
             )}
             <div className="min-w-0 leading-tight">
-              <div className="truncate text-xl font-serif tracking-wide text-stone-800 sm:text-2xl">{content.logo?.text || 'JAPANDI'}</div>
+              <div className="truncate text-xl font-serif tracking-wide text-stone-800 sm:text-2xl">{content.logo?.text || 'OMSHREEGUIDANCE'}</div>
               <div className="truncate text-xs text-stone-600 sm:text-sm">{content.logo?.subtext || 'Energetic Alignment'}</div>
             </div>
           </div>

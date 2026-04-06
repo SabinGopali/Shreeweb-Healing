@@ -52,7 +52,7 @@ export default function CmsFooterMenu() {
   const [footerBrand, setFooterBrand] = useState({
     logoText: 'J',
     logoImageUrl: '',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
     description:
       'Energetic Alignment for Sustainable Expansion. A calm, structured approach to help you restore clarity and expand naturally through Pranic Healing sessions.',

@@ -495,7 +495,7 @@ export default function CmsSettings() {
     });
     return {
       exportedAt: new Date().toISOString(),
-      source: 'japandi-shreeweb-cms',
+      source: 'OMSHREEGUIDANCE-shreeweb-cms',
       data,
     };
   };
@@ -504,7 +504,7 @@ export default function CmsSettings() {
     const blob = new Blob([JSON.stringify(bundle(), null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `japandi-cms-export-${Date.now()}.json`;
+    a.download = `OMSHREEGUIDANCE-cms-export-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
     setMsg('Backup file download started.');
@@ -554,7 +554,7 @@ export default function CmsSettings() {
   };
 
   const clearAll = () => {
-    if (!window.confirm('Remove all JAPANDI CMS data from this browser localStorage? This cannot be undone.')) return;
+    if (!window.confirm('Remove all OMSHREEGUIDANCE CMS data from this browser localStorage? This cannot be undone.')) return;
     SHREEWEB_CMS_ALL_KEYS.forEach((k) => {
       try {
         window.localStorage.removeItem(k);
@@ -1023,7 +1023,7 @@ export default function CmsSettings() {
           </div>
           <div>
             <h2 className={`${cmsTheme.title} text-lg`}>Local data overview</h2>
-            <p className={cmsTheme.subtitle}>What is saved in this browser for the JAPANDI CMS.</p>
+            <p className={cmsTheme.subtitle}>What is saved in this browser for the OMSHREEGUIDANCE CMS.</p>
           </div>
         </div>
         <div className="overflow-x-auto">

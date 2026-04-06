@@ -38,7 +38,7 @@ const titles = {
 
 export default function ShreeWebCmsLayout() {
   const { pathname } = useLocation();
-  const [title, desc] = titles[pathname] || ['JAPANDI CMS', ''];
+  const [title, desc] = titles[pathname] || ['OMSHREEGUIDANCE CMS', ''];
   const [workspaceEyebrow, setWorkspaceEyebrow] = useState('Content studio');
 
   const refreshWorkspaceLabel = useCallback(() => {

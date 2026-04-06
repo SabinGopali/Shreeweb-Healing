@@ -7,7 +7,8 @@ import {
   deleteCampaign,
   sendCampaign,
   sendTestEmail,
-  getCampaignAnalytics
+  getCampaignAnalytics,
+  fixCampaignRecipients
 } from '../controllers/emailCampaign.controller.js';
 import { verifyToken, requireAdmin } from '../controllers/shreeWebAuth.controller.js';
 
@@ -25,6 +26,7 @@ router.delete('/:id', deleteCampaign);
 
 // Campaign actions
 router.post('/:id/send', sendCampaign);
+router.post('/:id/fix-recipients', fixCampaignRecipients);
 router.post('/test-email', sendTestEmail);
 router.get('/:id/analytics', getCampaignAnalytics);
 

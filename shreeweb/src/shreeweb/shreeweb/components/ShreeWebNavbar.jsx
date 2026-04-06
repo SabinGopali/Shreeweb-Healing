@@ -26,7 +26,7 @@ const fallbackLinks = [
 const fallbackBrand = {
   logoText: 'J',
   logoImageUrl: '',
-  brandTitle: 'JAPANDI',
+  brandTitle: 'OMSHREEGUIDANCE',
   brandSubtitle: 'Energetic Alignment',
 };
 
@@ -80,7 +80,7 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
           className="flex min-w-0 flex-shrink items-center gap-2 sm:gap-3"
           onClick={() => setMobileOpen(false)}
         >
-          {brand.logoImageUrl ? (
+          {brand.logoImageUrl && (
             <img 
               src={resolveImage(brand.logoImageUrl)} 
               alt={brand.brandTitle}
@@ -90,12 +90,8 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
                 e.target.style.display = 'none';
               }}
             />
-          ) : (
-            <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl bg-stone-800 text-white sm:h-14 sm:w-14">
-              <span className="text-sm font-bold tracking-widest sm:text-base">{brand.logoText}</span>
-            </div>
           )}
-          <div className="hidden min-w-0 leading-tight xs:block sm:block">
+          <div className="min-w-0 leading-tight">
             <div className="truncate text-base font-serif tracking-wide text-stone-800 sm:text-lg">{brand.brandTitle}</div>
             <div className="truncate text-xs text-stone-600">{brand.brandSubtitle}</div>
           </div>
@@ -153,18 +149,42 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-2.5 py-1.5 text-xs font-medium text-stone-800 transition-all duration-200 hover:bg-stone-50 hover:shadow-md sm:px-3 sm:py-2 sm:text-sm lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white p-2 text-stone-800 transition-all duration-200 hover:bg-stone-50 hover:shadow-md lg:hidden"
             aria-expanded={mobileOpen}
-            aria-label="Open menu"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             onClick={() => setMobileOpen((o) => !o)}
           >
-            {mobileOpen ? 'Close' : 'Menu'}
+            {/* Hamburger Icon */}
+            <svg 
+              className="h-6 w-6" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              {mobileOpen ? (
+                // X icon when menu is open
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M6 18L18 6M6 6l12 12" 
+                />
+              ) : (
+                // Hamburger icon when menu is closed
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M4 6h16M4 12h16M4 18h16" 
+                />
+              )}
+            </svg>
           </button>
         </div>
       </div>
 
       {mobileOpen ? (
-        <div className="border-t border-stone-200/80 bg-[#F4EFE6] px-4 py-4 lg:hidden">
+        <div className="border-t border-stone-200/80 bg-[#F4EFE6] px-4 py-4 lg:hidden animate-slideDown">
           <nav className="flex flex-col gap-1">
             {links.map(({ to, label, external, newTab }) => (
               external ? (
@@ -195,7 +215,7 @@ export default function ShreeWebNavbar({ fullWidth = false }) {
                 <p className="truncate font-medium text-stone-900">{displayName(user)}</p>
                 <button
                   type="button"
-                  className="mt-2 w-full rounded-full border border-orange-200 bg-orange-50 py-2 text-sm font-medium text-orange-800"
+                  className="mt-2 w-full rounded-full border border-orange-200 bg-orange-50 py-2 text-sm font-medium text-orange-800 hover:bg-orange-100 transition-colors"
                   onClick={() => {
                     logout();
                     setMobileOpen(false);

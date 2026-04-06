@@ -28,7 +28,7 @@ export default function ShreeWebFooter() {
   const fallbackFooterBrand = {
     logoText: 'J',
     logoImageUrl: '',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
     description:
       'Energetic Alignment for Sustainable Expansion. A calm, structured approach to help you restore clarity and expand naturally through Pranic Healing sessions.',
@@ -241,7 +241,7 @@ export default function ShreeWebFooter() {
               <div className="w-1 h-1 bg-stone-400 rounded-full"></div>
               <span>{footerBrand.bottomText2}</span>
               <div className="w-1 h-1 bg-stone-400 rounded-full hidden sm:block"></div>
-              <Link to="/shreeweb/cms/overview" className="text-xs text-stone-400 hover:text-stone-700">
+              <Link to="/cms/overview" className="text-xs text-stone-400 hover:text-stone-700">
                 {footerBrand.cmsLinkLabel}
               </Link>
             </div>

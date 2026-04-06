@@ -463,7 +463,7 @@ export default function Home() {
                   </div>
                   
                   <Link
-                    to="/shreeweb/offers"
+                    to="/offers"
                     className="inline-flex items-center px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 text-stone-700 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-500 font-light tracking-wide shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
                   >
                     <span>{stripTags(growth.ctaButtonText)}</span>
@@ -746,7 +746,7 @@ export default function Home() {
                   "{stripTags(targetAudience.ctaQuote || "Ready to explore what's possible when your energy and ambition are aligned?")}"
                 </p>
                 <Link
-                  to="/shreeweb/offers"
+                  to="/offers"
                   className="group relative overflow-hidden inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500/90 to-amber-500/90 backdrop-blur-md text-white rounded-full hover:from-orange-600/90 hover:to-amber-600/90 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
                 >
                   <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">

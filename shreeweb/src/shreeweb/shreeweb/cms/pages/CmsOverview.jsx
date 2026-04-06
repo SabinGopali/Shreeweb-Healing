@@ -142,7 +142,7 @@ export default function CmsOverview() {
               Welcome back, {admin?.profile?.firstName || admin?.username || 'Administrator'}!
             </h1>
             <p className={`${cmsTheme.subtitle} mt-2`}>
-              Snapshot of your Japandi public site: content inventory, audience signals, and embed status. 
+              Snapshot of your OMSHREEGUIDANCE public site: content inventory, audience signals, and embed status. 
               {admin?.role === 'super_admin' && (
                 <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                   Super Admin

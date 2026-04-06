@@ -176,7 +176,7 @@ export default function ShreeWebSignup() {
               <div className="mb-6 text-sm font-medium tracking-wider text-stone-700 uppercase">
                 <span className="inline-flex items-center gap-2">
                   <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
-                  Join JAPANDI
+                  Join OMSHREEGUIDANCE
                   <div className="w-8 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
                 </span>
               </div>
@@ -410,9 +410,9 @@ export default function ShreeWebSignup() {
             <div className="mt-8 text-center">
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                 <p className="text-sm text-stone-600">
-                  Already part of JAPANDI?{' '}
+                  Already part of OMSHREEGUIDANCE?{' '}
                   <Link 
-                    to="/shreeweb/login" 
+                    to="/login" 
                     className="inline-flex items-center gap-1 font-semibold text-amber-700 hover:text-amber-800 transition-colors duration-200 group"
                   >
                     <span className="underline decoration-amber-400/50 group-hover:decoration-amber-500/70 transition-colors">

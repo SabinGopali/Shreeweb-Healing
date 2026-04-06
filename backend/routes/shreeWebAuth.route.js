@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import {
-  register,
   login,
   logout,
   getProfile,
@@ -22,7 +21,6 @@ import {
 const router = express.Router();
 
 // Authentication routes (no auth required)
-router.post('/register', register); // Temporary registration endpoint
 router.post('/login', login);
 router.post('/logout', logout);
 

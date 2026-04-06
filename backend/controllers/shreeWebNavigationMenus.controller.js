@@ -8,7 +8,7 @@ function uid() {
 const defaultPayload = {
   navbarBrand: {
     logoText: 'J',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
   },
   navbarItems: [
@@ -20,7 +20,7 @@ const defaultPayload = {
   ],
   footerBrand: {
     logoText: 'J',
-    brandTitle: 'JAPANDI',
+    brandTitle: 'OMSHREEGUIDANCE',
     brandSubtitle: 'Energetic Alignment',
     description:
       'Energetic Alignment for Sustainable Expansion. A calm, structured approach to help you restore clarity and expand naturally through Pranic Healing sessions.',

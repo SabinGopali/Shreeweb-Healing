@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { app } from '../../firebase';
 
-/** Matches JAPANDI auth cards: stone borders, warm white, serif-adjacent rhythm */
+/** Matches OMSHREEGUIDANCE auth cards: stone borders, warm white, serif-adjacent rhythm */
 export function ShreeWebAuthDivider() {
   return (
     <div className="relative my-7">

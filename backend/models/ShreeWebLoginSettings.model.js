@@ -4,7 +4,7 @@ const shreeWebLoginSettingsSchema = new mongoose.Schema({
   // Brand Information
   brandName: {
     type: String,
-    default: 'JAPANDI Studio',
+    default: 'OMSHREEGUIDANCE Studio',
     required: true,
     trim: true
   },

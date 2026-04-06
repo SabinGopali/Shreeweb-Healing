@@ -1,4 +1,4 @@
-﻿import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 class EmailService {
   constructor() {
@@ -23,7 +23,7 @@ class EmailService {
       }
     };
 
-    console.log('📧 Initializing email service...');
+    console.log('?? Initializing email service...');
     console.log('   Host:', emailConfig.host);
     console.log('   Port:', emailConfig.port);
     console.log('   Secure:', emailConfig.secure);
@@ -39,13 +39,13 @@ class EmailService {
           throw new Error('nodemailer.createTransport is not available');
         }
         this.transporter = createTransport.call(nodemailer.default || nodemailer, emailConfig);
-        console.log('✅ Email transporter created successfully');
+        console.log('? Email transporter created successfully');
       } catch (error) {
-        console.error('❌ Failed to create email transporter:', error.message);
+        console.error('? Failed to create email transporter:', error.message);
         console.error('   Nodemailer object:', Object.keys(nodemailer));
       }
     } else {
-      console.warn('⚠️  Email credentials not configured. Email sending will be simulated.');
+      console.warn('??  Email credentials not configured. Email sending will be simulated.');
     }
     
     this.initialized = true;
@@ -58,24 +58,35 @@ class EmailService {
     }
     
     if (!this.transporter) {
-      console.log('⚠️  [EMAIL SIMULATION]', { to, subject });
+      console.log('??  [EMAIL SIMULATION]', { to, subject });
       return { success: true, messageId: 'simulated-' + Date.now() };
     }
 
     try {
-      console.log('📧 Sending email to:', to);
+      console.log('?? Sending email to:', to);
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+      const unsubscribeLink = `${frontendUrl}/unsubscribe?email=${encodeURIComponent(to)}`;
+      const finalHtml = this.wrapEmailHtml(html, { unsubscribeLink });
+      const finalText = text || this.htmlToText(finalHtml);
       const info = await this.transporter.sendMail({
-        from: process.env.EMAIL_FROM?.trim() || process.env.EMAIL_USER?.trim(),
+        from: this.getFromAddress(),
         to,
         subject,
-        html,
-        text: text || this.htmlToText(html)
+        replyTo: process.env.EMAIL_REPLY_TO?.trim() || process.env.EMAIL_FROM?.trim() || process.env.EMAIL_USER?.trim(),
+        html: finalHtml,
+        text: finalText,
+        headers: {
+          'List-Unsubscribe': `<${unsubscribeLink}>`,
+          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          'Precedence': 'bulk',
+          'X-Auto-Response-Suppress': 'All'
+        }
       });
 
-      console.log('✅ Email sent successfully:', info.messageId);
+      console.log('? Email sent successfully:', info.messageId);
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error('❌ Error sending email:', error);
+      console.error('? Error sending email:', error);
       return { success: false, error: error.message };
     }
   }
@@ -92,7 +103,7 @@ class EmailService {
       errors: []
     };
 
-    console.log(`📧 Starting bulk email send to ${recipients.length} recipients...`);
+    console.log(`?? Starting bulk email send to ${recipients.length} recipients...`);
 
     for (const recipient of recipients) {
       try {
@@ -105,11 +116,11 @@ class EmailService {
 
         if (result.success) {
           results.sent++;
-          console.log(`✅ Sent to ${recipient.email}`);
+          console.log(`? Sent to ${recipient.email}`);
         } else {
           results.failed++;
           results.errors.push({ email: recipient.email, error: result.error });
-          console.log(`❌ Failed to send to ${recipient.email}:`, result.error);
+          console.log(`? Failed to send to ${recipient.email}:`, result.error);
         }
 
         // Add small delay to avoid rate limiting
@@ -117,11 +128,11 @@ class EmailService {
       } catch (error) {
         results.failed++;
         results.errors.push({ email: recipient.email, error: error.message });
-        console.log(`❌ Exception sending to ${recipient.email}:`, error.message);
+        console.log(`? Exception sending to ${recipient.email}:`, error.message);
       }
     }
 
-    console.log(`📊 Bulk send complete: ${results.sent} sent, ${results.failed} failed`);
+    console.log(`?? Bulk send complete: ${results.sent} sent, ${results.failed} failed`);
     return results;
   }
 
@@ -130,6 +141,66 @@ class EmailService {
       .replace(/\{\{email\}\}/g, recipient.email || '')
       .replace(/\{\{name\}\}/g, recipient.name || 'there')
       .replace(/\{\{unsubscribe_link\}\}/g, `${process.env.FRONTEND_URL || 'http://localhost:5173'}/unsubscribe?email=${encodeURIComponent(recipient.email)}`);
+  }
+
+  getFromAddress() {
+    const address = process.env.EMAIL_FROM?.trim() || process.env.EMAIL_USER?.trim();
+    const name = process.env.EMAIL_FROM_NAME?.trim() || 'Om Shree Guidance';
+    if (!address) return undefined;
+    if (address.includes('<')) return address;
+    return `"${name.replace(/"/g, '')}" <${address}>`;
+  }
+
+  wrapEmailHtml(html, { unsubscribeLink } = {}) {
+    const raw = String(html || '').trim();
+    const content = raw || '<p>Hello {{name}},</p><p>Thank you for being with us.</p>';
+    const footer = `
+      <hr style="border:none;border-top:1px solid #e7e5e4;margin:24px 0 16px 0;" />
+      <p style="font-size:12px;color:#78716c;line-height:1.6;margin:0;">
+        You are receiving this email because you subscribed to Om Shree Guidance updates.
+      </p>
+      <p style="font-size:12px;color:#78716c;line-height:1.6;margin:8px 0 0 0;">
+        <a href="${unsubscribeLink || '#'}" style="color:#a16207;text-decoration:underline;">Unsubscribe</a>
+      </p>
+    `;
+
+    // If sender provides a full HTML document, append footer before </body>.
+    if (/<html[\s>]/i.test(content)) {
+      if (/<\/body>/i.test(content)) {
+        return content.replace(/<\/body>/i, `${footer}</body>`);
+      }
+      return `${content}${footer}`;
+    }
+
+    const preheader = this.htmlToText(content).slice(0, 120);
+    return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Email</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f8f7f4;">
+    <div style="display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden;">
+      ${preheader}
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8f7f4;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #e7e5e4;border-radius:14px;overflow:hidden;">
+            <tr>
+              <td style="padding:28px;font-family:Arial,Helvetica,sans-serif;color:#292524;line-height:1.65;font-size:15px;">
+                ${content}
+                ${footer}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
   }
 
   htmlToText(html) {

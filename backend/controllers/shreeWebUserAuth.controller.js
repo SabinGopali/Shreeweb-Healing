@@ -33,12 +33,12 @@ const sendOTPEmail = async (email, otp, purpose) => {
     const transporter = createEmailTransporter();
     
     const subject = purpose === 'signup' 
-      ? 'Verify your JAPANDI account' 
-      : 'Reset your JAPANDI password';
+      ? 'Verify your OMSHREEGUIDANCE account' 
+      : 'Reset your OMSHREEGUIDANCE password';
     
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #D97706;">JAPANDI - Energetic Alignment</h2>
+        <h2 style="color: #D97706;">OMSHREEGUIDANCE - Energetic Alignment</h2>
         <p>Your verification code is:</p>
         <h1 style="background: #FEF3C7; padding: 20px; text-align: center; letter-spacing: 8px; font-size: 32px; color: #92400E;">
           ${otp}
@@ -47,13 +47,13 @@ const sendOTPEmail = async (email, otp, purpose) => {
         <p>If you didn't request this code, please ignore this email.</p>
         <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 20px 0;">
         <p style="color: #6B7280; font-size: 12px;">
-          JAPANDI - Your journey to energetic alignment and sustainable growth
+          OMSHREEGUIDANCE - Your journey to energetic alignment and sustainable growth
         </p>
       </div>
     `;
     
     await transporter.sendMail({
-      from: `"JAPANDI" <${process.env.EMAIL_USER}>`,
+      from: `"OMSHREEGUIDANCE" <${process.env.EMAIL_USER}>`,
       to: email,
       subject,
       html
