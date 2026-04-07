@@ -5,10 +5,14 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: parseInt(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_SECURE === 'true',
+  secure: process.env.EMAIL_PORT === '465', // true for 465, false for 587
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS?.replace(/\s+/g, ''), // Remove spaces from password
+  },
+  tls: {
+    rejectUnauthorized: false,
+    ciphers: 'SSLv3'
   },
 });
 
