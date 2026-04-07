@@ -312,9 +312,19 @@ export const handleOrderCreated = async (req, res) => {
       text: `Thank you for your order #${order.order_number}! We've received your order and will send you a shipping confirmation email as soon as your order ships.`,
     };
 
-    await transporter.sendMail(mailOptions);
+    console.log('📤 Attempting to send email to:', order.email);
+    console.log('📧 Email config:', {
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      user: process.env.EMAIL_USER,
+      from: process.env.EMAIL_FROM,
+      hasPassword: !!process.env.EMAIL_PASS
+    });
+
+    const info = await transporter.sendMail(mailOptions);
 
     console.log('✅ Order confirmation email sent to:', order.email);
+    console.log('📬 Message ID:', info.messageId);
 
     // Create booking record for calendar scheduling
     try {
@@ -333,6 +343,12 @@ export const handleOrderCreated = async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Error processing order webhook:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
     res.status(500).json({
       success: false,
       error: 'Failed to process order webhook',
