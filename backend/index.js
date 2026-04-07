@@ -94,6 +94,12 @@ const startServer = async () => {
   app.use('/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
     // Store raw body for signature verification
     req.rawBody = req.body.toString('utf8');
+    // Parse the body for the controller to use
+    try {
+      req.body = JSON.parse(req.rawBody);
+    } catch (e) {
+      console.error('Failed to parse webhook body:', e);
+    }
     next();
   }, shopifyWebhookRoute);
   
