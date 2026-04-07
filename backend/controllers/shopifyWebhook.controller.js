@@ -2,22 +2,42 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { createBookingFromOrder } from './booking.controller.js';
 
-// Create email transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false // Allow self-signed certificates
-  },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000
-});
+// Create email transporter with better error handling
+const createTransporter = () => {
+  // Remove spaces from password (common issue with app passwords)
+  const emailPass = process.env.EMAIL_PASS?.replace(/\s+/g, '');
+  
+  const config = {
+    host: process.env.EMAIL_HOST,
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: emailPass,
+    },
+    tls: {
+      rejectUnauthorized: false,
+      ciphers: 'SSLv3'
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    debug: true, // Enable debug logs
+    logger: true // Enable logger
+  };
+  
+  console.log('📧 Creating email transporter with config:', {
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    user: config.auth.user,
+    hasPassword: !!emailPass
+  });
+  
+  return nodemailer.createTransport(config);
+};
+
+const transporter = createTransporter();
 
 // Verify Shopify webhook signature
 function verifyShopifyWebhook(req) {
@@ -327,10 +347,20 @@ export const handleOrderCreated = async (req, res) => {
       hasPassword: !!process.env.EMAIL_PASS
     });
 
+    // Verify transporter connection before sending
+    try {
+      await transporter.verify();
+      console.log('✅ SMTP connection verified');
+    } catch (verifyError) {
+      console.error('❌ SMTP verification failed:', verifyError);
+      throw new Error(`SMTP connection failed: ${verifyError.message}`);
+    }
+
     const info = await transporter.sendMail(mailOptions);
 
     console.log('✅ Order confirmation email sent to:', order.email);
     console.log('📬 Message ID:', info.messageId);
+    console.log('📬 Response:', info.response);
 
     // Create booking record for calendar scheduling
     try {
@@ -353,12 +383,18 @@ export const handleOrderCreated = async (req, res) => {
       message: error.message,
       code: error.code,
       command: error.command,
-      response: error.response
+      response: error.response,
+      responseCode: error.responseCode,
+      stack: error.stack
     });
-    res.status(500).json({
+    
+    // Still return success to Shopify so it doesn't retry
+    // But log the error for debugging
+    res.status(200).json({
       success: false,
-      error: 'Failed to process order webhook',
+      error: 'Email sending failed but order received',
       message: error.message,
+      order_number: req.body?.order_number
     });
   }
 };
