@@ -1,0 +1,189 @@
+{
+  "info": {
+    "name": "OMSHREEGUIDANCE Webhook Tests",
+    "description": "Test collection for OMSHREEGUIDANCE Shopify webhook endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check (Test Endpoint)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://omshreeguidance.com/webhook/test",
+          "protocol": "https",
+          "host": [
+            "omshreeguidance",
+            "com"
+          ],
+          "path": [
+            "webhook",
+            "test"
+          ]
+        },
+        "description": "Test the health check endpoint. This should always return success."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Order Confirmation - Simple Test",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"test\": true\n}"
+        },
+        "url": {
+          "raw": "https://omshreeguidance.com/webhook/order-confirmation",
+          "protocol": "https",
+          "host": [
+            "omshreeguidance",
+            "com"
+          ],
+          "path": [
+            "webhook",
+            "order-confirmation"
+          ]
+        },
+        "description": "Simple test to check if endpoint exists.\n\nExpected responses:\n- 404: Endpoint not deployed yet\n- 400/401: Endpoint exists but missing required data (GOOD!)\n- 200: Success"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Order Confirmation - Minimal Order Data",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Topic",
+            "value": "orders/create",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Shop-Domain",
+            "value": "test-store.myshopify.com",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 123456789,\n  \"order_number\": 1001,\n  \"email\": \"test@example.com\",\n  \"customer\": {\n    \"first_name\": \"Test\",\n    \"last_name\": \"Customer\"\n  },\n  \"line_items\": [\n    {\n      \"title\": \"Free Discovery Call\",\n      \"variant_title\": null,\n      \"quantity\": 1,\n      \"price\": \"0.00\"\n    }\n  ],\n  \"total_price\": \"0.00\",\n  \"subtotal_price\": \"0.00\",\n  \"total_tax\": \"0.00\",\n  \"currency\": \"USD\",\n  \"created_at\": \"2026-04-07T10:00:00Z\"\n}"
+        },
+        "url": {
+          "raw": "https://omshreeguidance.com/webhook/order-confirmation",
+          "protocol": "https",
+          "host": [
+            "omshreeguidance",
+            "com"
+          ],
+          "path": [
+            "webhook",
+            "order-confirmation"
+          ]
+        },
+        "description": "Test with minimal order data (no signature verification).\n\nNote: This will fail signature verification if SHOPIFY_WEBHOOK_SECRET is set, but it will confirm the endpoint exists and processes requests."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Order Confirmation - Full Order Data",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Topic",
+            "value": "orders/create",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Shop-Domain",
+            "value": "test-store.myshopify.com",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Order-Id",
+            "value": "123456789",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 123456789,\n  \"order_number\": 1001,\n  \"email\": \"customer@example.com\",\n  \"customer\": {\n    \"id\": 987654321,\n    \"email\": \"customer@example.com\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone\": \"+1-555-0123\"\n  },\n  \"line_items\": [\n    {\n      \"id\": 111111111,\n      \"title\": \"Free Discovery Call - 30 Minutes\",\n      \"variant_title\": \"Standard Session\",\n      \"quantity\": 1,\n      \"price\": \"0.00\",\n      \"sku\": \"DISCOVERY-30\",\n      \"vendor\": \"OMSHREEGUIDANCE\",\n      \"product_id\": 222222222,\n      \"variant_id\": 333333333\n    }\n  ],\n  \"shipping_address\": {\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"name\": \"John Doe\",\n    \"address1\": \"123 Main Street\",\n    \"address2\": \"Apt 4B\",\n    \"city\": \"San Francisco\",\n    \"province\": \"California\",\n    \"province_code\": \"CA\",\n    \"country\": \"United States\",\n    \"country_code\": \"US\",\n    \"zip\": \"94102\",\n    \"phone\": \"+1-555-0123\"\n  },\n  \"billing_address\": {\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"name\": \"John Doe\",\n    \"address1\": \"123 Main Street\",\n    \"address2\": \"Apt 4B\",\n    \"city\": \"San Francisco\",\n    \"province\": \"California\",\n    \"province_code\": \"CA\",\n    \"country\": \"United States\",\n    \"country_code\": \"US\",\n    \"zip\": \"94102\",\n    \"phone\": \"+1-555-0123\"\n  },\n  \"total_price\": \"0.00\",\n  \"subtotal_price\": \"0.00\",\n  \"total_tax\": \"0.00\",\n  \"total_shipping_price_set\": {\n    \"shop_money\": {\n      \"amount\": \"0.00\",\n      \"currency_code\": \"USD\"\n    }\n  },\n  \"currency\": \"USD\",\n  \"financial_status\": \"paid\",\n  \"fulfillment_status\": null,\n  \"created_at\": \"2026-04-07T10:30:00Z\",\n  \"updated_at\": \"2026-04-07T10:30:00Z\",\n  \"order_status_url\": \"https://test-store.myshopify.com/account/orders/123456789\",\n  \"note\": \"Test order for webhook verification\",\n  \"tags\": \"test, webhook\"\n}"
+        },
+        "url": {
+          "raw": "https://omshreeguidance.com/webhook/order-confirmation",
+          "protocol": "https",
+          "host": [
+            "omshreeguidance",
+            "com"
+          ],
+          "path": [
+            "webhook",
+            "order-confirmation"
+          ]
+        },
+        "description": "Test with complete order data matching Shopify's order structure.\n\nThis simulates a real Shopify webhook payload. Without proper HMAC signature, it will fail verification if SHOPIFY_WEBHOOK_SECRET is configured."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Order Confirmation - With Your Email",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Topic",
+            "value": "orders/create",
+            "type": "text"
+          },
+          {
+            "key": "X-Shopify-Shop-Domain",
+            "value": "omshreeguidance.myshopify.com",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 999888777,\n  \"order_number\": 9999,\n  \"email\": \"YOUR_EMAIL@example.com\",\n  \"customer\": {\n    \"first_name\": \"Your\",\n    \"last_name\": \"Name\"\n  },\n  \"line_items\": [\n    {\n      \"title\": \"Free Discovery Call\",\n      \"variant_title\": null,\n      \"quantity\": 1,\n      \"price\": \"0.00\"\n    }\n  ],\n  \"shipping_address\": {\n    \"name\": \"Your Name\",\n    \"address1\": \"123 Test Street\",\n    \"city\": \"Test City\",\n    \"province\": \"CA\",\n    \"zip\": \"12345\",\n    \"country\": \"United States\",\n    \"phone\": \"555-0123\"\n  },\n  \"total_price\": \"0.00\",\n  \"subtotal_price\": \"0.00\",\n  \"total_tax\": \"0.00\",\n  \"total_shipping_price_set\": {\n    \"shop_money\": {\n      \"amount\": \"0.00\"\n    }\n  },\n  \"currency\": \"USD\",\n  \"created_at\": \"2026-04-07T10:00:00Z\",\n  \"order_status_url\": \"https://omshreeguidance.com/orders/test\"\n}"
+        },
+        "url": {
+          "raw": "https://omshreeguidance.com/webhook/order-confirmation",
+          "protocol": "https",
+          "host": [
+            "omshreeguidance",
+            "com"
+          ],
+          "path": [
+            "webhook",
+            "order-confirmation"
+          ]
+        },
+        "description": "Test with your own email address to receive the confirmation email.\n\n⚠️ IMPORTANT: Replace YOUR_EMAIL@example.com with your actual email address before sending!\n\nIf the webhook is working and SHOPIFY_WEBHOOK_SECRET is not set (or signature verification is disabled), you should receive an order confirmation email with the \"Schedule Now\" button."
+      },
+      "response": []
+    }
+  ]
+}
