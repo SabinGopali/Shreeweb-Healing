@@ -1,6 +1,7 @@
 import EmailCampaign from '../models/EmailCampaign.model.js';
 import EmailCapture from '../models/EmailCapture.model.js';
-import emailService from '../utils/emailService.js';
+// import emailService from '../utils/emailService.js';
+import emailService from '../utils/brevoEmailService.js';
 import { errorHandler } from '../utils/error.js';
 
 // Get all campaigns
