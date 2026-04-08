@@ -76,6 +76,56 @@ const brevoEmailService = {
     }
   },
 
+  async sendBulkEmails(recipients, { subject, html, text }) {
+
+  let sent = 0;
+  let failed = 0;
+
+  console.log(`📧 Sending bulk email to ${recipients.length} users`);
+
+  for (const recipient of recipients) {
+
+    try {
+
+      const result = await this.sendEmail({
+        to: recipient.email,
+        subject,
+        html,
+        text
+      });
+
+      if (result.success) {
+        sent++;
+      } else {
+        failed++;
+      }
+
+    } catch (err) {
+
+      failed++;
+
+      console.error(
+        `❌ Failed sending to ${recipient.email}`,
+        err.message
+      );
+
+    }
+
+    // Prevent Brevo rate-limit bursts
+    await new Promise(resolve => setTimeout(resolve, 250));
+
+  }
+
+  console.log(
+    `📧 Bulk send finished: ${sent} sent, ${failed} failed`
+  );
+
+  return {
+    sent,
+    failed
+  };
+},
+
   async verifyConnection() {
     try {
       const client = getClient();
