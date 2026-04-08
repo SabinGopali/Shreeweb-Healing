@@ -19,10 +19,47 @@ const shreeWebOfferingSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  detailedDescription: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  whoIsThisFor: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  whatYouWillReceive: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  highlights: [{
+    type: String,
+    trim: true
+  }],
+  outcomes: [{
+    type: String,
+    trim: true
+  }],
   price: {
     type: String,
     required: true,
     trim: true
+  },
+  originalPrice: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  discountedPrice: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  hasDiscount: {
+    type: Boolean,
+    default: false
   },
   category: {
     type: String,
@@ -44,6 +81,11 @@ const shreeWebOfferingSchema = new mongoose.Schema({
   image: {
     type: String,
     default: ''
+  },
+  imageAlt: {
+    type: String,
+    default: '',
+    trim: true
   },
   features: [{
     type: String,

@@ -19,7 +19,51 @@ export const getAboutContent = async (req, res, next) => {
           title: 'About me',
           subtitle: 'Holding space for visionaries.',
           content: 'This work didn\'t begin as something I planned — it grew quietly, through people who came to me when they needed support.\n\nAt first, it was physical — chronic pain, ongoing issues, things that felt stuck. But over time, I started noticing something more. The shifts weren\'t just in the body. They were happening in the moments that mattered.\n\nConfidence before important conversations. Clarity before big decisions. Things opening up… before they needed to. That\'s when I began to understand the deeper nature of this work.\n\nYour external reality — your business, your results, the way life responds to you — is deeply connected to your internal state. When that internal space is clear, things move differently. With more ease. More precision. Less force.\n\nWhat started as helping people heal has naturally expanded into supporting alignment, clarity, and energetic balance — especially for those who are building and leading.\n\nIt\'s not about doing more. It\'s about being clear enough to let it flow.',
+          image: '',
+          imageAlt: 'About me',
           backgroundColor: 'from-stone-50 to-amber-50'
+        },
+        imageGallery: {
+          enabled: true,
+          title: 'Experience the Journey',
+          subtitle: 'Moments of transformation and clarity',
+          backgroundColor: '#EDE7DC',
+          images: []
+        },
+        pranicHealing: {
+          enabled: true,
+          title: 'About Pranic Healing',
+          subtitle: 'Ancient wisdom for modern transformation',
+          content: 'Pranic Healing is a highly evolved and tested system of energy healing that utilizes prana to balance, harmonize and transform the body\'s energy processes. Prana is the Sanskrit word that means life-force, the invisible bio-energy or vital energy that keeps the body alive and maintains good health.\n\nThis no-touch energy healing system is based on the fundamental principle that the body has the innate ability to heal itself. Pranic Healing works on the principle that the healing process is accelerated by increasing the life force or vital energy on the affected part of the physical body.\n\nIn our sessions, we use Pranic Healing techniques to cleanse and energize your energy body, removing energetic blockages and diseased energy that may be causing physical, emotional, or mental imbalances. The result is a clearer, more balanced state that allows your natural vitality and clarity to emerge.',
+          image: '',
+          imageAlt: 'Pranic Healing energy work',
+          backgroundColor: 'from-amber-50 to-orange-50',
+          benefits: [
+            {
+              title: 'Physical Wellness',
+              description: 'Accelerates the body\'s natural healing ability for physical ailments and chronic conditions.',
+              icon: 'heart',
+              order: 1
+            },
+            {
+              title: 'Mental Clarity',
+              description: 'Clears mental fog and enhances focus, decision-making, and cognitive function.',
+              icon: 'brain',
+              order: 2
+            },
+            {
+              title: 'Emotional Balance',
+              description: 'Releases emotional blockages and promotes inner peace and emotional stability.',
+              icon: 'lightning',
+              order: 3
+            },
+            {
+              title: 'Energetic Protection',
+              description: 'Strengthens your energy field and builds resilience against external stressors.',
+              icon: 'shield',
+              order: 4
+            }
+          ]
         },
         whatWeDo: {
           title: 'What we do',
@@ -194,6 +238,157 @@ export const updateAboutSection = async (req, res, next) => {
     });
   } catch (error) {
     console.error(`Error updating ${req.params.section} section:`, error);
+    next(error);
+  }
+};
+
+// Upload gallery image
+export const uploadGalleryImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    // Convert absolute file path to relative URL path
+    let imageUrl = req.file.path.replace(/\\/g, '/');
+    
+    // Extract the part after 'uploads' directory
+    const uploadsIndex = imageUrl.toLowerCase().indexOf('uploads/');
+    if (uploadsIndex !== -1) {
+      imageUrl = '/' + imageUrl.substring(uploadsIndex);
+    } else {
+      // Fallback: use the filename
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    // Ensure it starts with /uploads/
+    if (!imageUrl.startsWith('/uploads/')) {
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Image uploaded successfully',
+      imageUrl: imageUrl,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Error uploading gallery image:', error);
+    next(error);
+  }
+};
+
+// Upload multiple gallery images
+export const uploadMultipleGalleryImages = async (req, res, next) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No files uploaded'
+      });
+    }
+
+    const uploadedImages = req.files.map(file => {
+      let imageUrl = file.path.replace(/\\/g, '/');
+      
+      const uploadsIndex = imageUrl.toLowerCase().indexOf('uploads/');
+      if (uploadsIndex !== -1) {
+        imageUrl = '/' + imageUrl.substring(uploadsIndex);
+      } else {
+        imageUrl = `/uploads/${file.filename}`;
+      }
+
+      if (!imageUrl.startsWith('/uploads/')) {
+        imageUrl = `/uploads/${file.filename}`;
+      }
+
+      return {
+        url: imageUrl,
+        filename: file.filename,
+        originalName: file.originalname
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `${uploadedImages.length} image(s) uploaded successfully`,
+      images: uploadedImages
+    });
+  } catch (error) {
+    console.error('Error uploading multiple gallery images:', error);
+    next(error);
+  }
+};
+
+// Upload About Me image
+export const uploadAboutMeImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    let imageUrl = req.file.path.replace(/\\/g, '/');
+    
+    const uploadsIndex = imageUrl.toLowerCase().indexOf('uploads/');
+    if (uploadsIndex !== -1) {
+      imageUrl = '/' + imageUrl.substring(uploadsIndex);
+    } else {
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    if (!imageUrl.startsWith('/uploads/')) {
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'About Me image uploaded successfully',
+      imageUrl: imageUrl,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Error uploading About Me image:', error);
+    next(error);
+  }
+};
+
+// Upload Pranic Healing image
+export const uploadPranicHealingImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    let imageUrl = req.file.path.replace(/\\/g, '/');
+    
+    const uploadsIndex = imageUrl.toLowerCase().indexOf('uploads/');
+    if (uploadsIndex !== -1) {
+      imageUrl = '/' + imageUrl.substring(uploadsIndex);
+    } else {
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    if (!imageUrl.startsWith('/uploads/')) {
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Pranic Healing image uploaded successfully',
+      imageUrl: imageUrl,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Error uploading Pranic Healing image:', error);
     next(error);
   }
 };

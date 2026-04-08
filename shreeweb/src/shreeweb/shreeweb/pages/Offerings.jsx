@@ -82,7 +82,7 @@ export default function Offerings() {
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
         
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="w-full max-w-[1600px] mx-auto relative z-10">
           <div data-aos="fade-up" data-aos-duration="200" data-aos-delay="200">
             <OffersSection customSettings={settings} />
           </div>

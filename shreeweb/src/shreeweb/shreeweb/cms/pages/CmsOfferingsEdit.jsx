@@ -11,10 +11,18 @@ export default function CmsOfferingsEdit() {
     subtitle: '',
     duration: '',
     description: '',
+    detailedDescription: '',
+    whoIsThisFor: '',
+    whatYouWillReceive: '',
     price: '',
+    hasDiscount: false,
+    originalPrice: '',
+    discountedPrice: '',
     category: 'single',
     featured: false,
     features: [''],
+    highlights: [''],
+    outcomes: [''],
     shopifyProductId: '',
     shopifyVariantId: '',
   });
@@ -59,10 +67,18 @@ export default function CmsOfferingsEdit() {
           subtitle: offering.subtitle || '',
           duration: offering.duration || '',
           description: offering.description || '',
+          detailedDescription: offering.detailedDescription || '',
+          whoIsThisFor: offering.whoIsThisFor || '',
+          whatYouWillReceive: offering.whatYouWillReceive || '',
           price: offering.price || '',
+          hasDiscount: offering.hasDiscount || false,
+          originalPrice: offering.originalPrice || '',
+          discountedPrice: offering.discountedPrice || '',
           category: offering.category || 'single',
           featured: offering.featured || false,
           features: offering.features && offering.features.length > 0 ? offering.features : [''],
+          highlights: offering.highlights && offering.highlights.length > 0 ? offering.highlights : [''],
+          outcomes: offering.outcomes && offering.outcomes.length > 0 ? offering.outcomes : [''],
           shopifyProductId: offering.shopifyProductId || '',
           shopifyVariantId: offering.shopifyVariantId || '',
         });
@@ -100,6 +116,48 @@ export default function CmsOfferingsEdit() {
     }));
   };
 
+  const addHighlight = () => {
+    setForm(prev => ({
+      ...prev,
+      highlights: [...prev.highlights, '']
+    }));
+  };
+
+  const updateHighlight = (index, value) => {
+    setForm(prev => ({
+      ...prev,
+      highlights: prev.highlights.map((highlight, i) => i === index ? value : highlight)
+    }));
+  };
+
+  const removeHighlight = (index) => {
+    setForm(prev => ({
+      ...prev,
+      highlights: prev.highlights.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addOutcome = () => {
+    setForm(prev => ({
+      ...prev,
+      outcomes: [...prev.outcomes, '']
+    }));
+  };
+
+  const updateOutcome = (index, value) => {
+    setForm(prev => ({
+      ...prev,
+      outcomes: prev.outcomes.map((outcome, i) => i === index ? value : outcome)
+    }));
+  };
+
+  const removeOutcome = (index) => {
+    setForm(prev => ({
+      ...prev,
+      outcomes: prev.outcomes.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     
@@ -124,7 +182,9 @@ export default function CmsOfferingsEdit() {
         credentials: 'include',
         body: JSON.stringify({
           ...form,
-          features: form.features.filter(f => f.trim())
+          features: form.features.filter(f => f.trim()),
+          highlights: form.highlights.filter(h => h.trim()),
+          outcomes: form.outcomes.filter(o => o.trim())
         }),
       });
 
@@ -286,7 +346,7 @@ export default function CmsOfferingsEdit() {
                 />
               </div>
               <div>
-                <label className={cmsTheme.label}>Price (USD)</label>
+                <label className={cmsTheme.label}>Price (USD) *</label>
                 <input
                   type="text"
                   value={form.price}
@@ -294,7 +354,7 @@ export default function CmsOfferingsEdit() {
                   placeholder="e.g. $45 or Complimentary"
                   className={cmsTheme.input}
                 />
-                <p className="mt-1 text-xs text-stone-500">All amounts are in US dollars (USD).</p>
+                <p className="mt-1 text-xs text-stone-500">Regular price or display price</p>
               </div>
               <div>
                 <label className={cmsTheme.label}>Category</label>
@@ -309,6 +369,49 @@ export default function CmsOfferingsEdit() {
                   <option value="program">Program</option>
                 </select>
               </div>
+            </div>
+
+            {/* Discount Pricing Section */}
+            <div className="border-t border-stone-200 pt-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="hasDiscount"
+                  checked={form.hasDiscount}
+                  onChange={(e) => updateField('hasDiscount')(e.target.checked)}
+                  className="rounded border-stone-300"
+                />
+                <label htmlFor="hasDiscount" className="text-sm font-medium text-stone-700">
+                  Enable discount pricing
+                </label>
+              </div>
+
+              {form.hasDiscount && (
+                <div className="grid gap-4 md:grid-cols-2 bg-amber-50 p-4 rounded-lg border border-amber-200">
+                  <div>
+                    <label className={cmsTheme.label}>Original Price</label>
+                    <input
+                      type="text"
+                      value={form.originalPrice}
+                      onChange={(e) => updateField('originalPrice')(e.target.value)}
+                      placeholder="e.g. $100"
+                      className={cmsTheme.input}
+                    />
+                    <p className="mt-1 text-xs text-stone-500">Will be shown with strikethrough</p>
+                  </div>
+                  <div>
+                    <label className={cmsTheme.label}>Discounted Price</label>
+                    <input
+                      type="text"
+                      value={form.discountedPrice}
+                      onChange={(e) => updateField('discountedPrice')(e.target.value)}
+                      placeholder="e.g. $75"
+                      className={cmsTheme.input}
+                    />
+                    <p className="mt-1 text-xs text-stone-500">Highlighted discount price</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -329,16 +432,123 @@ export default function CmsOfferingsEdit() {
             <h2 className={`${cmsTheme.title} text-lg`}>Description</h2>
             
             <div>
-              <label className={cmsTheme.label}>Full Description *</label>
+              <label className={cmsTheme.label}>Short Description *</label>
               <textarea
                 value={form.description}
                 onChange={(e) => updateField('description')(e.target.value)}
-                placeholder="A complimentary session to explore your current energetic landscape and discuss a customized plan for you."
-                className={`${cmsTheme.input} h-32 resize-none`}
-                rows={4}
+                placeholder="A brief overview that appears in the card preview"
+                className={`${cmsTheme.input} h-24 resize-none`}
+                rows={3}
                 required
               />
+              <p className="text-xs text-stone-500 mt-1">This appears in the compact card view</p>
             </div>
+
+            <div>
+              <label className={cmsTheme.label}>Detailed Description</label>
+              <textarea
+                value={form.detailedDescription}
+                onChange={(e) => updateField('detailedDescription')(e.target.value)}
+                placeholder="A more detailed explanation of what to expect from this offering"
+                className={`${cmsTheme.input} h-32 resize-none`}
+                rows={5}
+              />
+              <p className="text-xs text-stone-500 mt-1">Appears in the "What to Expect" section on the offers page</p>
+            </div>
+
+            <div>
+              <label className={cmsTheme.label}>Who This Is For</label>
+              <textarea
+                value={form.whoIsThisFor}
+                onChange={(e) => updateField('whoIsThisFor')(e.target.value)}
+                placeholder="Describe the ideal client or situation for this offering"
+                className={`${cmsTheme.input} h-32 resize-none`}
+                rows={5}
+              />
+              <p className="text-xs text-stone-500 mt-1">Helps clients identify if this offering is right for them</p>
+            </div>
+
+            <div>
+              <label className={cmsTheme.label}>What You'll Receive</label>
+              <textarea
+                value={form.whatYouWillReceive}
+                onChange={(e) => updateField('whatYouWillReceive')(e.target.value)}
+                placeholder="Detail what's included in this offering"
+                className={`${cmsTheme.input} h-32 resize-none`}
+                rows={5}
+              />
+              <p className="text-xs text-stone-500 mt-1">Specific deliverables and what clients can expect</p>
+            </div>
+          </div>
+
+          <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
+            <div className="flex items-center justify-between">
+              <h2 className={`${cmsTheme.title} text-lg`}>Key Benefits (Highlights)</h2>
+              <button
+                type="button"
+                onClick={addHighlight}
+                className="text-sm text-amber-600 hover:text-amber-700"
+              >
+                + Add Benefit
+              </button>
+            </div>
+            <p className="text-sm text-stone-600">Main benefits or key points about this offering</p>
+            
+            {form.highlights.map((highlight, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  type="text"
+                  value={highlight}
+                  onChange={(e) => updateHighlight(index, e.target.value)}
+                  placeholder="e.g., Immediate clarity and focus"
+                  className={`${cmsTheme.input} flex-1`}
+                />
+                {form.highlights.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeHighlight(index)}
+                    className="px-3 py-2 text-red-600 hover:text-red-700"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
+            <div className="flex items-center justify-between">
+              <h2 className={`${cmsTheme.title} text-lg`}>Expected Outcomes</h2>
+              <button
+                type="button"
+                onClick={addOutcome}
+                className="text-sm text-amber-600 hover:text-amber-700"
+              >
+                + Add Outcome
+              </button>
+            </div>
+            <p className="text-sm text-stone-600">Results clients can expect after completing this offering</p>
+            
+            {form.outcomes.map((outcome, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  type="text"
+                  value={outcome}
+                  onChange={(e) => updateOutcome(index, e.target.value)}
+                  placeholder="e.g., Reduced stress and increased mental clarity"
+                  className={`${cmsTheme.input} flex-1`}
+                />
+                {form.outcomes.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeOutcome(index)}
+                    className="px-3 py-2 text-red-600 hover:text-red-700"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
@@ -436,11 +646,25 @@ export default function CmsOfferingsEdit() {
                     </p>
                   )}
                   
-                  {form.price && form.price.trim() && (
+                  {form.hasDiscount && form.originalPrice && form.discountedPrice ? (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg font-serif text-stone-500 line-through">
+                          {form.originalPrice}
+                        </span>
+                        <span className="text-2xl font-serif text-amber-700 font-medium">
+                          {form.discountedPrice}
+                        </span>
+                      </div>
+                      <div className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-medium rounded-full border border-amber-200">
+                        Limited Time
+                      </div>
+                    </div>
+                  ) : form.price && form.price.trim() ? (
                     <div className="text-2xl font-serif text-stone-800 mb-4 font-medium">
                       {form.price}
                     </div>
-                  )}
+                  ) : null}
 
                   <div className="inline-flex w-full items-center justify-center rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-medium text-orange-800">
                     Book Now

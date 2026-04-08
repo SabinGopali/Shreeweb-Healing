@@ -140,9 +140,8 @@ export default function ShopifyCheckout({ offering }) {
 
   const priceLabel = displayPriceLabelForBooking(checkoutInfo, offering);
 
-  const buttonText = priceLabel
-    ? `Proceed to Checkout — ${priceLabel}`
-    : 'Proceed to Checkout';
+  // Check if offering has discount pricing
+  const hasDiscount = offering?.hasDiscount && offering?.originalPrice && offering?.discountedPrice;
 
   if (error && !checkoutInfo) {
     return (
@@ -205,7 +204,17 @@ export default function ShopifyCheckout({ offering }) {
               <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              {buttonText}
+              <span className="flex items-center gap-2">
+                Proceed to Checkout —
+                {hasDiscount ? (
+                  <>
+                    <span className="line-through opacity-70">{offering.originalPrice}</span>
+                    <span className="font-bold">{offering.discountedPrice}</span>
+                  </>
+                ) : (
+                  <span>{priceLabel || ''}</span>
+                )}
+              </span>
             </>
           )}
         </button>

@@ -180,26 +180,60 @@ export default function About() {
             <div className="absolute top-1/2 left-1/4 w-20 h-20 border border-orange-300 rounded-full animate-pulse" style={{animationDuration: '5s', animationDelay: '1s'}}></div>
           </div>
           
-          <div className="max-w-4xl mx-auto relative z-10">
+          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-8 sm:mb-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
               <h2 className="text-3xl font-serif text-stone-800 mb-3 sm:text-4xl md:text-5xl md:text-6xl sm:mb-4">{aboutData.aboutMe.title}</h2>
               <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-4 sm:w-32 sm:mb-6"></div>
               <p className="text-lg text-stone-700 font-light italic sm:text-xl md:text-2xl md:text-3xl">{aboutData.aboutMe.subtitle}</p>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-stone-200/50 sm:rounded-3xl sm:p-8 md:p-10 md:p-14" data-aos="fade-up" data-aos-duration="300" data-aos-delay="200">
-              <div className="prose prose-base max-w-none sm:prose-lg md:prose-xl">
-                {aboutData.aboutMe.content.split('\n\n').map((paragraph, index) => (
-                  <p 
-                    key={index} 
-                    className="text-stone-700 leading-relaxed mb-4 last:mb-0 text-base sm:text-lg sm:mb-6 md:text-xl"
-                    data-aos="fade-up"
-                    data-aos-duration="200"
-                    data-aos-delay={300 + (index * 100)}
-                  >
-                    {paragraph}
-                  </p>
-                ))}
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Text Content */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-stone-200/50 sm:rounded-3xl sm:p-8 md:p-10" data-aos="fade-right" data-aos-duration="300" data-aos-delay="200">
+                <div className="prose prose-base max-w-none sm:prose-lg md:prose-xl">
+                  {aboutData.aboutMe.content.split('\n\n').map((paragraph, index) => (
+                    <p 
+                      key={index} 
+                      className="text-stone-700 leading-relaxed mb-4 last:mb-0 text-base sm:text-lg sm:mb-6 md:text-xl"
+                      data-aos="fade-up"
+                      data-aos-duration="200"
+                      data-aos-delay={300 + (index * 100)}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Image */}
+              <div className="relative" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
+                {aboutData.aboutMe.image ? (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <img
+                      src={aboutData.aboutMe.image}
+                      alt={aboutData.aboutMe.imageAlt || 'About me'}
+                      className="w-full h-auto object-cover"
+                      style={{ aspectRatio: '4/5' }}
+                    />
+                    {/* Decorative overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 to-transparent"></div>
+                  </div>
+                ) : (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-stone-200 to-amber-100" style={{ aspectRatio: '4/5' }}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <svg className="w-20 h-20 text-stone-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p className="text-stone-500 text-lg">Add an image in CMS</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Decorative Elements */}
+                <div className="absolute -top-6 -right-6 w-24 h-24 bg-amber-200/30 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-orange-200/30 rounded-full blur-2xl"></div>
               </div>
             </div>
 
@@ -208,6 +242,218 @@ export default function About() {
               <div className="w-12 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:w-16"></div>
               <div className="w-2.5 h-2.5 bg-gradient-to-br from-amber-300 to-orange-400 rounded-full shadow-lg sm:w-3 sm:h-3"></div>
               <div className="w-12 h-px bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:w-16"></div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Pranic Healing Section */}
+      {aboutData.pranicHealing?.enabled && (
+        <section 
+          className={`py-16 px-4 bg-gradient-to-br ${aboutData.pranicHealing?.backgroundColor || 'from-amber-50 to-orange-50'} relative overflow-hidden sm:py-20 md:py-24`}
+          data-aos="fade-up"
+          data-aos-duration="300"
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 left-20 w-32 h-32 border border-orange-300 rounded-full animate-pulse" style={{animationDuration: '5s'}}></div>
+            <div className="absolute bottom-32 right-16 w-24 h-24 border border-amber-300 rounded-full animate-pulse" style={{animationDuration: '7s', animationDelay: '2s'}}></div>
+            <div className="absolute top-1/2 right-1/4 w-20 h-20 border border-stone-300 rounded-full animate-pulse" style={{animationDuration: '6s', animationDelay: '1s'}}></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="text-center mb-8 sm:mb-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
+              <h2 className="text-3xl font-serif text-stone-800 mb-3 sm:text-4xl md:text-5xl md:text-6xl sm:mb-4">
+                {aboutData.pranicHealing.title}
+              </h2>
+              <div className="w-24 h-0.5 bg-orange-400 mx-auto mb-4 sm:w-32 sm:mb-6"></div>
+              <p className="text-lg text-stone-700 font-light italic sm:text-xl md:text-2xl md:text-3xl">
+                {aboutData.pranicHealing.subtitle}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center mb-12">
+              {/* Image */}
+              <div className="relative order-2 md:order-1" data-aos="fade-right" data-aos-duration="300" data-aos-delay="200">
+                {aboutData.pranicHealing.image ? (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <img
+                      src={aboutData.pranicHealing.image}
+                      alt={aboutData.pranicHealing.imageAlt || 'Pranic Healing'}
+                      className="w-full h-auto object-cover"
+                      style={{ aspectRatio: '4/5' }}
+                    />
+                    {/* Decorative overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent"></div>
+                  </div>
+                ) : (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-amber-200 to-orange-100" style={{ aspectRatio: '4/5' }}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <svg className="w-20 h-20 text-orange-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <p className="text-orange-600 text-lg">Add an image in CMS</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Decorative Elements */}
+                <div className="absolute -top-6 -left-6 w-24 h-24 bg-orange-200/30 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-amber-200/30 rounded-full blur-2xl"></div>
+              </div>
+
+              {/* Text Content */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-stone-200/50 order-1 md:order-2 sm:rounded-3xl sm:p-8 md:p-10" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
+                <div className="prose prose-base max-w-none sm:prose-lg md:prose-xl">
+                  {aboutData.pranicHealing.content.split('\n\n').map((paragraph, index) => (
+                    <p 
+                      key={index} 
+                      className="text-stone-700 leading-relaxed mb-4 last:mb-0 text-base sm:text-lg sm:mb-6 md:text-xl"
+                      data-aos="fade-up"
+                      data-aos-duration="200"
+                      data-aos-delay={300 + (index * 100)}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Benefits Grid */}
+            {aboutData.pranicHealing.benefits && aboutData.pranicHealing.benefits.length > 0 && (
+              <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-4 mt-12">
+                {aboutData.pranicHealing.benefits
+                  .sort((a, b) => (a.order || 0) - (b.order || 0))
+                  .map((benefit, index) => (
+                    <div 
+                      key={index}
+                      className="group"
+                      data-aos="fade-up"
+                      data-aos-duration="200"
+                      data-aos-delay={200 + (index * 100)}
+                    >
+                      <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 h-full sm:p-8">
+                        <div className="w-14 h-14 bg-gradient-to-br from-orange-200 to-amber-200 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:from-orange-300 group-hover:to-amber-300 transition-all duration-300 sm:w-16 sm:h-16 sm:mb-6">
+                          {benefit.icon === 'heart' && (
+                            <svg className="w-7 h-7 text-orange-700 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                          )}
+                          {benefit.icon === 'brain' && (
+                            <svg className="w-7 h-7 text-orange-700 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                          )}
+                          {benefit.icon === 'lightning' && (
+                            <svg className="w-7 h-7 text-orange-700 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                          )}
+                          {benefit.icon === 'shield' && (
+                            <svg className="w-7 h-7 text-orange-700 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                          )}
+                          {!['heart', 'brain', 'lightning', 'shield'].includes(benefit.icon) && (
+                            <div className="w-7 h-7 border-2 border-orange-700 rounded-full sm:w-8 sm:h-8"></div>
+                          )}
+                        </div>
+                        <h3 className="text-xl font-serif text-stone-800 mb-3 text-center sm:text-2xl sm:mb-4">
+                          {benefit.title}
+                        </h3>
+                        <p className="text-stone-600 text-center leading-relaxed text-base sm:text-lg">
+                          {benefit.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+
+            {/* Decorative Element */}
+            <div className="flex items-center justify-center space-x-2 mt-8 sm:space-x-3 sm:mt-12" data-aos="fade-up" data-aos-duration="200" data-aos-delay="500">
+              <div className="w-12 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-16"></div>
+              <div className="w-2.5 h-2.5 bg-gradient-to-br from-orange-300 to-amber-400 rounded-full shadow-lg sm:w-3 sm:h-3"></div>
+              <div className="w-12 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:w-16"></div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Image Gallery Section */}
+      {aboutData.imageGallery?.enabled && aboutData.imageGallery?.images?.length > 0 && (
+        <section 
+          className="py-16 px-4 sm:py-20 md:py-24"
+          style={{ backgroundColor: aboutData.imageGallery?.backgroundColor || '#EDE7DC' }}
+          data-aos="fade-up"
+          data-aos-duration="300"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12 sm:mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
+              <h2 className="text-3xl font-serif text-stone-800 mb-4 sm:text-4xl md:text-5xl sm:mb-6">
+                {aboutData.imageGallery?.title || 'Experience the Journey'}
+              </h2>
+              <div className="w-20 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-24 sm:mb-8"></div>
+              {aboutData.imageGallery?.subtitle && (
+                <p className="text-lg text-stone-600 font-light italic sm:text-xl md:text-2xl">
+                  {aboutData.imageGallery.subtitle}
+                </p>
+              )}
+            </div>
+
+            {/* Image Grid */}
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {aboutData.imageGallery.images
+                .sort((a, b) => (a.order || 0) - (b.order || 0))
+                .map((image, index) => (
+                  <div
+                    key={index}
+                    className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500"
+                    data-aos="fade-up"
+                    data-aos-duration="300"
+                    data-aos-delay={100 + (index * 100)}
+                  >
+                    <div className="aspect-[4/5] relative bg-stone-200">
+                      {image.url ? (
+                        <>
+                          <img
+                            src={image.url}
+                            alt={image.alt || 'Gallery image'}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-stone-900/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          {/* Caption */}
+                          {image.caption && (
+                            <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                              <p className="text-sm font-light leading-relaxed">{image.caption}</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-stone-200 to-amber-100">
+                          <div className="text-center p-6">
+                            <svg className="w-16 h-16 text-stone-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p className="text-stone-500 text-sm">Image placeholder</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            {/* Decorative Element */}
+            <div className="flex items-center justify-center space-x-3 mt-12 sm:mt-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="400">
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-stone-400/60 to-transparent"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-amber-300 to-orange-400 rounded-full shadow-lg"></div>
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-stone-400/60 to-transparent"></div>
             </div>
           </div>
         </section>
@@ -427,7 +673,7 @@ export default function About() {
                 </p>
                 <div className="mt-6">
                   <Link
-                    to="/offers"
+                    to="/shreeweb/offers"
                     className="inline-block px-6 py-3 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
                   >
                     View Offerings
@@ -464,7 +710,7 @@ export default function About() {
                 </p>
                 <div className="mt-6">
                   <Link
-                    to="/booking"
+                    to="/shreeweb/booking"
                     className="inline-block px-6 py-3 bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-colors font-medium"
                   >
                     Book Session
