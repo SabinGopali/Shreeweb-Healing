@@ -1,4 +1,4 @@
-import SibApiV3Sdk from '@getbrevo/brevo';
+import * as SibApiV3Sdk from '@getbrevo/brevo';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,19 +8,19 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Initialize Brevo API client
-let apiClient = null;
+let apiInstance = null;
 
 function getApiClient() {
-  if (apiClient) return apiClient;
+  if (apiInstance) return apiInstance;
   
   console.log('📧 Initializing Brevo API client...');
   console.log('   API Key configured:', process.env.BREVO_API_KEY ? 'YES' : 'NO');
   
-  apiClient = new SibApiV3Sdk.TransactionalEmailsApi();
-  apiClient.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+  apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+  apiInstance.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
   
   console.log('✅ Brevo API client initialized');
-  return apiClient;
+  return apiInstance;
 }
 
 const brevoEmailService = {
@@ -47,6 +47,9 @@ const brevoEmailService = {
       
     } catch (error) {
       console.error(`❌ Failed to send to ${to}:`, error.message);
+      if (error.response) {
+        console.error('   Response body:', error.response.body);
+      }
       return { success: false, error: error.message };
     }
   },
@@ -96,6 +99,9 @@ const brevoEmailService = {
       return { success: true, message: 'API service is ready' };
     } catch (error) {
       console.error('❌ Brevo API verification failed:', error.message);
+      if (error.response) {
+        console.error('   Response body:', error.response.body);
+      }
       return { success: false, message: error.message };
     }
   }
