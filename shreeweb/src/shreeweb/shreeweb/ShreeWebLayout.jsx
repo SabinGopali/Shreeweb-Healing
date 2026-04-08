@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import ShreeWebNavbar from './components/ShreeWebNavbar';
 import ShreeWebFooter from './components/ShreeWebFooter';
 import BackToTopButton from './components/BackToTopButton';
+import PlayfairWrapper from './components/PlayfairWrapper';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -28,13 +29,13 @@ export default function ShreeWebLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F4EFE6] text-stone-900">
+    <PlayfairWrapper className="min-h-screen bg-[#F4EFE6] text-stone-900">
       <ShreeWebNavbar />
       <main className="w-full">
         <Outlet />
       </main>
       <ShreeWebFooter />
       <BackToTopButton />
-    </div>
+    </PlayfairWrapper>
   );
 }

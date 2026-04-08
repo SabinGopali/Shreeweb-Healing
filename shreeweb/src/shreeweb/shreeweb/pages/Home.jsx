@@ -254,14 +254,211 @@ export default function Home() {
   };
   return (
     <div className="w-full">
-      {/* Hero Section - Now using dynamic component */}
+      {/* 1. Hero Section */}
       <HeroSection />
 
-      {/* Curated Offerings Section */}
+      {/* 2. Clarity Section - Restore clarity */}
+      <ClaritySection />
+
+      {/* 2.5. This Work Is Designed For - Static Section */}
       <section 
-        className="py-12 px-4 relative overflow-hidden sm:py-16" 
-        style={{ backgroundColor: settings.section.backgroundColor }}
-        data-aos="fade-up" 
+        className="py-16 px-4 bg-gradient-to-br from-stone-50 via-amber-50/30 to-orange-50/20 sm:py-20"
+        data-aos="fade-up"
+        data-aos-duration="300"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-5xl mx-auto">
+            {/* Main Heading */}
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-3xl font-serif text-stone-800 mb-4 leading-tight sm:text-4xl md:text-5xl sm:mb-6">
+                This work is designed for
+              </h2>
+              <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-32 sm:mb-8"></div>
+              <p className="text-lg text-stone-600 max-w-3xl mx-auto leading-relaxed sm:text-xl">
+                Individuals ready to address the energetic foundations of sustainable success
+              </p>
+            </div>
+            
+            {/* Audience Cards Grid */}
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12 sm:mb-16">
+              
+              {/* Card 1: Entrepreneurs & Business Owners */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:rounded-3xl sm:p-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-200 to-orange-200 rounded-2xl mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                  <div className="w-6 h-6 bg-amber-600 rounded-lg sm:w-8 sm:h-8"></div>
+                </div>
+                <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
+                  Entrepreneurs & Business Owners
+                </h3>
+                <p className="text-sm text-stone-600 text-center leading-relaxed sm:text-base">
+                  Leaders seeking to maintain high performance without sacrificing well-being
+                </p>
+              </div>
+
+              {/* Card 2: Ambitious Professionals */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:rounded-3xl sm:p-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-200 to-amber-200 rounded-2xl mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                  <div className="w-6 h-6 bg-orange-600 rounded-lg sm:w-8 sm:h-8"></div>
+                </div>
+                <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
+                  Ambitious Professionals
+                </h3>
+                <p className="text-sm text-stone-600 text-center leading-relaxed sm:text-base">
+                  High-achievers experiencing stress, burnout, or feeling stuck despite their efforts
+                </p>
+              </div>
+
+              {/* Card 3: Growth & Transition Navigators */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:rounded-3xl sm:p-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-stone-200 to-amber-200 rounded-2xl mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                  <div className="w-6 h-6 bg-stone-600 rounded-lg sm:w-8 sm:h-8"></div>
+                </div>
+                <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
+                  Growth & Transition Navigators
+                </h3>
+                <p className="text-sm text-stone-600 text-center leading-relaxed sm:text-base">
+                  Individuals moving through periods of expansion or life transition
+                </p>
+              </div>
+
+              {/* Card 4: Energetic Alignment Seekers */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:rounded-3xl sm:p-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-200 to-orange-200 rounded-2xl mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                  <div className="w-6 h-6 bg-amber-600 rounded-lg sm:w-8 sm:h-8"></div>
+                </div>
+                <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
+                  Energetic Alignment Seekers
+                </h3>
+                <p className="text-sm text-stone-600 text-center leading-relaxed sm:text-base">
+                  People interested in deeper energetic work and holistic approaches to success
+                </p>
+              </div>
+
+              {/* Card 5: Clarity & Balance Seekers */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:scale-105 transition-all duration-300 sm:rounded-3xl sm:p-8 md:col-span-2 lg:col-span-1">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-200 to-amber-200 rounded-2xl mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                  <div className="w-6 h-6 bg-orange-600 rounded-lg sm:w-8 sm:h-8"></div>
+                </div>
+                <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
+                  Clarity & Balance Seekers
+                </h3>
+                <p className="text-sm text-stone-600 text-center leading-relaxed sm:text-base">
+                  People seeking greater clarity, stability, and internal balance to support their highest vision
+                </p>
+              </div>
+            </div>
+            
+            {/* Bottom Call to Action */}
+            <div className="text-center">
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 max-w-3xl mx-auto sm:rounded-3xl sm:p-8">
+                <p className="text-base text-stone-700 mb-4 italic sm:text-lg sm:mb-6">
+                  "Ready to explore what's possible when your energy and ambition are aligned?"
+                </p>
+                <Link
+                  to="/shreeweb/booking?plan=discovery"
+                  className="group relative overflow-hidden inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500/90 to-amber-500/90 backdrop-blur-md text-white rounded-full hover:from-orange-600/90 hover:to-amber-600/90 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
+                >
+                  <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+                    Start with a Discovery Call
+                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Hidden Cost Section */}
+      <section 
+        className="py-12 px-4 sm:py-16"
+        data-aos="fade-up"
+        data-aos-duration="300"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid gap-8 items-center lg:grid-cols-2 lg:gap-12">
+              <div data-aos="fade-right" data-aos-duration="300" data-aos-delay="100">
+                <div className="border-t-2 border-stone-300 pt-4 mb-6 sm:pt-6 sm:mb-8">
+                  <h2 className="text-2xl font-serif text-stone-800 italic mb-4 sm:text-3xl sm:mb-6">
+                    {stripTags(hiddenCost.title)}
+                  </h2>
+                  <p className="text-sm text-stone-600 mb-3 sm:text-base sm:mb-4">{stripTags(hiddenCost.paragraph1)}</p>
+                  <p className="text-sm text-stone-600 sm:text-base">{stripTags(hiddenCost.paragraph2)}</p>
+                </div>
+              </div>
+              <div className="relative" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
+                <div className="w-full h-64 rounded-2xl overflow-hidden shadow-lg sm:h-80 md:h-96">
+                  <img 
+                    src={resolveHiddenImageUrl(hiddenCost.image)}
+                    alt={hiddenCost.imageAlt || 'Healing and wellness imagery'}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Energetic Alignment Process */}
+      <section 
+        className="py-12 px-4 sm:py-16"
+        data-aos="fade-up"
+        data-aos-duration="300"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto text-center">
+            <div
+              data-aos="fade-up"
+              data-aos-duration="200"
+              data-aos-delay="100"
+            >
+              <CmsHtmlPreview
+                html={process.title}
+                className="text-2xl font-serif text-stone-800 mb-3 sm:text-3xl sm:mb-4"
+              />
+            </div>
+            <div
+              data-aos="fade-up"
+              data-aos-duration="200"
+              data-aos-delay="200"
+            >
+              <CmsHtmlPreview
+                html={process.description}
+                className="text-base text-stone-600 mb-8 sm:text-lg sm:mb-12"
+              />
+            </div>
+            
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
+              {Array.isArray(process.steps) &&
+                process.steps.slice(0, 6).map((step, i) => (
+                  <div 
+                    key={step.id || i}
+                    className="bg-[#EDE7DC] rounded-2xl p-6 sm:p-8"
+                    data-aos="fade-up"
+                    data-aos-duration="200"
+                    data-aos-delay={300 + i * 100}
+                  >
+                    <div className="w-12 h-12 bg-stone-300 rounded-full mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
+                      {renderProcessIcon(step.icon)}
+                    </div>
+                    <h3 className="text-lg font-serif text-stone-800 mb-3 sm:text-xl sm:mb-4">{stripTags(step.title)}</h3>
+                    <p className="text-sm text-stone-600 sm:text-base">{stripTags(step.description)}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Curated Offerings Section */}
+      <section 
+        className="py-16 px-4 relative overflow-hidden sm:py-20"
+        data-aos="fade-up"
         data-aos-duration="300"
       >
         {/* Enhanced background pattern */}
@@ -295,51 +492,16 @@ export default function Home() {
             </p>
             
             <div data-aos="fade-up" data-aos-duration="300" data-aos-delay="300">
-              <OffersSection customSettings={settings} />
+              <OffersSection customSettings={settings} layout="compact" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Clarity Section - Now using dynamic component */}
-      <ClaritySection />
-
-      {/* Video Testimonial Section - Now using dynamic component */}
+      {/* 6. Video Section - Vertical video with text on side */}
       <VideoSection />
 
-      {/* Hidden Cost Section */}
-      <section 
-        className="py-12 px-4 sm:py-16"
-        data-aos="fade-up"
-        data-aos-duration="300"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid gap-8 items-center lg:grid-cols-2 lg:gap-12">
-              <div data-aos="fade-right" data-aos-duration="300" data-aos-delay="100">
-                <div className="border-t-2 border-stone-300 pt-4 mb-6 sm:pt-6 sm:mb-8">
-                  <h2 className="text-2xl font-serif text-stone-800 italic mb-4 sm:text-3xl sm:mb-6">
-                    {stripTags(hiddenCost.title)}
-                  </h2>
-                  <p className="text-sm text-stone-600 mb-3 sm:text-base sm:mb-4">{stripTags(hiddenCost.paragraph1)}</p>
-                  <p className="text-sm text-stone-600 sm:text-base">{stripTags(hiddenCost.paragraph2)}</p>
-                </div>
-              </div>
-              <div className="relative" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
-                <div className="w-full h-64 rounded-2xl overflow-hidden shadow-lg sm:h-80 md:h-96">
-                  <img 
-                    src={resolveHiddenImageUrl(hiddenCost.image)}
-                    alt={hiddenCost.imageAlt || 'Healing and wellness imagery'}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* When Growth Feels Heavy Section - Healing/Meditation Design with Background */}
+      {/* 7. Growth Section - When growth begins to feel heavier */}
       <section 
         className="py-16 px-4 relative min-h-[80vh] flex items-center sm:py-20 sm:min-h-screen"
         style={{
@@ -463,7 +625,7 @@ export default function Home() {
                   </div>
                   
                   <Link
-                    to="/offers"
+                    to="/shreeweb/offers"
                     className="inline-flex items-center px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 text-stone-700 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-500 font-light tracking-wide shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
                   >
                     <span>{stripTags(growth.ctaButtonText)}</span>
@@ -483,287 +645,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Energetic Alignment Process */}
-      <section 
-        className="py-12 px-4 sm:py-16"
-        data-aos="fade-up"
-        data-aos-duration="300"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <div
-              data-aos="fade-up"
-              data-aos-duration="200"
-              data-aos-delay="100"
-            >
-              <CmsHtmlPreview
-                html={process.title}
-                className="text-2xl font-serif text-stone-800 mb-3 sm:text-3xl sm:mb-4"
-              />
-            </div>
-            <div
-              data-aos="fade-up"
-              data-aos-duration="200"
-              data-aos-delay="200"
-            >
-              <CmsHtmlPreview
-                html={process.description}
-                className="text-base text-stone-600 mb-8 sm:text-lg sm:mb-12"
-              />
-            </div>
-            
-            <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
-              {Array.isArray(process.steps) &&
-                process.steps.slice(0, 6).map((step, i) => (
-                  <div 
-                    key={step.id || i}
-                    className="bg-[#EDE7DC] rounded-2xl p-6 sm:p-8"
-                    data-aos="fade-up"
-                    data-aos-duration="200"
-                    data-aos-delay={300 + i * 100}
-                  >
-                    <div className="w-12 h-12 bg-stone-300 rounded-full mx-auto mb-4 flex items-center justify-center sm:w-16 sm:h-16 sm:mb-6">
-                      {renderProcessIcon(step.icon)}
-                    </div>
-                    <h3 className="text-lg font-serif text-stone-800 mb-3 sm:text-xl sm:mb-4">{stripTags(step.title)}</h3>
-                    <p className="text-sm text-stone-600 sm:text-base">{stripTags(step.description)}</p>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Target Audience Section */}
-      <section 
-        className="py-16 px-4 relative overflow-hidden sm:py-20"
-        data-aos="fade-up"
-        data-aos-duration="300"
-      >
-        {/* Enhanced Random Healing Background Patterns */}
-        <div className="absolute inset-0">
-          {/* Base gradient background with healing colors */}
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-rose-50 to-orange-50"></div>
-          
-          {/* Organic flowing patterns */}
-          <div className="absolute inset-0 opacity-25">
-            {/* Large flowing curves with healing energy */}
-            <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1200 800" fill="none">
-              <path d="M0,200 Q300,100 600,200 T1200,200 L1200,0 L0,0 Z" fill="url(#healingGradient1)" opacity="0.4"/>
-              <path d="M0,600 Q400,500 800,600 T1200,600 L1200,800 L0,800 Z" fill="url(#healingGradient2)" opacity="0.3"/>
-              <path d="M0,350 Q200,250 400,350 Q600,450 800,350 Q1000,250 1200,350 L1200,450 Q1000,550 800,450 Q600,350 400,450 Q200,550 0,450 Z" fill="url(#healingGradient3)" opacity="0.2"/>
-              <defs>
-                <linearGradient id="healingGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.15"/>
-                  <stop offset="30%" stopColor="#EC4899" stopOpacity="0.08"/>
-                  <stop offset="70%" stopColor="#D97706" stopOpacity="0.12"/>
-                  <stop offset="100%" stopColor="#92400E" stopOpacity="0.15"/>
-                </linearGradient>
-                <linearGradient id="healingGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#78716C" stopOpacity="0.1"/>
-                  <stop offset="50%" stopColor="#F472B6" stopOpacity="0.06"/>
-                  <stop offset="100%" stopColor="#D6D3D1" stopOpacity="0.1"/>
-                </linearGradient>
-                <linearGradient id="healingGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#FBBF24" stopOpacity="0.08"/>
-                  <stop offset="50%" stopColor="#F9A8D4" stopOpacity="0.05"/>
-                  <stop offset="100%" stopColor="#FB923C" stopOpacity="0.08"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          
-          {/* Random healing geometric elements */}
-          <div className="absolute inset-0 opacity-18">
-            {/* Animated floating circles with random positions */}
-            <div className="absolute top-12 right-20 w-44 h-44 border border-amber-300/35 rounded-full animate-pulse" style={{animationDuration: '4.2s'}}></div>
-            <div className="absolute bottom-20 left-12 w-32 h-32 border border-rose-300/40 rounded-full animate-pulse" style={{animationDuration: '6.8s', animationDelay: '2.1s'}}></div>
-            <div className="absolute top-1/3 left-2/5 w-24 h-24 border border-orange-300/45 rounded-full animate-pulse" style={{animationDuration: '5.3s', animationDelay: '0.7s'}}></div>
-            <div className="absolute bottom-1/4 right-1/5 w-36 h-36 border border-pink-300/30 rounded-full animate-pulse" style={{animationDuration: '7.1s', animationDelay: '3.2s'}}></div>
-            <div className="absolute top-3/5 right-2/5 w-28 h-28 border border-amber-400/35 rounded-full animate-pulse" style={{animationDuration: '4.9s', animationDelay: '1.8s'}}></div>
-            
-            {/* Organic blob shapes */}
-            <div className="absolute top-1/5 right-1/3 w-40 h-32 bg-gradient-to-br from-amber-200/15 to-orange-200/15 rounded-full blur-xl animate-pulse transform rotate-12" style={{animationDuration: '8.4s'}}></div>
-            <div className="absolute bottom-2/5 right-1/4 w-28 h-36 bg-gradient-to-br from-rose-200/12 to-pink-200/12 rounded-full blur-lg animate-pulse transform -rotate-6" style={{animationDuration: '7.7s', animationDelay: '2.8s'}}></div>
-            <div className="absolute top-2/3 left-1/6 w-48 h-28 bg-gradient-to-br from-orange-100/10 to-amber-100/10 rounded-full blur-2xl animate-pulse transform rotate-45" style={{animationDuration: '9.2s', animationDelay: '1.3s'}}></div>
-            <div className="absolute top-1/6 left-3/5 w-32 h-40 bg-gradient-to-br from-pink-100/8 to-rose-100/8 rounded-full blur-xl animate-pulse transform -rotate-12" style={{animationDuration: '6.5s', animationDelay: '4.1s'}}></div>
-            
-            {/* Healing mandala-like patterns */}
-            <div className="absolute top-1/4 left-1/4 w-20 h-20 border-2 border-dashed border-amber-300/25 rounded-full animate-spin" style={{animationDuration: '20s'}}></div>
-            <div className="absolute bottom-1/3 right-1/6 w-16 h-16 border-2 border-dotted border-rose-300/30 rounded-full animate-spin" style={{animationDuration: '25s', animationDirection: 'reverse'}}></div>
-            <div className="absolute top-1/2 right-3/4 w-12 h-12 border border-orange-400/35 rounded-full animate-spin" style={{animationDuration: '15s', animationDelay: '2s'}}></div>
-          </div>
-          
-          {/* Enhanced mesh gradient overlay with healing energy */}
-          <div className="absolute inset-0 opacity-35">
-            <div className="absolute top-0 left-0 w-2/5 h-2/5 bg-gradient-radial from-amber-200/25 via-rose-100/15 to-transparent blur-3xl"></div>
-            <div className="absolute top-0 right-0 w-2/5 h-2/5 bg-gradient-radial from-orange-200/20 via-pink-100/12 to-transparent blur-3xl"></div>
-            <div className="absolute bottom-0 left-1/3 w-3/5 h-3/5 bg-gradient-radial from-rose-200/18 via-amber-100/10 to-transparent blur-3xl"></div>
-            <div className="absolute top-1/3 right-1/4 w-1/3 h-1/3 bg-gradient-radial from-pink-200/15 via-orange-100/8 to-transparent blur-2xl"></div>
-          </div>
-          
-          {/* Random flowing particle elements with healing energy */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/5 left-1/6 w-2.5 h-2.5 bg-amber-400/55 rounded-full animate-ping" style={{animationDuration: '3.2s', animationDelay: '0.3s'}}></div>
-            <div className="absolute top-4/5 right-1/6 w-1.5 h-1.5 bg-rose-400/45 rounded-full animate-ping" style={{animationDuration: '4.1s', animationDelay: '2.2s'}}></div>
-            <div className="absolute top-1/2 left-1/5 w-1.5 h-1.5 bg-orange-400/50 rounded-full animate-ping" style={{animationDuration: '5.4s', animationDelay: '1.1s'}}></div>
-            <div className="absolute bottom-1/5 right-2/5 w-3 h-3 bg-pink-400/40 rounded-full animate-ping" style={{animationDuration: '6.3s', animationDelay: '3.5s'}}></div>
-            <div className="absolute top-1/8 right-1/8 w-2 h-2 bg-amber-300/60 rounded-full animate-ping" style={{animationDuration: '4.7s', animationDelay: '1.8s'}}></div>
-            <div className="absolute bottom-2/5 left-2/5 w-1 h-1 bg-rose-300/50 rounded-full animate-ping" style={{animationDuration: '3.8s', animationDelay: '2.9s'}}></div>
-            <div className="absolute top-3/5 right-1/3 w-2.5 h-2.5 bg-orange-300/45 rounded-full animate-ping" style={{animationDuration: '5.1s', animationDelay: '0.6s'}}></div>
-            <div className="absolute top-2/5 left-3/5 w-1.5 h-1.5 bg-pink-300/55 rounded-full animate-ping" style={{animationDuration: '4.4s', animationDelay: '3.7s'}}></div>
-          </div>
-          
-          {/* Enhanced wave patterns with healing flow */}
-          <div className="absolute inset-0 opacity-12">
-            <svg className="absolute bottom-0 left-0 w-full h-40" viewBox="0 0 1200 160" fill="none">
-              <path d="M0,80 Q200,40 400,80 Q600,120 800,80 Q1000,40 1200,80 L1200,160 L0,160 Z" fill="url(#healingWave1)" opacity="0.7"/>
-              <path d="M0,100 Q300,60 600,100 Q900,140 1200,100 L1200,160 L0,160 Z" fill="url(#healingWave2)" opacity="0.5"/>
-              <path d="M0,120 Q150,80 300,120 Q450,160 600,120 Q750,80 900,120 Q1050,160 1200,120 L1200,160 L0,160 Z" fill="url(#healingWave3)" opacity="0.4"/>
-              <defs>
-                <linearGradient id="healingWave1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.25"/>
-                  <stop offset="33%" stopColor="#EC4899" stopOpacity="0.15"/>
-                  <stop offset="66%" stopColor="#D97706" stopOpacity="0.2"/>
-                  <stop offset="100%" stopColor="#92400E" stopOpacity="0.25"/>
-                </linearGradient>
-                <linearGradient id="healingWave2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#78716C" stopOpacity="0.18"/>
-                  <stop offset="50%" stopColor="#F472B6" stopOpacity="0.12"/>
-                  <stop offset="100%" stopColor="#D6D3D1" stopOpacity="0.18"/>
-                </linearGradient>
-                <linearGradient id="healingWave3" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#FBBF24" stopOpacity="0.15"/>
-                  <stop offset="50%" stopColor="#F9A8D4" stopOpacity="0.1"/>
-                  <stop offset="100%" stopColor="#FB923C" stopOpacity="0.15"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          
-          {/* Sacred geometry patterns */}
-          <div className="absolute inset-0 opacity-8">
-            <svg className="absolute top-1/4 left-1/4 w-32 h-32" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="40" stroke="url(#sacredGradient1)" strokeWidth="0.5" opacity="0.6"/>
-              <circle cx="50" cy="50" r="30" stroke="url(#sacredGradient1)" strokeWidth="0.3" opacity="0.4"/>
-              <circle cx="50" cy="50" r="20" stroke="url(#sacredGradient1)" strokeWidth="0.2" opacity="0.3"/>
-              <defs>
-                <linearGradient id="sacredGradient1">
-                  <stop offset="0%" stopColor="#F59E0B"/>
-                  <stop offset="50%" stopColor="#EC4899"/>
-                  <stop offset="100%" stopColor="#D97706"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <svg className="absolute bottom-1/3 right-1/5 w-24 h-24" viewBox="0 0 100 100" fill="none">
-              <polygon points="50,10 90,90 10,90" stroke="url(#sacredGradient2)" strokeWidth="0.4" fill="none" opacity="0.5"/>
-              <polygon points="50,25 75,75 25,75" stroke="url(#sacredGradient2)" strokeWidth="0.3" fill="none" opacity="0.3"/>
-              <defs>
-                <linearGradient id="sacredGradient2">
-                  <stop offset="0%" stopColor="#FB923C"/>
-                  <stop offset="50%" stopColor="#F472B6"/>
-                  <stop offset="100%" stopColor="#FBBF24"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="max-w-5xl mx-auto">
-            {/* Main Heading */}
-            <div className="text-center mb-12 sm:mb-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="100">
-              <h2 className="text-3xl font-serif text-stone-800 mb-4 leading-tight sm:text-4xl md:text-5xl sm:mb-6">
-                {stripTags(targetAudience.title || 'This work is designed for')}
-              </h2>
-              <div className="w-24 h-0.5 bg-amber-400 mx-auto mb-6 sm:w-32 sm:mb-8"></div>
-              <p className="text-lg text-stone-600 max-w-3xl mx-auto leading-relaxed sm:text-xl">
-                {stripTags(
-                  targetAudience.subtitle ||
-                    'Individuals ready to address the energetic foundations of sustainable success'
-                )}
-              </p>
-            </div>
-            
-            {/* Target Audience Grid */}
-            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {(Array.isArray(targetAudience.audiences) ? targetAudience.audiences : []).map((aud, idx) => {
-                const scheme = aud?.colorScheme || 'stone';
-                const isFeatured = Boolean(aud?.featured);
-                const outerBg =
-                  isFeatured ? 'bg-gradient-to-r from-amber-50 to-orange-50' : 'bg-white/80';
-                const border =
-                  isFeatured ? 'border border-amber-200/50' : 'border border-stone-200/50';
-
-                const iconBg =
-                  scheme === 'amber'
-                    ? 'bg-gradient-to-br from-amber-200 to-orange-200 group-hover:from-amber-300 group-hover:to-orange-300'
-                    : scheme === 'orange'
-                      ? 'bg-gradient-to-br from-orange-200 to-amber-200 group-hover:from-orange-300 group-hover:to-amber-300'
-                      : 'bg-gradient-to-br from-stone-200 to-amber-200 group-hover:from-stone-300 group-hover:to-amber-300';
-
-                const iconInner =
-                  scheme === 'amber'
-                    ? 'bg-amber-600'
-                    : scheme === 'orange'
-                      ? 'bg-orange-600'
-                      : 'bg-stone-600';
-
-                const delay = 200 + idx * 100;
-
-                return (
-                  <div
-                    key={aud?.id || idx}
-                    className={`group ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
-                    data-aos="fade-up"
-                    data-aos-duration="200"
-                    data-aos-delay={delay}
-                  >
-                    <div
-                      className={`${outerBg} backdrop-blur-sm rounded-2xl p-6 shadow-lg ${border} hover:shadow-xl hover:scale-105 transition-all duration-300 h-full flex flex-col sm:rounded-3xl sm:p-8`}
-                    >
-                      <div
-                        className={`w-12 h-12 ${iconBg} rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all duration-300 sm:w-16 sm:h-16 sm:mb-6`}
-                      >
-                        <div className={`w-6 h-6 ${iconInner} rounded-lg sm:w-8 sm:h-8`}></div>
-                      </div>
-                      <h3 className="text-lg font-serif text-stone-800 text-center mb-3 sm:text-xl sm:mb-4">
-                        {stripTags(aud?.title || '')}
-                      </h3>
-                      <p className="text-sm text-stone-600 text-center leading-relaxed flex-grow sm:text-base">
-                        {stripTags(aud?.description || '')}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            
-            {/* Bottom Call to Action */}
-            <div className="mt-12 text-center sm:mt-16" data-aos="fade-up" data-aos-duration="200" data-aos-delay="700">
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-stone-200/50 max-w-3xl mx-auto sm:rounded-3xl sm:p-8">
-                <p className="text-base text-stone-700 mb-4 italic sm:text-lg sm:mb-6">
-                  "{stripTags(targetAudience.ctaQuote || "Ready to explore what's possible when your energy and ambition are aligned?")}"
-                </p>
-                <Link
-                  to="/offers"
-                  className="group relative overflow-hidden inline-flex items-center px-8 py-3 bg-gradient-to-r from-orange-500/90 to-amber-500/90 backdrop-blur-md text-white rounded-full hover:from-orange-600/90 hover:to-amber-600/90 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 text-sm sm:px-12 sm:py-4 sm:text-base"
-                >
-                  <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                    {stripTags(targetAudience.ctaText || 'Start with a Discovery Call')}
-                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
+      {/* 8. Testimonials */}
       <div data-aos="fade-up" data-aos-duration="300">
         <TestimonialsSection />
       </div>

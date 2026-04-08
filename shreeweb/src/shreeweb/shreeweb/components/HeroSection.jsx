@@ -69,7 +69,7 @@ const HeroSection = () => {
             data-aos-delay="600"
           >
             <Link
-              to="/booking?plan=discovery"
+              to="/shreeweb/offers"
               className="group relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 sm:px-10 sm:py-4 md:px-12 md:py-4 lg:px-14 border-2 border-white/40 text-white rounded-full hover:border-white/60 transition-all duration-500 font-semibold text-base sm:text-lg md:text-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 w-auto"
             >
               <span className="relative z-10 flex items-center gap-2 sm:gap-3">
@@ -174,7 +174,7 @@ const HeroSection = () => {
           data-aos-delay="600"
         >
           <Link
-            to="/booking?plan=discovery"
+            to="/shreeweb/offers"
             className={`group relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 sm:px-10 sm:py-4 md:px-12 md:py-4 lg:px-14 rounded-full transition-all duration-500 font-semibold text-base sm:text-lg md:text-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 w-auto ${getCtaButtonStyles()}`}
           >
             <span className="relative z-10 flex items-center gap-2 sm:gap-3">

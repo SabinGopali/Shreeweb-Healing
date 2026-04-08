@@ -114,13 +114,21 @@ export const createOffering = async (req, res, next) => {
       subtitle,
       duration,
       description,
+      detailedDescription,
+      whoIsThisFor,
+      whatYouWillReceive,
       price,
+      hasDiscount,
+      originalPrice,
+      discountedPrice,
       category,
       featured,
       order,
       isActive,
       image,
       features,
+      highlights,
+      outcomes,
       shopifyProductId,
       shopifyVariantId,
     } = req.body;
@@ -136,18 +144,36 @@ export const createOffering = async (req, res, next) => {
       return next(errorHandler(400, 'Invalid category'));
     }
 
+    // Validate discount pricing
+    if (hasDiscount) {
+      if (!originalPrice || !originalPrice.trim()) {
+        return next(errorHandler(400, 'Original price is required when discount is enabled'));
+      }
+      if (!discountedPrice || !discountedPrice.trim()) {
+        return next(errorHandler(400, 'Discounted price is required when discount is enabled'));
+      }
+    }
+
     const offering = new ShreeWebOffering({
       title: title.trim(),
       subtitle: subtitle?.trim() || '',
       duration: duration.trim(),
       description: description.trim(),
+      detailedDescription: detailedDescription?.trim() || '',
+      whoIsThisFor: whoIsThisFor?.trim() || '',
+      whatYouWillReceive: whatYouWillReceive?.trim() || '',
       price: price.trim(),
+      hasDiscount: hasDiscount || false,
+      originalPrice: hasDiscount && originalPrice ? originalPrice.trim() : '',
+      discountedPrice: hasDiscount && discountedPrice ? discountedPrice.trim() : '',
       category,
       featured: featured || false,
       order: order || 0,
       isActive: isActive !== undefined ? isActive : true,
       image: image || '',
       features: Array.isArray(features) ? features.filter(f => f.trim()).map(f => f.trim()) : [],
+      highlights: Array.isArray(highlights) ? highlights.filter(h => h.trim()).map(h => h.trim()) : [],
+      outcomes: Array.isArray(outcomes) ? outcomes.filter(o => o.trim()).map(o => o.trim()) : [],
       shopifyProductId: typeof shopifyProductId === 'string' ? shopifyProductId.trim() : '',
       shopifyVariantId: typeof shopifyVariantId === 'string' ? shopifyVariantId.trim() : '',
       createdBy: req.admin.adminId,
@@ -179,13 +205,21 @@ export const updateOffering = async (req, res, next) => {
       subtitle,
       duration,
       description,
+      detailedDescription,
+      whoIsThisFor,
+      whatYouWillReceive,
       price,
+      hasDiscount,
+      originalPrice,
+      discountedPrice,
       category,
       featured,
       order,
       isActive,
       image,
       features,
+      highlights,
+      outcomes,
       shopifyProductId,
       shopifyVariantId,
     } = req.body;
@@ -203,12 +237,39 @@ export const updateOffering = async (req, res, next) => {
       }
     }
 
+    // Validate discount pricing if enabled
+    if (hasDiscount !== undefined && hasDiscount) {
+      if (!originalPrice || !originalPrice.trim()) {
+        return next(errorHandler(400, 'Original price is required when discount is enabled'));
+      }
+      if (!discountedPrice || !discountedPrice.trim()) {
+        return next(errorHandler(400, 'Discounted price is required when discount is enabled'));
+      }
+    }
+
     // Update fields
     if (title !== undefined) offering.title = title.trim();
     if (subtitle !== undefined) offering.subtitle = subtitle.trim();
     if (duration !== undefined) offering.duration = duration.trim();
     if (description !== undefined) offering.description = description.trim();
+    if (detailedDescription !== undefined) offering.detailedDescription = detailedDescription.trim();
+    if (whoIsThisFor !== undefined) offering.whoIsThisFor = whoIsThisFor.trim();
+    if (whatYouWillReceive !== undefined) offering.whatYouWillReceive = whatYouWillReceive.trim();
     if (price !== undefined) offering.price = price.trim();
+    
+    // Handle discount pricing
+    if (hasDiscount !== undefined) {
+      offering.hasDiscount = hasDiscount;
+      if (hasDiscount) {
+        offering.originalPrice = originalPrice ? originalPrice.trim() : '';
+        offering.discountedPrice = discountedPrice ? discountedPrice.trim() : '';
+      } else {
+        // Clear discount fields if discount is disabled
+        offering.originalPrice = '';
+        offering.discountedPrice = '';
+      }
+    }
+    
     if (category !== undefined) offering.category = category;
     if (featured !== undefined) offering.featured = featured;
     if (order !== undefined) offering.order = order;
@@ -216,6 +277,12 @@ export const updateOffering = async (req, res, next) => {
     if (image !== undefined) offering.image = image;
     if (features !== undefined) {
       offering.features = Array.isArray(features) ? features.filter(f => f.trim()).map(f => f.trim()) : [];
+    }
+    if (highlights !== undefined) {
+      offering.highlights = Array.isArray(highlights) ? highlights.filter(h => h.trim()).map(h => h.trim()) : [];
+    }
+    if (outcomes !== undefined) {
+      offering.outcomes = Array.isArray(outcomes) ? outcomes.filter(o => o.trim()).map(o => o.trim()) : [];
     }
     if (shopifyProductId !== undefined) {
       offering.shopifyProductId = typeof shopifyProductId === 'string' ? shopifyProductId.trim() : '';

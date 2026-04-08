@@ -81,8 +81,26 @@ export default function Booking() {
                     <h2 className="text-xl font-serif text-stone-800 mb-2 sm:text-2xl">{selectedOffering.title}</h2>
                     <p className="text-sm text-stone-600 sm:text-base">{selectedOffering.duration}</p>
                   </div>
-                  <div className="text-2xl font-serif text-stone-800 shrink-0 sm:text-3xl">
-                    {selectedOffering.price}
+                  <div className="shrink-0">
+                    {selectedOffering.hasDiscount && selectedOffering.originalPrice && selectedOffering.discountedPrice ? (
+                      <div className="text-right">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg font-serif text-stone-500 line-through sm:text-xl">
+                            {selectedOffering.originalPrice}
+                          </span>
+                          <span className="text-2xl font-serif text-amber-700 font-medium sm:text-3xl">
+                            {selectedOffering.discountedPrice}
+                          </span>
+                        </div>
+                        <div className="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-medium rounded-full border border-amber-200">
+                          Limited Time
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-2xl font-serif text-stone-800 sm:text-3xl">
+                        {selectedOffering.price}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <p className="text-sm text-stone-700 leading-relaxed mb-4 sm:text-base sm:mb-6">{selectedOffering.description}</p>
@@ -158,7 +176,7 @@ export default function Booking() {
               <h3 className="text-base font-serif text-stone-800 mb-2 sm:text-lg">Different Session?</h3>
               <p className="text-xs text-stone-600 mb-3 sm:text-sm sm:mb-4">Explore other offerings that might suit your needs.</p>
               <Link
-                to="/offers"
+                to="/shreeweb/offers"
                 className="inline-flex w-full items-center justify-center rounded-full border border-orange-200 bg-orange-50 px-4 py-2.5 text-xs font-semibold text-orange-800 hover:bg-orange-100 transition-colors sm:text-sm sm:py-3"
               >
                 View All Offerings
@@ -170,7 +188,7 @@ export default function Booking() {
               <h3 className="text-base font-serif text-stone-800 mb-2 sm:text-lg">Need Help?</h3>
               <p className="text-xs text-stone-600 mb-3 sm:text-sm sm:mb-4">Contact us if you have questions before booking.</p>
               <Link
-                to="/contact"
+                to="/shreeweb/contact"
                 className="inline-flex w-full items-center justify-center rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 text-xs font-semibold text-stone-800 hover:bg-stone-100 transition-colors sm:text-sm sm:py-3"
               >
                 Contact Us

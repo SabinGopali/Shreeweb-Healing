@@ -102,144 +102,143 @@ const VideoSection = () => {
 
   return (
     <section 
-      className="py-16 px-4 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50"
+      className="py-16 px-4 bg-gradient-to-br from-stone-50 via-amber-50/30 to-orange-50/20 sm:py-20"
       data-aos="fade-up"
       data-aos-duration="300"
     >
       <div className="max-w-7xl mx-auto">
         <div className="max-w-6xl mx-auto">
-          {/* Social Media Links */}
-          {videoData.socialLinks && videoData.socialLinks.length > 0 && (
-            <div className="text-center mb-8" data-aos="fade-down" data-aos-duration="200">
-              <div className="flex justify-center space-x-12 text-sm text-stone-500 mb-12">
-                {videoData.socialLinks.map((link, index) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-serif hover:text-stone-700 transition-colors"
-                  >
-                    {link.name}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
           
-          {/* Video Container with Overlay Text */}
-          <div 
-            className="relative rounded-3xl overflow-hidden shadow-2xl group cursor-pointer"
-            data-aos="zoom-in"
-            data-aos-duration="300"
-            data-aos-delay="200"
-          >
-            {/* YouTube Video Embed */}
-            <div className="relative">
-              <div className="w-full aspect-video">
-                {videoData.youtubeUrl ? (
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={videoData.youtubeUrl}
-                    title="Video Preview"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="w-full h-full object-cover"
-                  ></iframe>
-                ) : (
-                  <div 
-                    className="relative w-full h-full bg-gradient-to-br from-stone-800 to-stone-900 flex items-center justify-center"
-                  >
-                    {videoData.videoImage ? (
-                      isVideoFileUrl(videoData.videoImage) ? (
-                        <video
-                          src={resolveBackendImageUrl(videoData.videoImage)}
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          className="absolute inset-0 h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className="absolute inset-0 bg-cover bg-center"
-                          style={{
-                            backgroundImage: `url(${resolveBackendImageUrl(videoData.videoImage)})`,
-                          }}
-                        />
-                      )
-                    ) : null}
-                  </div>
-                )}
+          {/* Two-Column Layout: Text Left, Video Right */}
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+            
+            {/* Left Side - Text Content */}
+            <div className="space-y-6 lg:space-y-8 lg:pr-8" data-aos="fade-right" data-aos-duration="300" data-aos-delay="100">
+              
+              {/* Social Media Links */}
+              {videoData.socialLinks && videoData.socialLinks.length > 0 && (
+                <div className="flex items-center gap-4 flex-wrap">
+                  {videoData.socialLinks.map((link, index) => (
+                    <a
+                      key={index}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-serif text-stone-600 hover:text-orange-600 transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-orange-500 hover:after:w-full after:transition-all after:duration-300"
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+              
+              {/* Title */}
+              <div>
+                <CmsHtmlPreview
+                  html={videoData.title}
+                  className="text-3xl md:text-4xl lg:text-5xl font-serif text-stone-800 mb-6 leading-tight text-justify"
+                />
+                
+                {/* Decorative Line */}
+                <div className="w-20 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full mb-6"></div>
               </div>
               
-              {/* Clickable Overlay for YouTube Redirect */}
-              {videoData.youtubeRedirectUrl && (
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col justify-end p-8 md:p-12 group-hover:bg-black/10 transition-all duration-300 cursor-pointer"
-                  onClick={() => window.open(videoData.youtubeRedirectUrl, '_blank')}
-                >
-                  <div className="text-white max-w-2xl">
-                    <CmsHtmlPreview
-                      html={videoData.title}
-                      className="text-3xl md:text-4xl font-serif italic mb-6 leading-tight text-white"
-                    />
-                    <CmsHtmlPreview
-                      html={videoData.description}
-                      className="text-lg mb-8 opacity-90 leading-relaxed text-white"
-                    />
-                    
-                    <div className="flex flex-wrap gap-4">
-                      <Link
-                        to={videoData.cta1Link || '/shreeweb/booking?plan=discovery'}
-                        className="group relative overflow-hidden px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-300 text-white font-serif shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        {stripHtmlToText(videoData.cta1Text)}
-                      </Link>
-                      <Link
-                        to={videoData.cta2Link || '/shreeweb/booking?plan=session'}
-                        className="group relative overflow-hidden px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-300 text-white font-serif shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        {stripHtmlToText(videoData.cta2Text)}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Description */}
+              <CmsHtmlPreview
+                html={videoData.description}
+                className="text-base md:text-lg lg:text-xl text-stone-600 leading-relaxed text-justify"
+              />
               
-              {/* Always show overlay with content if no redirect URL */}
-              {!videoData.youtubeRedirectUrl && (
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col justify-end p-8 md:p-12">
-                  <div className="text-white max-w-2xl">
-                    <CmsHtmlPreview
-                      html={videoData.title}
-                      className="text-3xl md:text-4xl font-serif italic mb-6 leading-tight text-white"
-                    />
-                    <CmsHtmlPreview
-                      html={videoData.description}
-                      className="text-lg mb-8 opacity-90 leading-relaxed text-white"
-                    />
-                    
-                    <div className="flex flex-wrap gap-4">
-                      <Link
-                        to={videoData.cta1Link || '/shreeweb/booking?plan=discovery'}
-                        className="group relative overflow-hidden px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-300 text-white font-serif shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        {stripHtmlToText(videoData.cta1Text)}
-                      </Link>
-                      <Link
-                        to={videoData.cta2Link || '/shreeweb/booking?plan=session'}
-                        className="group relative overflow-hidden px-8 py-3 bg-white/30 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/40 hover:border-white/50 transition-all duration-300 text-white font-serif shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                      >
-                        {stripHtmlToText(videoData.cta2Text)}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link
+                  to={videoData.cta1Link || '/shreeweb/booking?plan=discovery'}
+                  className="group inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:shadow-xl hover:scale-105 bg-gradient-to-r from-orange-600 to-orange-500 text-white relative overflow-hidden"
+                >
+                  <span className="relative z-10">{stripHtmlToText(videoData.cta1Text)}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-700 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                
+                <Link
+                  to="/shreeweb/offers"
+                  className="group inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:shadow-xl hover:scale-105 border-2 border-orange-600 text-orange-600 bg-transparent hover:bg-orange-50"
+                >
+                  <span className="relative z-10">{stripHtmlToText(videoData.cta2Text)}</span>
+                </Link>
+              </div>
             </div>
+
+            {/* Right Side - Video */}
+            <div className="lg:sticky lg:top-24" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200">
+              <div className="relative w-full max-w-md mx-auto">
+                {/* Video Container - Vertical aspect ratio with enhanced styling */}
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 backdrop-blur-sm" 
+                     style={{ aspectRatio: '9/16' }}>
+                  
+                  {videoData.youtubeUrl ? (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={videoData.youtubeUrl}
+                      title="Video Preview"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="w-full h-full object-cover"
+                    ></iframe>
+                  ) : (
+                    <div className="relative w-full h-full bg-gradient-to-br from-stone-800 to-stone-900 flex items-center justify-center">
+                      {videoData.videoImage ? (
+                        isVideoFileUrl(videoData.videoImage) ? (
+                          <video
+                            src={resolveBackendImageUrl(videoData.videoImage)}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="absolute inset-0 h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{
+                              backgroundImage: `url(${resolveBackendImageUrl(videoData.videoImage)})`,
+                            }}
+                          />
+                        )
+                      ) : (
+                        <div className="text-white text-center p-8">
+                          <div className="w-20 h-20 mx-auto mb-4 bg-white/10 rounded-full flex items-center justify-center">
+                            <svg className="w-10 h-10 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <p className="text-sm opacity-75 font-serif">No video configured</p>
+                        </div>
+                      )}
+                      
+                      {/* Clickable overlay for YouTube redirect */}
+                      {videoData.youtubeRedirectUrl && (
+                        <div 
+                          className="absolute inset-0 bg-black/20 hover:bg-black/10 transition-all duration-300 cursor-pointer flex items-center justify-center group"
+                          onClick={() => window.open(videoData.youtubeRedirectUrl, '_blank')}
+                        >
+                          <div className="w-20 h-20 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Decorative elements around video */}
+                <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-2xl -z-10"></div>
+                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-amber-200/30 rounded-full blur-2xl -z-10"></div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
