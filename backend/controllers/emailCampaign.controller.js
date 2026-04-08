@@ -446,10 +446,17 @@ function escapeRegex(str) {
 
 // Background function to send campaign emails
 async function sendCampaignEmails(campaignId, recipients, emailContent) {
+  console.log(`📧 [Background] Starting background send for campaign ${campaignId}`);
+  console.log(`📧 [Background] Recipients count: ${recipients.length}`);
+  
   try {
     const campaign = await EmailCampaign.findById(campaignId);
-    if (!campaign) return;
+    if (!campaign) {
+      console.error(`❌ [Background] Campaign ${campaignId} not found`);
+      return;
+    }
 
+    console.log(`📧 [Background] Sending to ${recipients.length} recipients...`);
     const results = await emailService.sendBulkEmails(recipients, emailContent);
 
     campaign.recipients.sentCount = results.sent;
@@ -457,14 +464,14 @@ async function sendCampaignEmails(campaignId, recipients, emailContent) {
     if (results.sent > 0) {
       campaign.status = 'sent';
       campaign.sentAt = new Date();
+      console.log(`✅ [Background] Campaign ${campaignId} completed: ${results.sent} sent, ${results.failed} failed`);
     } else {
       campaign.status = 'failed';
+      console.error(`❌ [Background] Campaign ${campaignId} failed: 0 emails sent`);
     }
     await campaign.save();
-
-    console.log(`Campaign ${campaignId} sent: ${results.sent} successful, ${results.failed} failed`);
   } catch (error) {
-    console.error(`Error sending campaign ${campaignId}:`, error);
+    console.error(`❌ [Background] Error sending campaign ${campaignId}:`, error);
     
     const campaign = await EmailCampaign.findById(campaignId);
     if (campaign) {

@@ -52,89 +52,87 @@ class EmailService {
   }
 
   async sendEmail({ to, subject, html, text }) {
-    // Ensure transporter is initialized
-    if (!this.initialized) {
-      this.initializeTransporter();
-    }
-    
-    if (!this.transporter) {
-      console.log('??  [EMAIL SIMULATION]', { to, subject });
-      return { success: true, messageId: 'simulated-' + Date.now() };
-    }
-
-    try {
-      console.log('?? Sending email to:', to);
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      const unsubscribeLink = `${frontendUrl}/unsubscribe?email=${encodeURIComponent(to)}`;
-      const finalHtml = this.wrapEmailHtml(html, { unsubscribeLink });
-      const finalText = text || this.htmlToText(finalHtml);
-      const info = await this.transporter.sendMail({
-        from: this.getFromAddress(),
-        to,
-        subject,
-        replyTo: process.env.EMAIL_REPLY_TO?.trim() || process.env.EMAIL_FROM?.trim() || process.env.EMAIL_USER?.trim(),
-        html: finalHtml,
-        text: finalText,
-        headers: {
-          'List-Unsubscribe': `<${unsubscribeLink}>`,
-          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
-          'Precedence': 'bulk',
-          'X-Auto-Response-Suppress': 'All'
-        }
-      });
-
-      console.log('? Email sent successfully:', info.messageId);
-      return { success: true, messageId: info.messageId };
-    } catch (error) {
-      console.error('? Error sending email:', error);
-      return { success: false, error: error.message };
-    }
+  console.log(`📧 [sendEmail] Starting for: ${to}`);
+  
+  if (!this.initialized) {
+    console.log('📧 [sendEmail] Initializing transporter...');
+    this.initializeTransporter();
   }
+  
+  if (!this.transporter) {
+    console.log('⚠️ [sendEmail] No transporter - simulating email');
+    return { success: true, messageId: 'simulated-' + Date.now() };
+  }
+
+  try {
+    console.log(`📧 [sendEmail] Preparing mail options for: ${to}`);
+    
+    const mailOptions = {
+      from: this.getFromAddress(),
+      to,
+      subject,
+      html: this.wrapEmailHtml(html, { unsubscribeLink: `${process.env.FRONTEND_URL}/unsubscribe?email=${encodeURIComponent(to)}` }),
+      text: text || this.htmlToText(html)
+    };
+    
+    console.log(`📧 [sendEmail] Mail options ready, calling sendMail...`);
+    const info = await this.transporter.sendMail(mailOptions);
+    console.log(`✅ [sendEmail] SUCCESS! Email sent to: ${to}`);
+    console.log(`✅ [sendEmail] Message ID: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error(`❌ [sendEmail] FAILED for: ${to}`);
+    console.error(`❌ [sendEmail] Error code: ${error.code}`);
+    console.error(`❌ [sendEmail] Error message: ${error.message}`);
+    console.error(`❌ [sendEmail] Command: ${error.command}`);
+    console.error(`❌ [sendEmail] Response: ${error.response}`);
+    if (error.responseCode) console.error(`❌ [sendEmail] Response code: ${error.responseCode}`);
+    return { success: false, error: error.message, code: error.code };
+  }
+}
 
   async sendBulkEmails(recipients, { subject, html, text }) {
-    // Ensure transporter is initialized
-    if (!this.initialized) {
-      this.initializeTransporter();
-    }
+  console.log(`📧 [Bulk] Starting bulk email send to ${recipients.length} recipients...`);
+  
+  const results = {
+    sent: 0,
+    failed: 0,
+    errors: []
+  };
+
+  for (let i = 0; i < recipients.length; i++) {
+    const recipient = recipients[i];
+    console.log(`📧 [Bulk] Processing recipient ${i + 1}/${recipients.length}: ${recipient.email}`);
     
-    const results = {
-      sent: 0,
-      failed: 0,
-      errors: []
-    };
+    try {
+      const result = await this.sendEmail({
+        to: recipient.email,
+        subject,
+        html: this.personalizeContent(html, recipient),
+        text: text ? this.personalizeContent(text, recipient) : null
+      });
 
-    console.log(`?? Starting bulk email send to ${recipients.length} recipients...`);
-
-    for (const recipient of recipients) {
-      try {
-        const result = await this.sendEmail({
-          to: recipient.email,
-          subject,
-          html: this.personalizeContent(html, recipient),
-          text: text ? this.personalizeContent(text, recipient) : null
-        });
-
-        if (result.success) {
-          results.sent++;
-          console.log(`? Sent to ${recipient.email}`);
-        } else {
-          results.failed++;
-          results.errors.push({ email: recipient.email, error: result.error });
-          console.log(`? Failed to send to ${recipient.email}:`, result.error);
-        }
-
-        // Add small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (error) {
+      if (result.success) {
+        results.sent++;
+        console.log(`✅ [Bulk] Sent to ${recipient.email} (${results.sent}/${recipients.length})`);
+      } else {
         results.failed++;
-        results.errors.push({ email: recipient.email, error: error.message });
-        console.log(`? Exception sending to ${recipient.email}:`, error.message);
+        results.errors.push({ email: recipient.email, error: result.error });
+        console.log(`❌ [Bulk] Failed to send to ${recipient.email}: ${result.error}`);
       }
-    }
 
-    console.log(`?? Bulk send complete: ${results.sent} sent, ${results.failed} failed`);
-    return results;
+      // Add delay between emails to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      results.failed++;
+      results.errors.push({ email: recipient.email, error: error.message });
+      console.log(`❌ [Bulk] Exception for ${recipient.email}:`, error.message);
+    }
   }
+
+  console.log(`📧 [Bulk] Complete: ${results.sent} sent, ${results.failed} failed`);
+  return results;
+}
 
   personalizeContent(content, recipient) {
     return content
