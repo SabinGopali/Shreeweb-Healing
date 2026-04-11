@@ -25,7 +25,6 @@ import CmsEmailCampaignView from './pages/CmsEmailCampaignView';
 import CmsContacts from './pages/CmsContacts';
 import CmsBookings from './pages/CmsBookings';
 import CmsProfile from './pages/CmsProfile';
-import CmsEmbeds from './pages/CmsEmbeds';
 import CmsSettings from './pages/CmsSettings';
 import CmsHeroSection from './pages/CmsHeroSection';
 import CmsVideoSection from './pages/CmsVideoSection';
@@ -185,13 +184,6 @@ export default function ShreeWebCmsRoutes() {
           
           {/* Profile - All admins can access */}
           <Route path="profile" element={<CmsProfile />} />
-          
-          {/* Embeds - Requires canManageContent */}
-          <Route path="embeds" element={
-            <ProtectedRoute requirePermission="canManageContent">
-              <CmsEmbeds />
-            </ProtectedRoute>
-          } />
           
           {/* Settings - Requires canManageSettings */}
           <Route path="settings" element={

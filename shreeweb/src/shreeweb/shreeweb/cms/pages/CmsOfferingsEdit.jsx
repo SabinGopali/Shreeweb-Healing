@@ -25,6 +25,7 @@ export default function CmsOfferingsEdit() {
     outcomes: [''],
     shopifyProductId: '',
     shopifyVariantId: '',
+    shopifyBuyButtonEmbed: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -81,6 +82,7 @@ export default function CmsOfferingsEdit() {
           outcomes: offering.outcomes && offering.outcomes.length > 0 ? offering.outcomes : [''],
           shopifyProductId: offering.shopifyProductId || '',
           shopifyVariantId: offering.shopifyVariantId || '',
+          shopifyBuyButtonEmbed: offering.shopifyBuyButtonEmbed || '',
         });
       }
     } catch (error) {
@@ -586,15 +588,25 @@ export default function CmsOfferingsEdit() {
           </div>
 
           <div className={`${cmsTheme.card} ${cmsTheme.cardPadding} space-y-4`}>
-            <h2 className={`${cmsTheme.title} text-lg`}>Shopify checkout</h2>
+            <h2 className={`${cmsTheme.title} text-lg`}>Shopify Integration</h2>
             <p className="text-sm text-stone-600">
-              Link this offering to a product in Shopify so booking opens the correct paid item. Find the numeric
-              product ID in Shopify Admin → Products → product → URL or “API” section. Variant ID is only needed if
-              the product has multiple variants.
+              Configure direct checkout for this offering. You need either the Product ID or Variant ID from Shopify.
             </p>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <h3 className="text-sm font-semibold text-blue-900 mb-2">How to Find Your Shopify IDs:</h3>
+              <ol className="text-xs text-blue-800 space-y-1 list-decimal list-inside">
+                <li>Go to Shopify Admin → Products</li>
+                <li>Click on your product</li>
+                <li>Look at the URL: <code className="bg-blue-100 px-1 rounded">admin.shopify.com/products/12345678</code></li>
+                <li>The number at the end is your Product ID</li>
+                <li>For Variant ID, scroll down to Variants section and click on a variant to see its ID in the URL</li>
+              </ol>
+            </div>
+
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className={cmsTheme.label}>Shopify product ID</label>
+                <label className={cmsTheme.label}>Shopify Product ID (Required)</label>
                 <input
                   type="text"
                   value={form.shopifyProductId}
@@ -602,17 +614,37 @@ export default function CmsOfferingsEdit() {
                   placeholder="e.g. 8123456789012"
                   className={`${cmsTheme.input} font-mono text-sm`}
                 />
+                <p className="text-xs text-stone-500 mt-1">
+                  Numeric ID from product URL
+                </p>
               </div>
               <div>
-                <label className={cmsTheme.label}>Shopify variant ID (optional)</label>
+                <label className={cmsTheme.label}>Shopify Variant ID (Optional)</label>
                 <input
                   type="text"
                   value={form.shopifyVariantId}
                   onChange={(e) => updateField('shopifyVariantId')(e.target.value)}
-                  placeholder="Numeric or gid://shopify/ProductVariant/…"
+                  placeholder="e.g. 44123456789012"
                   className={`${cmsTheme.input} font-mono text-sm`}
                 />
+                <p className="text-xs text-stone-500 mt-1">
+                  Use if product has multiple variants
+                </p>
               </div>
+            </div>
+
+            <div className="border-t border-stone-200 pt-4">
+              <label className={cmsTheme.label}>Shopify Buy Button Embed Code (Optional)</label>
+              <textarea
+                value={form.shopifyBuyButtonEmbed}
+                onChange={(e) => updateField('shopifyBuyButtonEmbed')(e.target.value)}
+                placeholder='Optional: Paste Shopify Buy Button code here to extract domain automatically'
+                className={`${cmsTheme.input} h-24 resize-none font-mono text-xs`}
+                rows={4}
+              />
+              <p className="text-xs text-stone-500 mt-1">
+                Only needed if your Shopify domain is different from the default. The domain will be extracted from this code.
+              </p>
             </div>
           </div>
 

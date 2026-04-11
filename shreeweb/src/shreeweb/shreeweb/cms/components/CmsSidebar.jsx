@@ -242,10 +242,6 @@ export default function CmsSidebar() {
       </NavLink>
 
       <p className={groupLabel}>System Configuration</p>
-      <NavLink to="/cms/embeds" className={itemClass} onClick={() => setOpen(false)}>
-        <IntegrationsIcon />
-        Third-party Integrations
-      </NavLink>
       <NavLink to="/cms/settings" className={itemClass} onClick={() => setOpen(false)}>
         <SettingsIcon />
         System Settings

@@ -51,7 +51,6 @@ export const CMS_NAV_GROUPS = [
   {
     title: 'System Configuration',
     items: [
-      { to: '/shreeweb/cms/embeds', label: 'Third-party Integrations', keywords: ['integrations', 'embeds', 'shopify', 'calendar', 'payment', 'external'] },
       { to: '/shreeweb/cms/settings', label: 'System Settings', keywords: ['settings', 'backup', 'export', 'workspace', 'configuration', 'preferences'] },
     ],
   },

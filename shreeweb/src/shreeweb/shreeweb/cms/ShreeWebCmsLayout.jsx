@@ -32,7 +32,6 @@ const titles = {
   '/shreeweb/cms/contacts': ['Contact Messages', 'Handle contact form submissions and customer inquiries from potential clients.'],
   '/shreeweb/cms/bookings': ['Session Bookings', 'Manage discovery calls, session bookings, and appointment scheduling for your practice.'],
   '/shreeweb/cms/profile': ['Practitioner Profile', 'Manage your professional information, practice details, and personal bio for your wellness practice.'],
-  '/shreeweb/cms/embeds': ['Third-party Integrations', 'Configure third-party integrations like Shopify, calendars, and payment systems.'],
   '/shreeweb/cms/settings': ['System Settings', 'System configuration, workspace settings, and data export options for your CMS.'],
 };
 
