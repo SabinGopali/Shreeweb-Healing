@@ -314,15 +314,6 @@ export default function OffersSection({ customSettings = null, layout = 'expande
                         {offering.price}
                       </div>
                     )}
-                    <Link
-                      to={`/shreeweb/booking?plan=${encodeURIComponent(offering._id)}`}
-                      className="inline-flex items-center justify-center rounded-full border-2 border-orange-300 bg-orange-50 px-10 py-4 text-base lg:text-lg font-medium text-orange-800 hover:bg-orange-100 hover:border-orange-400 transition-all shadow-md hover:shadow-lg whitespace-nowrap"
-                    >
-                      Book Now
-                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
                   </div>
                 </div>
 
@@ -415,6 +406,19 @@ export default function OffersSection({ customSettings = null, layout = 'expande
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* Book Now Button - Bottom Right */}
+                <div className="mt-8 pt-8 border-t border-stone-300/50 flex justify-end">
+                  <Link
+                    to={`/shreeweb/booking?plan=${encodeURIComponent(offering._id)}`}
+                    className="inline-flex items-center justify-center rounded-full border-2 border-orange-300 bg-orange-50 px-10 py-4 text-base lg:text-lg font-medium text-orange-800 hover:bg-orange-100 hover:border-orange-400 transition-all shadow-md hover:shadow-lg whitespace-nowrap"
+                  >
+                    Book Now
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             </article>

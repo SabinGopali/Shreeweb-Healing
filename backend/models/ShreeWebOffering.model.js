@@ -103,6 +103,12 @@ const shreeWebOfferingSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  /** Shopify Buy Button embed code (HTML/JavaScript) */
+  shopifyBuyButtonEmbed: {
+    type: String,
+    default: '',
+    trim: true
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ShreeWebAdmin'
